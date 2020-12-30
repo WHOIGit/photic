@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=photic
+      - POSTGRES_USER=photic
+      - POSTGRES_PASSWORD=photic
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./static:/code/static:ro
+    ports:
+      - "${HOST:-0.0.0.0}:${HTTP_PORT:-80}:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
