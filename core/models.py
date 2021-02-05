@@ -21,6 +21,11 @@ class Label(models.Model):
         return self.name
 
 
+class Annotator(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    power = models.IntegerField(default=1)
+
+
 class Annotation(models.Model):
     roi = models.ForeignKey(ROI, on_delete=models.CASCADE, related_name='annotations')
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='annotations')
