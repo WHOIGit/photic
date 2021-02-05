@@ -30,7 +30,9 @@ class Annotation(models.Model):
     roi = models.ForeignKey(ROI, on_delete=models.CASCADE, related_name='annotations')
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='annotations')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='annotations')
+    user_power = models.IntegerField(default=1)
     timestamp = models.DateTimeField(auto_now_add=True)
+    verifications = models.IntegerField(default=0)
 
 
 class ImageCollection(models.Model):
