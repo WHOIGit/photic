@@ -77,7 +77,7 @@ class Annotation(models.Model):
 
 class ImageCollection(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    rois = models.ManyToManyField(ROI, related_name="rois")
+    rois = models.ManyToManyField(ROI, related_name="collections")
 
     def __str__(self):
         return self.name
