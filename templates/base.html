@@ -1,9 +1,28 @@
 {%  load static %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}" >
+<link rel="stylesheet" type="text/css" href="{% static 'vendorcss/jquery.datetimepicker.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'vendorcss/chrome-dark.css' %}"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
 <html>
     <body>
-        <h1>Hello World</h1>
-        {% block content %}{% endblock %}
-
-        {% block scripts %}{% endblock %}
-    </body>
+        <div class="off-canvas position-right" id="offCanvasMenu" data-off-canvas data-transition="overlap">
+            {% include 'components/mobile-navigation.html' %}
+        </div>
+        <div class="off-canvas-content" data-off-canvas-content>
+            <div class="grid-y grid-frame">
+                <div class="cell shrink">
+                    {% include 'components/global-navigation.html' %}
+                </div>
+                <div class="cell auto" style="height:100vh">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <div class="cell shrink">
+                    {% include 'components/footer.html' %}
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'vendorJS/context.min.js' %}"></script>
+        <script src="{% static 'js/app.js' %}"></script>
+        
 </html>
