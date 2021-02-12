@@ -46022,9 +46022,15 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-after-date').datetimepick
 });
 var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
   // All elements in this container can be selected
-  selectables: ['.imageContainer > img'],
+  selectables: ['.bricks-container > img'],
   // The container is also the boundary in this case
-  boundaries: ['#main-panel']
+  boundaries: ['#main-panel'],
+  singleTap: {
+    // Enable single-click selection (Also disables range-selection via shift + ctrl).
+    allow: true,
+    // 'native' (element was mouse-event target) or 'touch' (element visually touched).
+    intersect: 'native'
+  }
 }).on('start', function (_ref) {
   var store = _ref.store,
       event = _ref.event;
@@ -46114,8 +46120,12 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
       }
     }
   }
-}).on('stop', function () {
+}).on('stop', function (_ref3) {
+  var store = _ref3.store,
+      event = _ref3.event;
   selection.keepSelection();
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.selected).addClass('selected');
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.changed.removed).removeClass('selected');
 });
 
 var clickHandler = function clickHandler(e) {
@@ -46153,7 +46163,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/MCharron/Documents/Kaimika/Dev/WHOI/Photic/photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! /Users/colin/development/kaimika/photic/assets/src/js/app.js */"./src/js/app.js");
 
 
 /***/ })

@@ -58,14 +58,21 @@ $('#filter-after-date').datetimepicker({
 });
 
 const selection = new SelectionArea({
-
     // All elements in this container can be selected
-    selectables: ['.imageContainer > img'],
+    selectables: ['.bricks-container > img'],
 
     // The container is also the boundary in this case
-    boundaries: ['#main-panel']
-}).on('start', ({store, event}) => {
+    boundaries: ['#main-panel'],
 
+    singleTap: {
+
+        // Enable single-click selection (Also disables range-selection via shift + ctrl).
+        allow: true,
+
+        // 'native' (element was mouse-event target) or 'touch' (element visually touched).
+        intersect: 'native'
+    },
+}).on('start', ({store, event}) => {
     // Remove class if the user isn't pressing the control key or ⌘ key
     if (!event.ctrlKey && !event.metaKey) {
 
@@ -90,9 +97,10 @@ const selection = new SelectionArea({
     for (const el of removed) {
         el.classList.remove('selected');
     }
-
-}).on('stop', () => {
-    selection.keepSelection();
+ }).on('stop', ({store, event}) => {
+    selection.keepSelection()
+    $(store.selected).addClass('selected');
+    $(store.changed.removed).removeClass('selected');
 });
 
 const clickHandler = e => {

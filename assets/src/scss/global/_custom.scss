@@ -22,3 +22,12 @@
     border: 2px solid rgba(98, 155, 255, 0.81);
     border-radius: 0.1em;
 }
+.bricks-container{
+    img{
+        border:5px solid white;
+        &.selected{
+            border:5px solid seagreen;
+        }
+    }
+
+}
