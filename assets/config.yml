@@ -1,0 +1,28 @@
+# Your project's server will run on localhost:xxxx at this port
+PORT: 8000
+
+# UnCSS will use these settings
+UNCSS_OPTIONS:
+  html:
+    # Search for used CSS classes in generated HTML files
+    - "dist/**/*.html"
+  ignore:
+    - !!js/regexp .foundation-mq
+    - !!js/regexp ^\.is-.*
+
+# Gulp will reference these paths when it copies files
+PATHS:
+  # Path to dist folder
+  dist: "../static"
+  # Paths to static assets that aren't images, CSS, or JavaScript
+  assets:
+    - "src/**/*"
+    - "!src/{img,js,scss}/**/*"
+  # Paths to Sass libraries, which can then be loaded with @import
+  sass:
+    - "node_modules/foundation-sites/scss"
+    - "node_modules/motion-ui/src"
+    - "node_modules/@fortawesome/fontawesome-free/scss"    
+  # Paths to JavaScript entry points for webpack to bundle modules
+  entries:
+    - "src/js/app.js"

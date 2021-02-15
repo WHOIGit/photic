@@ -1,0 +1,89 @@
+<form>
+  <div class="grid-x grid-padding-x">
+    <div class="cell">
+        <ul class="accordion" data-accordion data-allow-all-closed="true">
+
+        <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title">Load Images</a>
+            <div class="accordion-content" data-tab-content>           
+      <label>Image Collection
+        <select id="filter-index">
+            {% for index in indices %}
+            <option value="{{ index.name }}">{{ index.name }}</option>
+            {% endfor %}
+        </select>
+      </label>
+    </div>
+    </li>
+    </ul>
+</div>
+
+    <div class="cell">
+    <ul class="accordion" data-accordion data-allow-all-closed="true">
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Filter</a>
+          <div class="accordion-content" data-tab-content>              
+            <div class="cell">
+                <label>Label
+                  <select id="filter-label">
+                    <option value="Fish">Fish</option>
+                    <option value="Starfish">Starfish</option>
+                    <option value="Crab">Crab</option>
+                    <option value="SeaHorse">Sea Horse</option>
+                  </select>
+                </label>
+                <label>Annotator
+                    <select id="filter-annotator">
+                        <option value="Joe">Joe</option>
+                        <option value="Mike">Mike</option>
+                        <option value="Matt">Matt</option>
+                        <option value="Nick">Nick</option>
+                    </select>
+                  </label>        
+              </div>            
+            <div class="cell">
+              <label>Before
+                <input type="text" id="filter-before-date" placeholder="Start Date">
+              </label>
+            </div>
+            <div class="cell">
+              <label>After
+                <input type="text" id="filter-after-date" placeholder="End Date">
+              </label>
+            </div>
+            <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
+                <a class="button primary expanded margin-0 filterButton"><i class="fas fa-filter"></i> Filter</a>
+            </div>            
+          </div>
+        </li>
+
+      </ul>    
+        </div> 
+        <div class="cell">
+            <ul class="accordion" data-accordion data-allow-all-closed="true">
+    
+            <li class="accordion-item" data-accordion-item>
+                <a href="#" class="accordion-title">Actions</a>
+                <div class="accordion-content" data-tab-content>           
+                    <fieldset class="fieldset">
+                        <legend>Assign Label</legend>
+                    <div class="input-group">
+                <select class="input-group-field">
+                  <option value="Fish">Fish</option>
+                  <option value="Starfish">Starfish</option>
+                  <option value="Crab">Crab</option>
+                  <option value="SeaHorse">Sea Horse</option>
+                </select>
+                <div class="input-group-button">
+                    <input type="submit" class="button" value="Apply">
+                  </div>
+
+          </div>
+          </fieldset>
+        </div>
+        </li>
+        </ul>
+    </div>
+    
+  </div>
+</form>
