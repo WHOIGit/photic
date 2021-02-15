@@ -9,14 +9,23 @@ services:
       - POSTGRES_PASSWORD=photic
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - photic
 
   web:
-    build: .
+    build:
+      context: .
+      args:
+        HTTP_PROXY: '${HTTP_PROXY}'
+        HTTPS_PROXY: '${HTTPS_PROXY}'
+
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     depends_on:
       - db
+    networks:
+      - photic
 
   nginx:
     image: nginx:alpine
@@ -27,6 +36,13 @@ services:
       - "${HOST:-0.0.0.0}:${HTTP_PORT:-80}:80"
     depends_on:
       - web
+    networks:
+      - photic
 
 volumes:
   postgres_data:
+
+networks:
+    photic:
+      name: photic
+      driver: bridge
