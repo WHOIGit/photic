@@ -111,7 +111,7 @@ const selection = new SelectionArea({
 
 $(".bricks-container img").on('contextmenu', function(ev) {
     ev.preventDefault();
-    showTags(ev.target);
+    showTags(ev);
     return false;
 });
 
@@ -128,22 +128,22 @@ let $dt = $overlay.find("table").DataTable( {
     ]
 } );
 
-function showTags(el){
-    let $targ = $(el);
-    let dataSet = $targ.data("tags");
+function showTags(event){
+    // let $targ = $(el);
+    // let width = $targ.outerWidth();
+    // let height = $targ.outerHeight();
+    let dataSet = $(event.target).data("tags");
 
-    let pos = $targ.position();
+    let posX = event.pageX;
+    let posY = event.pageY;
 
-    // .outerWidth() takes into account border and padding.
-    let width = $targ.outerWidth();
-    let height = $targ.outerHeight();
 
     let overlayWidth = $overlay.outerWidth();
     //show the menu directly over the placeholder
     $overlay.css({
         position: "absolute",
-        top: (pos.top + height) + "px",
-        left: ((pos.left + width/2) - overlayWidth/2) + "px"
+        top: posY + "px",
+        left: (posX -(overlayWidth/2)) + "px"
     })
     $overlay.show();
     $dt.clear();

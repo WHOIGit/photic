@@ -4,7 +4,11 @@
 .top-bar{
     border-bottom:2px solid $secondary-color;
 }
+#main-panel{
+    overflow: visible;
+    overflow-y:auto;
 
+}
 .mobileNavHeader{
     background: $secondary-color;
 }
@@ -23,6 +27,7 @@
     border-radius: 0.1em;
 }
 #tag-holder{
+    pointer-events: none;
     display: none;
     filter: drop-shadow(10px 10px 10px #333333);
     position:absolute;
