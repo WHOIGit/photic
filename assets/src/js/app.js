@@ -5,6 +5,7 @@ import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
 import moment from 'moment';
+
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
 // to the top of the file so if we used `import` to import Foundation,
 // it would execute earlier than we have assigned the global variable.
@@ -12,6 +13,9 @@ import moment from 'moment';
 // have the hoisting behavior.
 window.jQuery = $;
 window.$ = $;
+
+var dt = require('datatables');
+
 const sizes = [
     { columns: 2, gutter: 10 },                   // assumed to be mobile, because of the missing mq property
     { mq: '768px', columns: 3, gutter: 25 },
@@ -68,10 +72,11 @@ const selection = new SelectionArea({
 
         // Enable single-click selection (Also disables range-selection via shift + ctrl).
         allow: true,
-
         // 'native' (element was mouse-event target) or 'touch' (element visually touched).
         intersect: 'native'
     },
+}).on('beforestart', ({store, event}) => {
+    if((event.button == 2)) return false;
 }).on('start', ({store, event}) => {
     // Remove class if the user isn't pressing the control key or ⌘ key
     if (!event.ctrlKey && !event.metaKey) {
@@ -103,21 +108,50 @@ const selection = new SelectionArea({
     $(store.changed.removed).removeClass('selected');
 });
 
-const clickHandler = e => {
-    e.label.innerText = e.label.innerText.split('').reverse().join('');
-    e.data.text = e.label.innerText;
-    e.handled = true;
+
+$(".bricks-container img").on('contextmenu', function(ev) {
+    ev.preventDefault();
+    showTags(ev.target);
+    return false;
+});
+
+let $overlay = $("#tag-holder");
+let $dt = $overlay.find("table").DataTable( {
+    data: [],
+    paging: false,
+    searching: false,
+    info: false,
+    columns: [
+        { title: "Label" },
+        { title: "Annontator" },
+        { title: "Time" },
+    ]
+} );
+
+function showTags(el){
+    let $targ = $(el);
+    let dataSet = $targ.data("tags");
+
+    let pos = $targ.position();
+
+    // .outerWidth() takes into account border and padding.
+    let width = $targ.outerWidth();
+    let height = $targ.outerHeight();
+
+    let overlayWidth = $overlay.outerWidth();
+    //show the menu directly over the placeholder
+    $overlay.css({
+        position: "absolute",
+        top: (pos.top + height) + "px",
+        left: ((pos.left + width/2) - overlayWidth/2) + "px"
+    })
+    $overlay.show();
+    $dt.clear();
+    if(dataSet && dataSet.length>0){
+        $dt.rows.add( dataSet ).draw();
+    }
+
 }
-
-const contextMenu = new ContextMenu(document.body, [
-    {text: 'Tag', onclick: clickHandler},
-    {text: 'Apply Keyword', onclick: clickHandler},
-    null,
-    {text: 'Reload', hotkey: 'Ctrl+R', onclick: clickHandler}
-]);
-
-contextMenu.install();
-
 require('foundation-sites');
 
 // If you want to pick and choose which modules to include, comment out the above and uncomment
