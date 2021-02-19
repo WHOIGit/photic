@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div id="tag-holder">
+    <div class="triangle"></div>
+    <table>
+    </table> 
+</div>
 <div class="grid-x height-100">
     <div class="cell shrink shadow hide" data-toggler=".hide" id="left-col-shrunk">
     <button class="button small hollow margin-bottom-0" id="left-col-expand-button" data-toggle="leftCol left-col-shrunk"><i class="fas fa-angle-double-right"></i></button>
     </div>
+
     <div class="large-2 cell shadow lightBg" data-toggler=".hide" id="leftCol">
         <div class="off-canvas position-left height-100" id="filterColumn" data-off-canvas
             data-options="inCanvasOn:large;" style="z-index:999">
@@ -24,19 +30,14 @@
         </div>
     </div>
     <div class="cell auto">
-        <div class="grid-y grid-frame">
-            <div class="cell auto margin-bottom-2 margin-top-1" id="main-panel" style="overflow-y:auto;">
+        <div class="grid-y grid-frame" style="overflow:visible" >
+            <div class="cell auto margin-bottom-2 margin-top-1" id="main-panel">
 
                 <div class="imageContainer">
                     <div class="grid-x grid-padding-x">
                         
                         <div class="cell">
                             <div class="bricks-container">
-                        <div id="tag-holder">
-                            <div class="triangle"></div>
-                            <table>
-                            </table> 
-                        </div>
                                 <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"], ["mollusk", "joefutrelle", "02:34:35-2001/06/12"]]' src="https://picsum.photos/200/50?random=1">
                                 <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/290?random=2">
                                 <img data-tags='[]' src="https://picsum.photos/200/30?random=3">

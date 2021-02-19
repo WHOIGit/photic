@@ -60215,7 +60215,7 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
   ev.preventDefault();
-  showTags(ev.target);
+  showTags(ev);
   return false;
 });
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
@@ -60233,19 +60233,19 @@ var $dt = $overlay.find("table").DataTable({
   }]
 });
 
-function showTags(el) {
-  var $targ = jquery__WEBPACK_IMPORTED_MODULE_0___default()(el);
-  var dataSet = $targ.data("tags");
-  var pos = $targ.position(); // .outerWidth() takes into account border and padding.
-
-  var width = $targ.outerWidth();
-  var height = $targ.outerHeight();
+function showTags(event) {
+  // let $targ = $(el);
+  // let width = $targ.outerWidth();
+  // let height = $targ.outerHeight();
+  var dataSet = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).data("tags");
+  var posX = event.pageX;
+  var posY = event.pageY;
   var overlayWidth = $overlay.outerWidth(); //show the menu directly over the placeholder
 
   $overlay.css({
     position: "absolute",
-    top: pos.top + height + "px",
-    left: pos.left + width / 2 - overlayWidth / 2 + "px"
+    top: posY + "px",
+    left: posX - overlayWidth / 2 + "px"
   });
   $overlay.show();
   $dt.clear();
