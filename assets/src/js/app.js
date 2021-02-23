@@ -123,7 +123,7 @@ let $dt = $overlay.find("table").DataTable( {
     info: false,
     columns: [
         { title: "Label" },
-        { title: "Annontator" },
+        { title: "Annotator" },
         { title: "Time" },
     ]
 } );

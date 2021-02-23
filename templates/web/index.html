@@ -38,6 +38,13 @@
                         
                         <div class="cell">
                             <div class="bricks-container">
+                                {% for annotation in annotations %}
+                                <img data-tags='[["{{ annotation.label.name }}", "{{ annotation.user.username }}", "{{ annotation.timestamp }}"]]' src="{{ annotation.roi.path }}">
+                                {% endfor %}
+
+                                <!--
+                                <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"], ["mollusk", "joefutrelle", "02:34:35-2001/06/12"]]' src="/rois/pterpod/Basler_avA2300-25gm__22955661__20200315_075501348_15476_1405_543.png">
+
                                 <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"], ["mollusk", "joefutrelle", "02:34:35-2001/06/12"]]' src="https://picsum.photos/200/50?random=1">
                                 <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/290?random=2">
                                 <img data-tags='[]' src="https://picsum.photos/200/30?random=3">
@@ -52,6 +59,7 @@
                                 <img data-tags='[["polyp", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/250?random=12">
                                 <img data-tags='[["pteropod", "matt", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/200?random=13">
                                 <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/100?random=14">
+                                -->
                             </div>                                                                                                                                          
                         </div>
                        
