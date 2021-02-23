@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div id="tag-holder">
+    <div class="triangle"></div>
+    <table>
+    </table> 
+</div>
 <div class="grid-x height-100">
     <div class="cell shrink shadow hide" data-toggler=".hide" id="left-col-shrunk">
     <button class="button small hollow margin-bottom-0" id="left-col-expand-button" data-toggle="leftCol left-col-shrunk"><i class="fas fa-angle-double-right"></i></button>
     </div>
+
     <div class="large-2 cell shadow lightBg" data-toggler=".hide" id="leftCol">
         <div class="off-canvas position-left height-100" id="filterColumn" data-off-canvas
             data-options="inCanvasOn:large;" style="z-index:999">
@@ -24,29 +30,29 @@
         </div>
     </div>
     <div class="cell auto">
-        <div class="grid-y grid-frame">
-            <div class="cell auto margin-bottom-2 margin-top-1" id="main-panel" style="overflow-y:auto;">
+        <div class="grid-y grid-frame" style="overflow:visible" >
+            <div class="cell auto margin-bottom-2 margin-top-1" id="main-panel">
 
                 <div class="imageContainer">
                     <div class="grid-x grid-padding-x">
                         
                         <div class="cell">
                             <div class="bricks-container">
-                            <img src="https://picsum.photos/200/50?random=1">
-                            <img src="https://picsum.photos/200/290?random=2">
-                            <img src="https://picsum.photos/200/30?random=3">
-                            <img src="https://picsum.photos/200/300?random=4">
-                            <img src="https://picsum.photos/200/150?random=5">
-                            <img src="https://picsum.photos/200/150?random=6">
-                            <img src="https://picsum.photos/200/75?random=7">
-                            <img src="https://picsum.photos/200/96?random=8">
-                            <img src="https://picsum.photos/200/180?random=9">
-                            <img src="https://picsum.photos/200/250?random=10">
-                            <img src="https://picsum.photos/200/300?random=11">
-                            <img src="https://picsum.photos/200/250?random=12">
-                            <img src="https://picsum.photos/200/200?random=13">
-                            <img src="https://picsum.photos/200/100?random=14">
-                        </div>                                                                                                                                          
+                                <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"], ["mollusk", "joefutrelle", "02:34:35-2001/06/12"]]' src="https://picsum.photos/200/50?random=1">
+                                <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/290?random=2">
+                                <img data-tags='[]' src="https://picsum.photos/200/30?random=3">
+                                <img data-tags='[["shark", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/300?random=4">
+                                <img data-tags='[["isopod", "joefutrelle", "16:34:35-2011/12/12"]]' src="https://picsum.photos/200/150?random=5">
+                                <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/150?random=6">
+                                <img data-tags='[["cephalopod", "matt", "16:34:35-2011/12/12"]]' src="https://picsum.photos/200/75?random=7">
+                                <img data-tags='[["protozoa", "mike", "14:34:35-2011/12/12"],["protozoa", "colin", "14:34:35-2011/12/12"],["protozoa", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/96?random=8">
+                                <img data-tags='[["protozoa", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/180?random=9">
+                                <img data-tags='[["kelp", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/250?random=10">
+                                <img data-tags='[["spore", "matt", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/300?random=11">
+                                <img data-tags='[["polyp", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/250?random=12">
+                                <img data-tags='[["pteropod", "matt", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/200?random=13">
+                                <img data-tags='[["pteropod", "colin", "14:34:35-2011/12/12"]]' src="https://picsum.photos/200/100?random=14">
+                            </div>                                                                                                                                          
                         </div>
                        
                     </div>

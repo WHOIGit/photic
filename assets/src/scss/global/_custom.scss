@@ -4,7 +4,11 @@
 .top-bar{
     border-bottom:2px solid $secondary-color;
 }
+#main-panel{
+    overflow: visible;
+    overflow-y:auto;
 
+}
 .mobileNavHeader{
     background: $secondary-color;
 }
@@ -21,6 +25,24 @@
     background: rgba(46, 115, 252, 0.11);
     border: 2px solid rgba(98, 155, 255, 0.81);
     border-radius: 0.1em;
+}
+#tag-holder{
+    pointer-events: none;
+    display: none;
+    filter: drop-shadow(10px 10px 10px #333333);
+    position:absolute;
+    width:300px;
+    z-index:100;
+    .triangle{
+        position: relative;
+        transform: translateX(-50%);
+        left:50%;
+        width: 0; 
+        height: 0; 
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 15px solid white;
+    }
 }
 .bricks-container{
     img{
