@@ -16,38 +16,8 @@ window.$ = $;
 
 var dt = require('datatables');
 
-const sizes = [
-    { columns: 2, gutter: 10 },                   // assumed to be mobile, because of the missing mq property
-    { mq: '768px', columns: 3, gutter: 25 },
-    { mq: '1024px', columns: 6, gutter: 25 }
-  ]
   
-  // create an instance
-  
-  const instance = Bricks({
-    container: '.bricks-container',
-    packed:    'data-packed',        // if not prefixed with 'data-', it will be added
-    sizes:     sizes
-  })
-  
-  // bind callbacks
-  
-  instance
-    .on('pack',   () => console.log('ALL grid items packed.'))
-    .on('update', () => console.log('NEW grid items packed.'))
-    .on('resize', size => console.log('The grid has be re-packed to accommodate a new BREAKPOINT.'))
-  
-  // start it up, when the DOM is ready
-  // note that if images are in the grid, you may need to wait for document.readyState === 'complete'
-  document.onreadystatechange = function () {
-    if(document.readyState === "complete"){
-    instance
-      .resize(true)     // bind resize handler
-      .pack()           // pack initial items
-    }
-  }
-  
-  $('#filter-before-date').datetimepicker({
+$('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
     formatTime: 'H:i',
@@ -108,7 +78,14 @@ const selection = new SelectionArea({
     $(store.changed.removed).removeClass('selected');
 });
 
-
+$("body").on('contextmenu', function(ev) {
+    hideTags();
+});
+$("body").on('click', function(ev) {
+    if(!$(ev.target).is("#tag-holder")){
+        hideTags();
+    }
+});
 $(".bricks-container img").on('contextmenu', function(ev) {
     ev.preventDefault();
     showTags(ev);
@@ -123,7 +100,7 @@ let $dt = $overlay.find("table").DataTable( {
     info: false,
     columns: [
         { title: "Label" },
-        { title: "Annotator" },
+        { title: "Annontator" },
         { title: "Time" },
     ]
 } );
@@ -151,6 +128,9 @@ function showTags(event){
         $dt.rows.add( dataSet ).draw();
     }
 
+}
+function hideTags(event){
+    $overlay.hide();
 }
 require('foundation-sites');
 

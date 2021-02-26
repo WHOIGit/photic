@@ -60053,43 +60053,6 @@ window.$ = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 var dt = __webpack_require__(/*! datatables */ "./node_modules/datatables/media/js/jquery.dataTables.js");
 
-var sizes = [{
-  columns: 2,
-  gutter: 10
-}, // assumed to be mobile, because of the missing mq property
-{
-  mq: '768px',
-  columns: 3,
-  gutter: 25
-}, {
-  mq: '1024px',
-  columns: 6,
-  gutter: 25
-}]; // create an instance
-
-var instance = Object(bricks_js__WEBPACK_IMPORTED_MODULE_3__["default"])({
-  container: '.bricks-container',
-  packed: 'data-packed',
-  // if not prefixed with 'data-', it will be added
-  sizes: sizes
-}); // bind callbacks
-
-instance.on('pack', function () {
-  return console.log('ALL grid items packed.');
-}).on('update', function () {
-  return console.log('NEW grid items packed.');
-}).on('resize', function (size) {
-  return console.log('The grid has be re-packed to accommodate a new BREAKPOINT.');
-}); // start it up, when the DOM is ready
-// note that if images are in the grid, you may need to wait for document.readyState === 'complete'
-
-document.onreadystatechange = function () {
-  if (document.readyState === "complete") {
-    instance.resize(true) // bind resize handler
-    .pack(); // pack initial items
-  }
-};
-
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -60213,6 +60176,14 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.selected).addClass('selected');
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.changed.removed).removeClass('selected');
 });
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").on('contextmenu', function (ev) {
+  hideTags();
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").on('click', function (ev) {
+  if (!jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).is("#tag-holder")) {
+    hideTags();
+  }
+});
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
   ev.preventDefault();
   showTags(ev);
@@ -60253,6 +60224,10 @@ function showTags(event) {
   if (dataSet && dataSet.length > 0) {
     $dt.rows.add(dataSet).draw();
   }
+}
+
+function hideTags(event) {
+  $overlay.hide();
 }
 
 __webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js"); // If you want to pick and choose which modules to include, comment out the above and uncomment
