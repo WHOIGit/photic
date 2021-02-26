@@ -60189,6 +60189,21 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('conte
   showTags(ev);
   return false;
 });
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").change(function (ev) {
+  updateQuery("label", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val());
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").change(function (ev) {
+  updateQuery("annotator", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val());
+});
+
+function updateQuery(key, val) {
+  var url = new URL(document.location);
+  var search_params = url.searchParams;
+  search_params.set(key, val);
+  url.search = search_params.toString();
+  document.location = url.toString();
+}
+
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
 var $dt = $overlay.find("table").DataTable({
   data: [],

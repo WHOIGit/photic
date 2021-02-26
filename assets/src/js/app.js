@@ -16,7 +16,6 @@ window.$ = $;
 
 var dt = require('datatables');
 
-  
 $('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
@@ -91,6 +90,27 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     showTags(ev);
     return false;
 });
+
+$("#filter-label").change(function(ev){
+    updateQuery("label", $("#filter-label").val());
+});
+
+$("#filter-annotator").change(function(ev){
+    updateQuery("annotator", $("#filter-annotator").val());
+});
+
+
+function updateQuery(key, val){
+    var url = new URL(document.location);
+
+    var search_params = url.searchParams;
+
+    search_params.set(key, val);
+
+    url.search = search_params.toString();
+
+    document.location = url.toString();
+}
 
 let $overlay = $("#tag-holder");
 let $dt = $overlay.find("table").DataTable( {
