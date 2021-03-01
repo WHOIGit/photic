@@ -16,38 +16,7 @@ window.$ = $;
 
 var dt = require('datatables');
 
-const sizes = [
-    { columns: 2, gutter: 10 },                   // assumed to be mobile, because of the missing mq property
-    { mq: '768px', columns: 3, gutter: 25 },
-    { mq: '1024px', columns: 6, gutter: 25 }
-  ]
-  
-  // create an instance
-  
-  const instance = Bricks({
-    container: '.bricks-container',
-    packed:    'data-packed',        // if not prefixed with 'data-', it will be added
-    sizes:     sizes
-  })
-  
-  // bind callbacks
-  
-  instance
-    .on('pack',   () => console.log('ALL grid items packed.'))
-    .on('update', () => console.log('NEW grid items packed.'))
-    .on('resize', size => console.log('The grid has be re-packed to accommodate a new BREAKPOINT.'))
-  
-  // start it up, when the DOM is ready
-  // note that if images are in the grid, you may need to wait for document.readyState === 'complete'
-  document.onreadystatechange = function () {
-    if(document.readyState === "complete"){
-    instance
-      .resize(true)     // bind resize handler
-      .pack()           // pack initial items
-    }
-  }
-  
-  $('#filter-before-date').datetimepicker({
+$('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
     formatTime: 'H:i',
@@ -121,6 +90,27 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     showTags(ev);
     return false;
 });
+
+$("#filter-label").change(function(ev){
+    updateQuery("label", $("#filter-label").val());
+});
+
+$("#filter-annotator").change(function(ev){
+    updateQuery("annotator", $("#filter-annotator").val());
+});
+
+
+function updateQuery(key, val){
+    var url = new URL(document.location);
+
+    var search_params = url.searchParams;
+
+    search_params.set(key, val);
+
+    url.search = search_params.toString();
+
+    document.location = url.toString();
+}
 
 let $overlay = $("#tag-holder");
 let $dt = $overlay.find("table").DataTable( {

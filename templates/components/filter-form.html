@@ -26,20 +26,20 @@
             <div class="cell">
                 <label>Label
                   <select id="filter-label">
-                    <option value="Fish">Fish</option>
-                    <option value="Starfish">Starfish</option>
-                    <option value="Crab">Crab</option>
-                    <option value="SeaHorse">Sea Horse</option>
+                    <option value="">All</option>
+                    {% for label in labels %}
+                    <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
+                    {% endfor %}
                   </select>
                 </label>
                 <label>Annotator
-                    <select id="filter-annotator">
-                        <option value="Joe">Joe</option>
-                        <option value="Mike">Mike</option>
-                        <option value="Matt">Matt</option>
-                        <option value="Nick">Nick</option>
-                    </select>
-                  </label>        
+                  <select id="filter-annotator">
+                    <option value="">All</option>
+                    {% for annotator in annotation_users %}
+                    <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
+                    {% endfor %}
+                  </select>
+                </label>        
               </div>            
             <div class="cell">
               <label>Before

@@ -60053,43 +60053,6 @@ window.$ = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 var dt = __webpack_require__(/*! datatables */ "./node_modules/datatables/media/js/jquery.dataTables.js");
 
-var sizes = [{
-  columns: 2,
-  gutter: 10
-}, // assumed to be mobile, because of the missing mq property
-{
-  mq: '768px',
-  columns: 3,
-  gutter: 25
-}, {
-  mq: '1024px',
-  columns: 6,
-  gutter: 25
-}]; // create an instance
-
-var instance = Object(bricks_js__WEBPACK_IMPORTED_MODULE_3__["default"])({
-  container: '.bricks-container',
-  packed: 'data-packed',
-  // if not prefixed with 'data-', it will be added
-  sizes: sizes
-}); // bind callbacks
-
-instance.on('pack', function () {
-  return console.log('ALL grid items packed.');
-}).on('update', function () {
-  return console.log('NEW grid items packed.');
-}).on('resize', function (size) {
-  return console.log('The grid has be re-packed to accommodate a new BREAKPOINT.');
-}); // start it up, when the DOM is ready
-// note that if images are in the grid, you may need to wait for document.readyState === 'complete'
-
-document.onreadystatechange = function () {
-  if (document.readyState === "complete") {
-    instance.resize(true) // bind resize handler
-    .pack(); // pack initial items
-  }
-};
-
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -60226,6 +60189,21 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('conte
   showTags(ev);
   return false;
 });
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").change(function (ev) {
+  updateQuery("label", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val());
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").change(function (ev) {
+  updateQuery("annotator", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val());
+});
+
+function updateQuery(key, val) {
+  var url = new URL(document.location);
+  var search_params = url.searchParams;
+  search_params.set(key, val);
+  url.search = search_params.toString();
+  document.location = url.toString();
+}
+
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
 var $dt = $overlay.find("table").DataTable({
   data: [],
