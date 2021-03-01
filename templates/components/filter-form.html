@@ -6,10 +6,10 @@
         <li class="accordion-item" data-accordion-item>
             <a href="#" class="accordion-title">Load Images</a>
             <div class="accordion-content" data-tab-content>           
-      <label>Image Collection
-        <select id="filter-index">
-            {% for index in indices %}
-            <option value="{{ index.name }}">{{ index.name }}</option>
+        <label>Image Collection
+        <select id="filter-collection">
+            {% for collection in collections %}
+            <option value="{{ collection.name }}">{{ collection.name }}</option>
             {% endfor %}
         </select>
       </label>

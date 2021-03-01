@@ -1,14 +1,13 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render
 
-from core.models import Annotation
-from core.models import Label
-from django.contrib.auth.models import User
+from core.models import Annotation, Label, ImageCollection
 
 def index(request):
     # TODO: Group by ROI...
     annotations = Annotation.objects.all()
-
     annotation_users = User.objects.all()
+    collections = ImageCollection.objects.all()
 
     labels = Label.objects.all()
 
@@ -25,4 +24,5 @@ def index(request):
         "annotation_users": annotation_users,
         "labels": labels,
         "is_filtered": is_filtered,
+        "collections": collections,
     })
