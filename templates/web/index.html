@@ -20,23 +20,23 @@
                     <h2 id="formTitle" class="margin-bottom-0">Menu</h2>
                         <button id="left-col-collapse" class="button primary small hollow margin-bottom-0 show-for-large" data-toggle="leftCol left-col-shrunk"><i class="fas fa-angle-double-left"></i></button>
                     </div>
-                    
                 </div>
                 <div class="cell auto" style="overflow-y:auto;">
                     {% include 'components/filter-form.html' %}
                 </div>
-
             </div>
         </div>
     </div>
     <div class="cell auto">
         <div class="grid-y grid-frame" style="overflow:visible" >
             <div class="cell auto margin-bottom-2 margin-top-1" id="main-panel">
-
                 <div class="imageContainer">
                     <div class="grid-x grid-padding-x">
                         
                         <div class="cell">
+                        <div class="callout primary bold">
+                            <h5><b>{{annotations.count}} ROI(s) Matching Selected Filters</b></h5>
+                        </div>
                             <div class="bricks-container">
                                 {% for annotation in annotations %}
                                 <img class="image-tile" data-tags='[["{{ annotation.label.name }}", "{{ annotation.user.username }}", "{{ annotation.timestamp }}"]]' src="{{ annotation.roi.path }}">
