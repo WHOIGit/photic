@@ -60188,18 +60188,29 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('conte
   ev.preventDefault();
   showTags(ev);
   return false;
-});
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").change(function (ev) {
-  updateQuery("label", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val());
-});
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").change(function (ev) {
-  updateQuery("annotator", jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val());
+}); // $("#filter-label").change(function(ev){
+//     updateQuery({"label": $("#filter-label").val()});
+// });
+// $("#filter-annotator").change(function(ev){
+//     updateQuery({"annotator": $("#filter-annotator").val()});
+// });
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
+  ev.preventDefault();
+  var filters = {};
+  filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
+  filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
+  updateQuery(filters);
 });
 
-function updateQuery(key, val) {
+function updateQuery(obj) {
   var url = new URL(document.location);
   var search_params = url.searchParams;
-  search_params.set(key, val);
+
+  for (var key in obj) {
+    search_params.set(key, obj[key]);
+  }
+
   url.search = search_params.toString();
   document.location = url.toString();
 }
@@ -60213,7 +60224,7 @@ var $dt = $overlay.find("table").DataTable({
   columns: [{
     title: "Label"
   }, {
-    title: "Annontator"
+    title: "Annotator"
   }, {
     title: "Time"
   }]

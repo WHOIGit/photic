@@ -91,21 +91,28 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     return false;
 });
 
-$("#filter-label").change(function(ev){
-    updateQuery("label", $("#filter-label").val());
-});
+// $("#filter-label").change(function(ev){
+//     updateQuery({"label": $("#filter-label").val()});
+// });
 
-$("#filter-annotator").change(function(ev){
-    updateQuery("annotator", $("#filter-annotator").val());
-});
+// $("#filter-annotator").change(function(ev){
+//     updateQuery({"annotator": $("#filter-annotator").val()});
+// });
+$("#filter-button").on('click', function(ev){
+    ev.preventDefault();
+    let filters = {}
+    filters["annotator"] = $("#filter-annotator").val();
+    filters["label"] = $("#filter-label").val();
+    updateQuery(filters);
+})
 
 
-function updateQuery(key, val){
+function updateQuery(obj){
     var url = new URL(document.location);
-
     var search_params = url.searchParams;
-
-    search_params.set(key, val);
+    for (const key in obj){
+        search_params.set(key, obj[key]);
+    }
 
     url.search = search_params.toString();
 
