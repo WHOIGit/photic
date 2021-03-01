@@ -108,7 +108,14 @@ const selection = new SelectionArea({
     $(store.changed.removed).removeClass('selected');
 });
 
-
+$("body").on('contextmenu', function(ev) {
+    hideTags();
+});
+$("body").on('click', function(ev) {
+    if(!$(ev.target).is("#tag-holder")){
+        hideTags();
+    }
+});
 $(".bricks-container img").on('contextmenu', function(ev) {
     ev.preventDefault();
     showTags(ev);
@@ -151,6 +158,9 @@ function showTags(event){
         $dt.rows.add( dataSet ).draw();
     }
 
+}
+function hideTags(event){
+    $overlay.hide();
 }
 require('foundation-sites');
 

@@ -60213,6 +60213,14 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.selected).addClass('selected');
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.changed.removed).removeClass('selected');
 });
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").on('contextmenu', function (ev) {
+  hideTags();
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").on('click', function (ev) {
+  if (!jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).is("#tag-holder")) {
+    hideTags();
+  }
+});
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
   ev.preventDefault();
   showTags(ev);
@@ -60253,6 +60261,10 @@ function showTags(event) {
   if (dataSet && dataSet.length > 0) {
     $dt.rows.add(dataSet).draw();
   }
+}
+
+function hideTags(event) {
+  $overlay.hide();
 }
 
 __webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js"); // If you want to pick and choose which modules to include, comment out the above and uncomment

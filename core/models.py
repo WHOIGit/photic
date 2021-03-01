@@ -2,19 +2,24 @@ import os
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F
+from django.db.models.expressions import Window
+from django.db.models.functions import LastValue
 
 from django.utils import timezone
 
 from PIL import Image
 
+
 class ROIManager(models.Manager):
     def create_roi(self, path):
         if not path.endswith('.png'):
             raise NameError(f'{path} is not the path to a ROI image')
-        roi_id = os.path.basename(path)[:-4] # we know it ends ".png"
+        roi_id = os.path.basename(path)[:-4]  # we know it ends ".png"
         image = Image.open(path)
         width, height = image.size
         return self.create(roi_id=roi_id, width=width, height=height, path=path)
+
 
 class ROI(models.Model):
     roi_id = models.CharField(max_length=255, unique=True)
@@ -36,6 +41,7 @@ class Label(models.Model):
     def __str__(self):
         return self.name
 
+
 class Annotator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     power = models.IntegerField(default=1)
@@ -43,7 +49,27 @@ class Annotator(models.Model):
     def __str__(self):
         return f'{self.user.username} ({self.power})'
 
+
+class AnnotationQuerySet(models.QuerySet):
+    def with_winning_label(self, label):  # label = Label object
+        winning_label = self.annotate(
+            winning_label=Window(
+                expression=LastValue(F('label')),
+                partition_by=[F('roi')],
+                order_by=[F('user_power'), F('timestamp')]
+            )
+        )
+        sql, params = winning_label.query.sql_with_params()
+        return self.raw("""
+            SELECT * FROM ({}) a
+            WHERE winning_label = %s
+        """.format(sql), [*params, label.id])
+
+
 class AnnotationManager(models.Manager):
+    def get_queryset(self):
+        return AnnotationQuerySet(self.model, using=self._db)
+
     def create_annotation(self, roi, label, user):
         return self.create(roi=roi, label=label, user=user, user_power=user.annotator.power)
 
@@ -54,6 +80,10 @@ class AnnotationManager(models.Manager):
             return annotation # does not save
         except Annotation.DoesNotExistError:
             return self.create_annotation(roi=roi, label=label, user=user)
+
+    def with_winning_label(self, label):
+        return self.get_queryset().with_winning_label(label)
+
 
 class Annotation(models.Model):
     roi = models.ForeignKey(ROI, on_delete=models.CASCADE, related_name='annotations')
