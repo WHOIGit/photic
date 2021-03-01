@@ -46,6 +46,7 @@ class Command(BaseCommand):
         print(f'found {len(unlabeled)} images and {len(labeled)} label directories')
         # now create ROI records in the database
         for roi_name in unlabeled:
+            path = os.path.join(directory, roi_name + '.png')
             roi = ROI.objects.create_roi(path)
             if collection:
                 collection.rois.add(roi)
