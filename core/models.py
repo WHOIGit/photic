@@ -3,15 +3,34 @@ import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
-from django.db.models.expressions import Window
-from django.db.models.functions import LastValue
+from django.db.models.expressions import Window, ValueRange
+from django.db.models.functions import LastValue, FirstValue
 
 from django.utils import timezone
 
 from PIL import Image
 
 
+class ROIQuerySet(models.QuerySet):
+    def with_label(self, label):
+        label_id = label.id
+        winner = Annotation.objects.get_queryset().\
+            winner_window().order_by('roi_id', 'winner').values('roi_id', 'winner').distinct()
+        sql, params = winner.query.sql_with_params()
+        return self.raw("""
+           SELECT a.* FROM core_roi a, ({}) b
+           WHERE a.id = b.roi_id
+           AND %s = (
+               SELECT label_id
+               FROM core_annotation c
+               WHERE c.id = b.winner)
+        """.format(sql), [*params, label_id])
+
+
 class ROIManager(models.Manager):
+    def get_queryset(self):
+        return ROIQuerySet(self.model, using=self._db)
+
     def create_roi(self, path):
         if not path.endswith('.png'):
             raise NameError(f'{path} is not the path to a ROI image')
@@ -19,6 +38,9 @@ class ROIManager(models.Manager):
         image = Image.open(path)
         width, height = image.size
         return self.create(roi_id=roi_id, width=width, height=height, path=path)
+
+    def with_label(self, label):
+        return self.get_queryset().with_label(label)
 
 
 class ROI(models.Model):
@@ -28,6 +50,9 @@ class ROI(models.Model):
     path = models.CharField(max_length=512)
 
     objects = ROIManager()
+
+    def winning_label(self):
+        return self.annotations.filter(roi=self).winner()[0].label
 
     def __str__(self):
         return self.roi_id
@@ -51,19 +76,24 @@ class Annotator(models.Model):
 
 
 class AnnotationQuerySet(models.QuerySet):
-    def with_winning_label(self, label):  # label = Label object
-        winning_label = self.annotate(
-            winning_label=Window(
-                expression=LastValue(F('label')),
-                partition_by=[F('roi')],
-                order_by=[F('user_power'), F('timestamp')]
+    def winner_window(self):
+        return self.annotate(
+            winner=Window(
+                expression=LastValue(F('id')),
+                partition_by=(F('roi')),
+                order_by=[F('user_power'), F('timestamp')],
+                frame=ValueRange()
             )
         )
-        sql, params = winning_label.query.sql_with_params()
+
+    def winner(self):
+        winner = self.winner_window().order_by('winner').values('winner').distinct()
+        sql, params = winner.query.sql_with_params()
         return self.raw("""
-            SELECT * FROM ({}) a
-            WHERE winning_label = %s
-        """.format(sql), [*params, label.id])
+           SELECT a.* FROM core_annotation a, ({}) b
+           WHERE a.id = b.winner
+           ORDER BY roi_id
+        """.format(sql), params)
 
 
 class AnnotationManager(models.Manager):
@@ -81,8 +111,8 @@ class AnnotationManager(models.Manager):
         except Annotation.DoesNotExistError:
             return self.create_annotation(roi=roi, label=label, user=user)
 
-    def with_winning_label(self, label):
-        return self.get_queryset().with_winning_label(label)
+    def winner(self):
+        return self.get_queryset().winner()
 
 
 class Annotation(models.Model):
