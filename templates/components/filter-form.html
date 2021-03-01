@@ -43,12 +43,12 @@
               </div>            
             <div class="cell">
               <label>Before
-                <input type="text" id="filter-before-date" placeholder="Start Date">
+                <input type="text" id="filter-before-date" placeholder="Start Date" disabled>
               </label>
             </div>
             <div class="cell">
               <label>After
-                <input type="text" id="filter-after-date" placeholder="End Date">
+                <input type="text" id="filter-after-date" placeholder="End Date" disabled>
               </label>
             </div>
             <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
@@ -69,10 +69,10 @@
                         <legend>Assign Label</legend>
                     <div class="input-group">
                 <select class="input-group-field">
-                  <option value="Fish">Fish</option>
-                  <option value="Starfish">Starfish</option>
-                  <option value="Crab">Crab</option>
-                  <option value="SeaHorse">Sea Horse</option>
+                    <option value=""></option>
+                    {% for label in labels %}
+                    <option value="{{label.name}}">{{label.name}}</option>
+                    {% endfor %}
                 </select>
                 <div class="input-group-button">
                     <input type="submit" class="button" value="Apply">
