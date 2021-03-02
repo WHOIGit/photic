@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from core.models import Annotation, Label, ImageCollection, ROI
 
@@ -9,7 +9,7 @@ def index(request):
     labels = Label.objects.all()
 
     if request.GET.get("label"):
-        label = Label.objects.filter(name=request.GET.get("label")).first()
+        label = get_object_or_404(Label, name=request.GET.get('label'))
         rois = list(ROI.objects.with_label(label))
     else:
         rois = ROI.objects.all()
