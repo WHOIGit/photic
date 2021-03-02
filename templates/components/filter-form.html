@@ -27,6 +27,7 @@
                 <label>Label
                   <select id="filter-label">
                     <option value="">All</option>
+                      <option value="unlabeled">unlabeled</option>
                     {% for label in labels %}
                     <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
                     {% endfor %}

@@ -8,15 +8,20 @@ def index(request):
     collections = ImageCollection.objects.all()
     labels = Label.objects.all()
 
-    if request.GET.get("label"):
-        label = get_object_or_404(Label, name=request.GET.get('label'))
-        rois = list(ROI.objects.with_label(label))
+    requested_label = request.GET.get('label')
+
+    if requested_label:
+        if requested_label == 'unlabeled':
+            rois = ROI.objects.unlabeled()
+        else:
+            label = get_object_or_404(Label, name=requested_label)
+            rois = list(ROI.objects.with_label(label))
     else:
         rois = ROI.objects.all()
 
     # TODO: Hook up annotator filter
 
-    is_filtered = request.GET.get("label") or request.GET.get("annotator")
+    is_filtered = requested_label or request.GET.get("annotator")
 
     return render(request, "web/index.html", {
         "annotation_users": annotation_users,
