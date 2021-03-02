@@ -35,13 +35,15 @@
                         
                         <div class="cell">
                         <div class="callout primary bold">
-                            <h5><b>{{annotations.count}} ROI(s) Matching Selected Filters</b></h5>
+                            <h5><b>{{ roi_count }} ROI(s) Matching Selected Filters</b></h5>
                         </div>
                             <div class="bricks-container">
-                                {% for annotation in annotations %}
-                                <img class="image-tile" data-tags='[["{{ annotation.label.name }}", "{{ annotation.user.username }}", "{{ annotation.timestamp }}"]]' src="{{ annotation.roi.path }}">
+                                {% for roi in rois %}
+                                    {% autoescape off %}
+                                    <img class="image-tile" data-tags='{{ roi.tags }}' src="{{ roi.path }}">
+                                    {% endautoescape %}
                                 {% endfor %}
-                            </div>                                                                                                                                          
+                            </div>
                         </div>
                        
                     </div>

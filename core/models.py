@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+import json
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -53,6 +55,14 @@ class ROI(models.Model):
 
     def winning_label(self):
         return self.annotations.filter(roi=self).winner()[0].label
+
+    @property
+    def tags(self):
+        tags = [[a.label.name, a.user.username, a.timestamp.strftime("%m/%d/%Y, %H:%M:%S")] for a in self.annotations.all()]
+
+        # The conversion to json is important. Without it, we get [['1','2','3']]. With it we get double quotes
+        #   [["1","2","3"]]. This is necessary for the HTML on the front end to work properly
+        return json.dumps(tags)
 
     def __str__(self):
         return self.roi_id
