@@ -1,28 +1,28 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-from core.models import Annotation, Label, ImageCollection
+from core.models import Annotation, Label, ImageCollection, ROI
 
 def index(request):
-    # TODO: Group by ROI...
-    annotations = Annotation.objects.all()
     annotation_users = User.objects.all()
     collections = ImageCollection.objects.all()
-
     labels = Label.objects.all()
 
-    # TODO: Hook up to "winning" label filter"
     if request.GET.get("label"):
-        annotations = annotations.filter(label__name=request.GET.get("label"))
+        label = get_object_or_404(Label, name=request.GET.get('label'))
+        rois = list(ROI.objects.with_label(label))
+    else:
+        rois = ROI.objects.all()
 
     # TODO: Hook up annotator filter
 
     is_filtered = request.GET.get("label") or request.GET.get("annotator")
 
     return render(request, "web/index.html", {
-        "annotations": annotations,
         "annotation_users": annotation_users,
         "labels": labels,
         "is_filtered": is_filtered,
         "collections": collections,
+        "rois": rois,
+        "roi_count": len(rois),
     })
