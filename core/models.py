@@ -26,6 +26,10 @@ class ROIQuerySet(models.QuerySet):
                WHERE c.id = b.winner)
         """.format(sql), [*params, label_id])
 
+    def unlabeled(self):
+        # FIXME may be inefficient
+        return self.exclude(id__in=Annotation.objects.values_list('roi__id', flat=True))
+
 
 class ROIManager(models.Manager):
     def get_queryset(self):
@@ -42,6 +46,9 @@ class ROIManager(models.Manager):
     def with_label(self, label):
         return self.get_queryset().with_label(label)
 
+    def unlabeled(self):
+        return self.get_queryset().unlabeled()
+
 
 class ROI(models.Model):
     roi_id = models.CharField(max_length=255, unique=True)
@@ -50,6 +57,9 @@ class ROI(models.Model):
     path = models.CharField(max_length=512)
 
     objects = ROIManager()
+
+    def assign_label(self, label, user):  # does not save
+        return Annotation.objects.create_or_verify(self, label, user)
 
     def winning_label(self):
         return self.annotations.filter(roi=self).winner()[0].label
