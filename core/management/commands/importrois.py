@@ -33,11 +33,17 @@ class Command(BaseCommand):
                 name=collection_name)
         # scan directory and one level of subdirectories
         def scan(dir):
-            return [n[:-4] for n in os.listdir(dir) if n.endswith('.png')]
+            result = []
+            for fn in os.listdir(dir):
+                name, ext = os.path.splitext(fn)
+                if ext not in ['.png', '.jpg']:
+                    continue
+                result.append(fn)
+            return result
         unlabeled = scan(directory)
         labeled = {}
         for n in os.listdir(directory):
-            if os.path.isdir(os.path.join(directory,n)):
+            if os.path.isdir(os.path.join(directory, n)):
                 label = n
                 label_dir_path = os.path.join(directory, n)
                 labeled[label] = scan(label_dir_path)
@@ -45,15 +51,15 @@ class Command(BaseCommand):
             raise CommandError('labeled ROIs found but no username specified')
         print(f'found {len(unlabeled)} images and {len(labeled)} label directories')
         # now create ROI records in the database
-        for roi_name in unlabeled:
-            path = os.path.join(directory, roi_name + '.png')
+        for roi_filename in unlabeled:
+            path = os.path.join(directory, roi_filename)
             roi = ROI.objects.create_roi(path)
             if collection:
                 collection.rois.add(roi)
         for label_name, rois in labeled.items():
             label, created = Label.objects.get_or_create(name=label_name)
-            for roi_name in rois:
-                roi_path = os.path.join(directory, label_name, roi_name + '.png')
+            for roi_filename in rois:
+                roi_path = os.path.join(directory, label_name, roi_filename)
                 roi = ROI.objects.create_roi(roi_path)
                 if collection:
                     collection.rois.add(roi)

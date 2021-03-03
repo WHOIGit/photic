@@ -9,19 +9,25 @@ def index(request):
     labels = Label.objects.all()
 
     requested_label = request.GET.get('label')
+    requested_collection = request.GET.get('collection')
+
+    qs = ROI.objects
+
+    if requested_collection:
+        qs = qs.filter(collections__name=requested_collection)
 
     if requested_label:
         if requested_label == 'unlabeled':
-            rois = ROI.objects.unlabeled()
+            rois = qs.unlabeled()
         else:
             label = get_object_or_404(Label, name=requested_label)
-            rois = list(ROI.objects.with_label(label))
+            rois = qs.with_label(label)
     else:
-        rois = ROI.objects.all()
+        rois = qs.all()
 
     # TODO: Hook up annotator filter
 
-    is_filtered = requested_label or request.GET.get("annotator")
+    is_filtered = requested_label is not None
 
     return render(request, "web/index.html", {
         "annotation_users": annotation_users,

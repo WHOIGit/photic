@@ -18,15 +18,17 @@ class ROIQuerySet(models.QuerySet):
         label_id = label.id
         winner = Annotation.objects.get_queryset().\
             winner_window().order_by('roi_id', 'winner').values('roi_id', 'winner').distinct()
-        sql, params = winner.query.sql_with_params()
-        return self.raw("""
-           SELECT a.* FROM core_roi a, ({}) b
+        roi_sql, roi_params = self.query.sql_with_params()
+        winner_sql, winner_params = winner.query.sql_with_params()
+        params = roi_params + winner_params
+        return self.raw(f"""
+           SELECT a.* FROM ({roi_sql}) a, ({winner_sql}) b
            WHERE a.id = b.roi_id
            AND %s = (
                SELECT label_id
                FROM core_annotation c
                WHERE c.id = b.winner)
-        """.format(sql), [*params, label_id])
+        """, [*params, label_id])
 
     def unlabeled(self):
         # FIXME may be inefficient
@@ -38,9 +40,9 @@ class ROIManager(models.Manager):
         return ROIQuerySet(self.model, using=self._db)
 
     def create_roi(self, path):
-        if not path.endswith('.png'):
+        if not path.endswith('.png') and not path.endswith('.jpg'):
             raise NameError(f'{path} is not the path to a ROI image')
-        roi_id = os.path.basename(path)[:-4]  # we know it ends ".png"
+        roi_id = os.path.basename(path)[:-4]  # we know it ends with an image extension
         image = Image.open(path)
         width, height = image.size
         return self.create(roi_id=roi_id, width=width, height=height, path=path)

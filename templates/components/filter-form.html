@@ -9,7 +9,7 @@
         <label>Image Collection
         <select id="filter-collection">
             {% for collection in collections %}
-            <option value="{{ collection.name }}">{{ collection.name }}</option>
+            <option value="{{ collection.name }}" {% if collection.name == request.GET.collection  %} selected {% endif %}>{{ collection.name }}</option>
             {% endfor %}
         </select>
       </label>

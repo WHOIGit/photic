@@ -98,14 +98,23 @@ $(".bricks-container img").on('contextmenu', function(ev) {
 // $("#filter-annotator").change(function(ev){
 //     updateQuery({"annotator": $("#filter-annotator").val()});
 // });
-$("#filter-button").on('click', function(ev){
-    ev.preventDefault();
+function updateFilters() {
     let filters = {}
     filters["annotator"] = $("#filter-annotator").val();
     filters["label"] = $("#filter-label").val();
+    filters['collection'] = $('#filter-collection').val();
     updateQuery(filters);
+}
+
+$("#filter-button").on('click', function(ev){
+    ev.preventDefault();
+    updateFilters();
 })
 
+$('#filter-collection').select(function(ev) {
+    ev.preventDefault();
+    updateFilters();
+})
 
 function updateQuery(obj){
     var url = new URL(document.location);
