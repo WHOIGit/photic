@@ -60195,12 +60195,21 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('conte
 //     updateQuery({"annotator": $("#filter-annotator").val()});
 // });
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
-  ev.preventDefault();
+function updateFilters() {
   var filters = {};
   filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
   filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
+  filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
   updateQuery(filters);
+}
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
+  ev.preventDefault();
+  updateFilters();
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').select(function (ev) {
+  ev.preventDefault();
+  updateFilters();
 });
 
 function updateQuery(obj) {
@@ -60272,7 +60281,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/colin/development/kaimika/photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\jfutrelle\Documents\GitHub\photic\assets\src\js\app.js */"./src/js/app.js");
 
 
 /***/ })
