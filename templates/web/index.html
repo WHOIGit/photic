@@ -40,7 +40,7 @@
                             <div class="bricks-container">
                                 {% for roi in rois %}
                                     {% autoescape off %}
-                                    <img class="image-tile" data-tags='{{ roi.tags }}' src="{{ roi.path }}">
+                                    <img class="image-tile" data-roi-id='{{ roi.id }}' src="{{ roi.path }}">
                                     {% endautoescape %}
                                 {% endfor %}
                             </div>

@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from core.models import Annotation, Label, ImageCollection, ROI
 
@@ -36,4 +39,28 @@ def index(request):
         "collections": collections,
         "rois": rois,
         "roi_count": len(rois),
+    })
+
+
+@require_POST
+def roi_annotations(request):
+    roi_id = request.POST.get('roi_id')  # here roi_id is the pk of the ROI table
+    roi = get_object_or_404(ROI, id=roi_id)
+    annotations = roi.annotations.all()
+    annotation_records = [{
+        'label_id': a.label.id,
+        'label': a.label.name,
+        'annotator_id': a.user.id,
+        'annotator': a.user.username,
+        'time': a.timestamp,
+        'verifications': a.verifications,
+    } for a in annotations]
+    table_rows = [
+        [a.label.name, a.user.username, a.timestamp.isoformat(' ','minutes'), a.verifications]
+        for a in annotations
+    ]
+
+    return JsonResponse({
+        'annotations': annotation_records,
+        'rows': table_rows,
     })

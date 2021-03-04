@@ -85,9 +85,19 @@ $("body").on('click', function(ev) {
         hideTags();
     }
 });
+
+function getCsrfToken() {
+    return $('[name="csrfmiddlewaretoken"]').val();
+}
+
 $(".bricks-container img").on('contextmenu', function(ev) {
     ev.preventDefault();
-    showTags(ev);
+    $.post('api/roi_annotations', {
+        'roi_id': $(ev.target).data('roi-id'),
+        'csrfmiddlewaretoken': getCsrfToken(),
+    }, function(r) {
+        showAnnotations(ev, r.rows);
+    });
     return false;
 });
 
@@ -138,8 +148,31 @@ let $dt = $overlay.find("table").DataTable( {
         { title: "Label" },
         { title: "Annotator" },
         { title: "Time" },
+        { title: 'Verifications' },
     ]
 } );
+
+function showAnnotations(event, rows) {
+    let posX = event.pageX;
+    let posY = event.pageY;
+
+    let overlayWidth = $overlay.outerWidth();
+    //show the menu directly over the placeholder
+    $overlay.css({
+        position: "absolute",
+        top: posY + "px",
+        left: (posX -(overlayWidth/2)) + "px"
+    })
+    $overlay.show();
+    $dt.clear();
+    if(rows && rows.length>0){
+        //$dt.rows.add( annotations ).draw();
+        $dt.rows.add(rows).draw();
+    }
+
+    //console.log([['thing','joe','2012-03-04']]);
+    //console.log($(event.target).data('tags'));
+}
 
 function showTags(event){
     // let $targ = $(el);
