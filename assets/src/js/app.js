@@ -178,6 +178,23 @@ function showAnnotations(event, rows) {
 function hideTags(event) {
     $overlay.hide();
 }
+
+function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
+    $.post('api/create_or_verify_annotation', {
+        'roi': roi_id,
+        'label': label_name,
+        'annotator': annotator_name,
+        'csrfmiddlewaretoken': getCsrfToken(),
+    }, function(r) {
+        callback({
+            'roi_id': roi_id,
+            'label': label_name,
+            'annotator': annotator_name,
+            'created': r.created,
+        });
+    });
+}
+
 require('foundation-sites');
 
 // If you want to pick and choose which modules to include, comment out the above and uncomment

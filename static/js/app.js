@@ -60278,6 +60278,22 @@ function hideTags(event) {
   $overlay.hide();
 }
 
+function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_or_verify_annotation', {
+    'roi': roi_id,
+    'label': label_name,
+    'annotator': annotator_name,
+    'csrfmiddlewaretoken': getCsrfToken()
+  }, function (r) {
+    callback({
+      'roi_id': roi_id,
+      'label': label_name,
+      'annotator': annotator_name,
+      'created': r.created
+    });
+  });
+}
+
 __webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js"); // If you want to pick and choose which modules to include, comment out the above and uncomment
 // the line below
 //import './lib/foundation-explicit-pieces';

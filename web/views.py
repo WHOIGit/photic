@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from core.models import Annotation, Label, ImageCollection, ROI
+from core.models import Annotation, Label, ImageCollection, ROI, Annotator
+
 
 def index(request):
     annotation_users = User.objects.all()
@@ -73,5 +74,25 @@ def create_label(request):
 
     return JsonResponse({
         'label': label_name,
+        'created': created,
+    })
+
+
+@require_POST
+def create_or_verify_annotation(request):
+    roi_id = request.POST.get('roi')  # pk id
+    annotator_name = request.POST.get('annotator')
+    label_name = request.POST.get('label')
+
+    annotator = get_object_or_404(User, username=annotator_name)
+    label = get_object_or_404(Label, name=label_name)
+    try:
+        roi = get_object_or_404(ROI, id=int(roi_id))
+    except ValueError:
+        return HttpResponseBadRequest('roi ID must be an integer')
+
+    annotation, created = Annotation.objects.create_or_verify(roi, label, annotator)
+
+    return JsonResponse({
         'created': created,
     })
