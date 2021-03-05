@@ -60053,6 +60053,7 @@ window.$ = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 var dt = __webpack_require__(/*! datatables */ "./node_modules/datatables/media/js/jquery.dataTables.js");
 
+window.moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -60265,32 +60266,11 @@ function showAnnotations(event, rows) {
   $dt.clear();
 
   if (rows && rows.length > 0) {
-    //$dt.rows.add( annotations ).draw();
-    $dt.rows.add(rows).draw();
-  } //console.log([['thing','joe','2012-03-04']]);
-  //console.log($(event.target).data('tags'));
-
-}
-
-function showTags(event) {
-  // let $targ = $(el);
-  // let width = $targ.outerWidth();
-  // let height = $targ.outerHeight();
-  var dataSet = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).data("tags");
-  var posX = event.pageX;
-  var posY = event.pageY;
-  var overlayWidth = $overlay.outerWidth(); //show the menu directly over the placeholder
-
-  $overlay.css({
-    position: "absolute",
-    top: posY + "px",
-    left: posX - overlayWidth / 2 + "px"
-  });
-  $overlay.show();
-  $dt.clear();
-
-  if (dataSet && dataSet.length > 0) {
-    $dt.rows.add(dataSet).draw();
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.each(rows, function (i, row) {
+      row[2] = moment__WEBPACK_IMPORTED_MODULE_6___default()(row[2]).format('YYYY-MM-DD h:mma Z');
+      $dt.rows.add([row]);
+    });
+    $dt.draw();
   }
 }
 
