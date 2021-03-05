@@ -56,11 +56,22 @@ def roi_annotations(request):
         'verifications': a.verifications,
     } for a in annotations]
     table_rows = [
-        [a.label.name, a.user.username, a.timestamp.isoformat(' ','minutes'), a.verifications]
+        [a.label.name, a.user.username, a.timestamp.isoformat('T', 'minutes'), a.verifications]
         for a in annotations
     ]
 
     return JsonResponse({
         'annotations': annotation_records,
         'rows': table_rows,
+    })
+
+
+@require_POST
+def create_label(request):
+    label_name = request.POST.get('name')
+    label, created = Label.objects.get_or_create(name=label_name)
+
+    return JsonResponse({
+        'label': label_name,
+        'created': created,
     })

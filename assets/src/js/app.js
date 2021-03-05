@@ -15,6 +15,7 @@ window.jQuery = $;
 window.$ = $;
 
 var dt = require('datatables');
+window.moment = require('moment');
 
 $('#filter-before-date').datetimepicker({
     inline: false,
@@ -165,40 +166,16 @@ function showAnnotations(event, rows) {
     })
     $overlay.show();
     $dt.clear();
-    if(rows && rows.length>0){
-        //$dt.rows.add( annotations ).draw();
-        $dt.rows.add(rows).draw();
+    if(rows && rows.length>0) {
+        $.each(rows, function(i, row) {
+            row[2] = moment(row[2]).format('YYYY-MM-DD h:mma Z');
+            $dt.rows.add([row]);
+        });
+        $dt.draw();
     }
-
-    //console.log([['thing','joe','2012-03-04']]);
-    //console.log($(event.target).data('tags'));
 }
 
-function showTags(event){
-    // let $targ = $(el);
-    // let width = $targ.outerWidth();
-    // let height = $targ.outerHeight();
-    let dataSet = $(event.target).data("tags");
-
-    let posX = event.pageX;
-    let posY = event.pageY;
-
-
-    let overlayWidth = $overlay.outerWidth();
-    //show the menu directly over the placeholder
-    $overlay.css({
-        position: "absolute",
-        top: posY + "px",
-        left: (posX -(overlayWidth/2)) + "px"
-    })
-    $overlay.show();
-    $dt.clear();
-    if(dataSet && dataSet.length>0){
-        $dt.rows.add( dataSet ).draw();
-    }
-
-}
-function hideTags(event){
+function hideTags(event) {
     $overlay.hide();
 }
 require('foundation-sites');
