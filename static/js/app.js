@@ -60279,18 +60279,22 @@ function hideTags(event) {
 }
 
 function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_or_verify_annotation', {
-    'roi': roi_id,
-    'label': label_name,
-    'annotator': annotator_name,
-    'csrfmiddlewaretoken': getCsrfToken()
-  }, function (r) {
-    callback({
-      'roi_id': roi_id,
-      'label': label_name,
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    url: 'api/create_or_verify_annotations',
+    type: 'POST',
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    headers: {
+      'X-CSRFToken': getCsrfToken()
+    },
+    data: JSON.stringify({
       'annotator': annotator_name,
-      'created': r.created
-    });
+      'annotations': [{
+        'roi_id': roi_id,
+        'label': label_name
+      }]
+    }),
+    success: callback
   });
 }
 
