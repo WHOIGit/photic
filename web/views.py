@@ -1,10 +1,13 @@
+import json
+
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from core.models import Annotation, Label, ImageCollection, ROI
+from core.models import Annotation, Label, ImageCollection, ROI, Annotator
+
 
 def index(request):
     annotation_users = User.objects.all()
@@ -74,4 +77,51 @@ def create_label(request):
     return JsonResponse({
         'label': label_name,
         'created': created,
+    })
+
+
+@require_POST
+def create_or_verify_annotations(request):
+    body = json.loads(request.body.decode("utf-8"))
+
+    # FIXME should just use the logged-in user as the annotator
+    annotator_name = body['annotator']
+    annotator = get_object_or_404(User, username=annotator_name)
+
+    batch = body['annotations']
+
+    rois = {}  # roi objects by ID
+    labels = {}  # label objects by name
+
+    # cache all relevant objects
+
+    for annotation_record in batch:
+        roi_id = annotation_record['roi_id']
+        roi = rois.get(roi_id)
+        if roi is None:
+            roi = get_object_or_404(ROI, id=roi_id)
+            rois[roi_id] = roi
+        label_name = annotation_record['label']
+        label = labels.get(label_name)
+        if label is None:
+            labels[label_name] = get_object_or_404(Label, name=label_name)
+
+    # now create/verify the annotations
+
+    return_records = []
+
+    for annotation_record in batch:
+        roi = rois[annotation_record['roi_id']]
+        label = labels[annotation_record['label']]
+
+        annotation, created = Annotation.objects.create_or_verify(roi, label, annotator)
+
+        return_records.append({
+            'roi_id': roi.id,
+            'label_name': label.name,
+            'created': created
+        })
+
+    return JsonResponse({
+        'annotations': return_records
     })

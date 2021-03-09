@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction
 from django.db.models import F
 from django.db.models.expressions import Window, ValueRange
 from django.db.models.functions import LastValue, FirstValue
@@ -126,12 +126,13 @@ class AnnotationManager(models.Manager):
         return self.create(roi=roi, label=label, user=user, user_power=user.annotator.power)
 
     def create_or_verify(self, roi, label, user):
-        try:
-            annotation = self.get(roi=roi, label=label, user=user)
-            annotation.verify()
-            return annotation # does not save
-        except Annotation.DoesNotExistError:
-            return self.create_annotation(roi=roi, label=label, user=user)
+        with transaction.atomic():
+            try:
+                annotation = self.get(roi=roi, label=label, user=user)
+                annotation.verify().save()
+                return annotation, False
+            except Annotation.DoesNotExist:
+                return self.create_annotation(roi=roi, label=label, user=user), True
 
     def winner(self):
         return self.get_queryset().winner()
@@ -151,7 +152,7 @@ class Annotation(models.Model):
         self.verifications += 1
         self.timestamp = timezone.now()
         self.user_power = self.user.annotator.power # update user power
-        # does not save
+        return self
 
     def __str__(self):
         return f'{self.roi.roi_id} ({self.label.name}) by {self.user.username}'
