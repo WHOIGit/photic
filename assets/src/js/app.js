@@ -14,7 +14,15 @@ import moment from 'moment';
 window.jQuery = $;
 window.$ = $;
 
-var dt = require('datatables');
+require('datatables.net-zf');
+require('datatables.net-buttons-zf');
+require('datatables.net-buttons/js/buttons.colVis.js');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-colreorder-zf');
+require('datatables.net-fixedcolumns-zf');
+require('datatables.net-fixedheader-zf');
+require('datatables.net-rowgroup-zf');
+require('datatables.net-searchpanes-zf');
 window.moment = require('moment');
 
 $('#filter-before-date').datetimepicker({

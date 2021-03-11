@@ -20,13 +20,11 @@
           <li class="is-dropdown-submenu-parent">
             <a href="#">Admin</a>
             <ul class="menu">
-                <li><a href="#">User Management</a></li>
+                <li><a href="{% url 'manage:users' %}">User Management</a></li>
               </li>
             </ul>
           </li>
-
-                <li><a href="#">Login</a></li>
-
+          <li><a href="{% url 'manage:login' %}">Login</a></li>
         </ul>        
       </div>    
   </div>
