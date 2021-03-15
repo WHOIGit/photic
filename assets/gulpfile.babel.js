@@ -32,7 +32,7 @@ function loadConfig() {
 // Build the "dist" folder by running all of the below tasks
 // Sass must be run later so UnCSS can search for used classes in the others assets.
 gulp.task('build',
- gulp.series(clean, gulp.parallel(javascript, images, copy, icons,vendorCSS), sass));
+ gulp.series(clean, gulp.parallel(javascript, images, copy, icons, vendorCSS, django), sass));
 
 // Build the site, run the server, and watch for file changes
 gulp.task('default',
@@ -51,7 +51,7 @@ function icons() {
 
 function vendorCSS(){
     return gulp.src('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css')
-    .pipe(gulp.dest(PATHS.dist+'/vendorcss/'));
+    .pipe(gulp.dest(PATHS.dist+'/vendorCSS/'));
 }
 
 // Copy files out of the assets folder
@@ -150,10 +150,13 @@ function javascript() {
 // In production, the images are compressed
 function images() {
   return gulp.src('src/img/**/*')
-    .pipe($.if(PRODUCTION, $.imagemin([
-      $.imagemin.jpegtran({ progressive: true }),
-    ])))
     .pipe(gulp.dest(PATHS.dist + '/img'));
+}
+
+// Copy Django admin static files (from running collectstatic)
+function django() {
+  return gulp.src('django/admin/**/*')
+      .pipe(gulp.dest(PATHS.dist + '/admin'));
 }
 
 // Start a server with BrowserSync to preview the site in
