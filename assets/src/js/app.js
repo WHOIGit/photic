@@ -95,7 +95,6 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     ev.preventDefault();
     $.post('api/roi_annotations', {
         'roi_id': $(ev.target).data('roi-id'),
-        'csrfmiddlewaretoken': getCsrfToken(),
     }, function(r) {
         showAnnotations(ev, r.rows);
     });
