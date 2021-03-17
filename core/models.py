@@ -30,6 +30,22 @@ class ROIQuerySet(models.QuerySet):
                WHERE c.id = b.winner)
         """, [*params, label_id])
 
+    def winning_annotations(self):
+        """ returns the winning annotation for each ROI in the queryset """
+        all_annotations = Annotation.objects.get_queryset()
+        winner = all_annotations.\
+            winner_window().order_by('roi_id', 'winner').values('roi_id', 'winner').distinct()
+        winner_sql, winner_params = winner.query.sql_with_params()
+        roi_sql, roi_params = self.query.sql_with_params()
+        ann_sql, _ = all_annotations.query.sql_with_params()
+        return Annotation.objects.raw(f"""
+            SELECT a.* FROM ({ann_sql}) a, ({roi_sql}) b, ({winner_sql}) c
+            WHERE b.id = c.roi_id
+            AND a.roi_id = c.roi_id
+            AND a.id = c.winner
+            ORDER BY a.roi_id
+        """, roi_params + winner_params)
+
     def unlabeled(self):
         # FIXME may be inefficient
         return self.exclude(id__in=Annotation.objects.values_list('roi__id', flat=True))
@@ -111,11 +127,10 @@ class AnnotationQuerySet(models.QuerySet):
     def winner(self):
         winner = self.winner_window().order_by('winner').values('winner').distinct()
         sql, params = winner.query.sql_with_params()
-        return self.raw("""
-           SELECT a.* FROM core_annotation a, ({}) b
+        return self.raw(f"""
+           SELECT a.* FROM core_annotation a, ({sql}) b
            WHERE a.id = b.winner
-           ORDER BY roi_id
-        """.format(sql), params)
+        """, params)
 
 
 class AnnotationManager(models.Manager):
