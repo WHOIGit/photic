@@ -134,6 +134,31 @@ $('#filter-collection').select(function(ev) {
     updateFilters();
 })
 
+
+$("#add_label").on('click', function(ev){
+    ev.preventDefault();
+    let label_name = $("#add_label_text").val()
+    let re = /^[a-z0-9_ ]+$/i;
+    
+    if(!re.test(label_name)){
+        alert("label characters can only be alphanumeric, [underscore], or [space]");   
+    }
+    
+    $.post('api/create_label', {
+        'name': label_name,
+    },
+        function(r) {
+            console.log(r)
+            //add to select element here
+        }
+    )
+
+})
+
+function add_label_callback(evt){
+
+}
+
 function updateQuery(obj){
     var url = new URL(document.location);
     var search_params = url.searchParams;

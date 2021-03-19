@@ -71279,8 +71279,7 @@ function getCsrfToken() {
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
   ev.preventDefault();
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
-    'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id'),
-    'csrfmiddlewaretoken': getCsrfToken()
+    'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
   }, function (r) {
     showAnnotations(ev, r.rows);
   });
@@ -71308,6 +71307,23 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').select(funct
   ev.preventDefault();
   updateFilters();
 });
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label").on('click', function (ev) {
+  ev.preventDefault();
+  var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
+  var re = /^[a-z0-9_ ]+$/i;
+
+  if (!re.test(label_name)) {
+    alert("label characters can only be alphanumeric, [underscore], or [space]");
+  }
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
+    'name': label_name
+  }, function (r) {
+    console.log(r); //add to select element here
+  });
+});
+
+function add_label_callback(evt) {}
 
 function updateQuery(obj) {
   var url = new URL(document.location);
@@ -71366,13 +71382,10 @@ function hideTags(event) {
 
 function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    url: 'api/create_or_verify_annotations',
+    url: '/api/create_or_verify_annotations',
     type: 'POST',
     contentType: 'application/json; charset=utf-8',
     dataType: 'json',
-    headers: {
-      'X-CSRFToken': getCsrfToken()
-    },
     data: JSON.stringify({
       'annotator': annotator_name,
       'annotations': [{
@@ -71389,6 +71402,13 @@ __webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dis
 //import './lib/foundation-explicit-pieces';
 
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ajaxSend(function (event, jqXHR, ajaxOptions) {
+  var csrf = getCsrfToken();
+
+  if (csrf != null) {
+    jqXHR.setRequestHeader('X-CSRFToken', csrf);
+  }
+});
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),

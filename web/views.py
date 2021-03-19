@@ -72,7 +72,9 @@ def roi_annotations(request):
 @require_POST
 def create_label(request):
     label_name = request.POST.get('name')
+
     label, created = Label.objects.get_or_create(name=label_name)
+    
 
     return JsonResponse({
         'label': label_name,

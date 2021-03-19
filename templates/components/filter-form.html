@@ -59,32 +59,36 @@
         </li>
 
       </ul>    
-        </div> 
-        <div class="cell">
-            <ul class="accordion" data-accordion data-allow-all-closed="true">
-    
-            <li class="accordion-item" data-accordion-item>
-                <a href="#" class="accordion-title">Actions</a>
-                <div class="accordion-content" data-tab-content>           
-                    <fieldset class="fieldset">
-                        <legend>Assign Label</legend>
-                    <div class="input-group">
+    </div> 
+    <div class="cell">
+      <ul class="accordion" data-accordion data-allow-all-closed="true">
+        <li class="accordion-item is-active" data-accordion-item>
+          <a href="#" class="accordion-title">Actions</a>
+          <div class="accordion-content" data-tab-content>           
+            <fieldset class="fieldset">
+              <legend>Assign Label</legend>
+              <div class="">
                 <select class="input-group-field">
                     <option value=""></option>
                     {% for label in labels %}
                     <option value="{{label.name}}">{{label.name}}</option>
                     {% endfor %}
                 </select>
-                <div class="input-group-button">
-                    <input type="submit" class="button small primary expanded margin-0" value="Apply">
-                  </div>
-
+                <input type="submit" class="button small primary expanded margin-0" value="Apply">
+                
+              </div>
+            </fieldset>   
+            <fieldset class="fieldset">
+              <legend>Create New Label</legend>
+              <div class="">
+                <input type="text" class="margin-0" id="add_label_text" value="test_label" >
+                <input type="submit" class="button small primary expanded margin-0" id="add_label" value="Add Label">
+                
+              </div>
+            </fieldset>
           </div>
-          </fieldset>
-        </div>
         </li>
-        </ul>
+      </ul>
     </div>
-    
   </div>
 </form>
