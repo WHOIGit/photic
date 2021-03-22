@@ -95,8 +95,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/*! Selectionjs 2.0.0-beta.5 MIT | https://github.com/Simonwep/selection */
-const t=(t,e="px")=>"number"==typeof t?t+e:t;function e({style:e},s,i){if("object"==typeof s)for(const[i,o]of Object.entries(s))e[i]=t(o);else void 0!==i&&(e[s]=t(i))}function s(t){return(e,s,i,o={})=>{e instanceof HTMLCollection||e instanceof NodeList?e=Array.from(e):Array.isArray(e)||(e=[e]),Array.isArray(s)||(s=[s]);for(const n of e)for(const e of s)n[t](e,i,{capture:!1,...o});return[e,s,i,o]}}const i=s("addEventListener"),o=s("removeEventListener"),n=t=>{const e=t.touches&&t.touches[0]||t;return{tap:e,x:e.clientX,y:e.clientY,target:e.target}};function h(t){let e=t.path||t.composedPath&&t.composedPath();if(e)return e;let s=t.target.parentElement;for(e=[t.target,s];s=s.parentElement;)e.push(s);return e.push(document,window),e}function r(t,e,s="touch"){switch(s){case"center":{const s=e.left+e.width/2,i=e.top+e.height/2;return s>=t.left&&s<=t.right&&i>=t.top&&i<=t.bottom}case"cover":return e.left>=t.left&&e.top>=t.top&&e.right<=t.right&&e.bottom<=t.bottom;case"touch":return t.right>=e.left&&t.left<=e.right&&t.bottom>=e.top&&t.top<=e.bottom;default:throw new Error(`Unkown intersection mode: ${s}`)}}function c(t,e){const s=t.indexOf(e);~s&&t.splice(s,1)}function l(t,e=document){const s=Array.isArray(t)?t:[t],i=[];for(let t=0,o=s.length;t<o;t++){const o=s[t];"string"==typeof o?i.push(...Array.from(e.querySelectorAll(o))):o instanceof HTMLElement&&i.push(o)}return i}const{abs:a,max:d,min:u,ceil:p}=Math,m=t=>t.preventDefault();class SelectionArea extends class{constructor(){this.t=new Map,this.on=this.addEventListener,this.off=this.removeEventListener,this.emit=this.dispatchEvent}addEventListener(t,e){const s=this.t.get(t)||new Set;return this.t.set(t,s),s.add(e),this}removeEventListener(t,e){var s;return null===(s=this.t.get(t))||void 0===s||s.delete(e),this}dispatchEvent(t,...e){let s=!0;for(const i of this.t.get(t)||[])s=!1!==i(...e)&&s;return s}}{constructor(t){super(),this.i={touched:[],stored:[],selected:[],changed:{added:[],removed:[]}},this.o=[],this.h=new DOMRect,this.l={y1:0,x2:0,y2:0,x1:0},this.u=!0,this.p=!0,this.m={x:0,y:0},this.v={x:0,y:0},this.disable=this.g.bind(this,!1),this.enable=this.g,this._=Object.assign({class:"selection-area",document:window.document,intersect:"touch",startThreshold:10,singleClick:!0,allowTouch:!0,overlap:"invert",selectables:[],singleTap:{allow:!0,intersect:"native"},scrolling:{speedDivider:10,manualSpeed:750},startareas:["html"],boundaries:["html"],container:"body"},t);for(const t of Object.getOwnPropertyNames(Object.getPrototypeOf(this)))"function"==typeof this[t]&&(this[t]=this[t].bind(this));const{document:s}=this._;this.S=s.createElement("div"),this.T=s.createElement("div"),this.T.appendChild(this.S),this.S.classList.add(this._.class),e(this.S,{willChange:"top, left, bottom, right, width, height",top:0,left:0,position:"fixed"}),e(this.T,{overflow:"hidden",position:"fixed",transform:"translate3d(0, 0, 0)",pointerEvents:"none",zIndex:1}),this.enable()}g(t=!0){const{document:e,allowTouch:s}=this._,n=t?i:o;n(e,"mousedown",this.A),s&&n(e,"touchstart",this.A,{passive:!1})}A(t,e=!1){const{x:s,y:o,target:c}=n(t),{_:a}=this,{document:d}=this._,u=c.getBoundingClientRect(),p=l(a.startareas,a.document),f=l(a.boundaries,a.document);this.L=f.find((t=>r(t.getBoundingClientRect(),u)));const v=h(t);if(!this.L||!p.find((t=>v.includes(t)))||!f.find((t=>v.includes(t))))return;if(!e&&!1===this.k("beforestart",t))return;this.l={x1:s,y1:o,x2:0,y2:0};const g=d.scrollingElement||d.body;this.v={x:g.scrollLeft,y:g.scrollTop},this.u=!0,this.clearSelection(!1),i(d,"selectstart",m),i(d,["touchmove","mousemove"],this.M,{passive:!1}),i(d,["mouseup","touchcancel","touchend"],this.j),i(d,"scroll",this.O)}R(t){const{intersect:e}=this._.singleTap,s=n(t);let i=null;if("native"===e)i=s.target;else if("touch"===e){this.resolveSelectables();const{x:t,y:e}=s;i=this.o.find((s=>{const{right:i,left:o,top:n,bottom:h}=s.getBoundingClientRect();return t<i&&t>o&&e<h&&e>n}))}if(!i)return;for(this.resolveSelectables();!this.o.includes(i);){if(!i.parentElement)return;i=i.parentElement}const{stored:o}=this.i;if(this.k("start",t),t.shiftKey&&o.length){const t=o[o.length-1],[e,s]=4&t.compareDocumentPosition(i)?[i,t]:[t,i],n=[...this.o.filter((t=>4&t.compareDocumentPosition(e)&&2&t.compareDocumentPosition(s))),i];this.select(n)}else o.includes(i)?this.deselect(i):this.select(i);this.k("stop",t)}M(t){const{startThreshold:s,container:h,document:r}=this._,{x1:c,y1:d}=this.l,{x:u,y:p}=n(t),m=typeof s;("number"===m&&a(u+p-(c+d))>=s||"object"===m&&a(u-c)>=s.x||a(p-d)>=s.y)&&(o(r,["mousemove","touchmove"],this.M,{passive:!1}),i(r,["mousemove","touchmove"],this.$,{passive:!1}),e(this.S,"display","block"),l(h,r)[0].appendChild(this.T),this.resolveSelectables(),this.u=!1,this.C=this.L.getBoundingClientRect(),this.p=this.L.scrollHeight!==this.L.clientHeight||this.L.scrollWidth!==this.L.clientWidth,this.p&&(i(r,"wheel",this.D,{passive:!1}),this.o=this.o.filter((t=>this.L.contains(t)))),this.H(),this.k("start",t),this.$(t)),t.preventDefault()}H(){const{T:t,L:s,S:i}=this,o=this.C=s.getBoundingClientRect();this.p?(e(t,{top:o.top,left:o.left,width:o.width,height:o.height}),e(i,{marginTop:-o.top,marginLeft:-o.left})):(e(t,{top:0,left:0,width:"100%",height:"100%"}),e(i,{marginTop:0,marginLeft:0}))}$(t){const{x:e,y:s}=n(t),{m:i,l:o,_:h}=this,{speedDivider:r}=h.scrolling,c=this.L;if(o.x2=e,o.y2=s,this.p&&(i.y||i.x)){const e=()=>{if(!i.x&&!i.y)return;const{scrollTop:s,scrollLeft:n}=c;i.y&&(c.scrollTop+=p(i.y/r),o.y1-=c.scrollTop-s),i.x&&(c.scrollLeft+=p(i.x/r),o.x1-=c.scrollLeft-n),this.q(),this.F(),this.k("move",t),this.W(),requestAnimationFrame(e)};requestAnimationFrame(e)}else this.q(),this.F(),this.k("move",t),this.W();t.preventDefault()}O(){const{v:t,_:{document:e}}=this,{scrollTop:s,scrollLeft:i}=e.scrollingElement||e.body;this.l.x1+=t.x-i,this.l.y1+=t.y-s,t.x=i,t.y=s,this.H(),this.q(),this.F(),this.k("move",null),this.W()}D(t){const{manualSpeed:e}=this._.scrolling,s=t.deltaY?t.deltaY>0?1:-1:0,i=t.deltaX?t.deltaX>0?1:-1:0;this.m.y+=s*e,this.m.x+=i*e,this.$(t),t.preventDefault()}q(){const{m:t,l:e,h:s,L:i,C:o}=this,{scrollTop:n,scrollHeight:h,clientHeight:r,scrollLeft:c,scrollWidth:l,clientWidth:p}=i,m=o;let{x1:f,y1:v,x2:g,y2:y}=e;g<m.left?(t.x=c?-a(m.left-g):0,g=m.left):g>m.right?(t.x=l-c-p?a(m.left+m.width-g):0,g=m.right):t.x=0,y<m.top?(t.y=n?-a(m.top-y):0,y=m.top):y>m.bottom?(t.y=h-n-r?a(m.top+m.height-y):0,y=m.bottom):t.y=0;const _=u(f,g),x=u(v,y),w=d(f,g),S=d(v,y);s.x=_,s.y=x,s.width=w-_,s.height=S-x}W(){const{x:t,y:e,width:s,height:i}=this.h,{style:o}=this.S;o.left=`${t}px`,o.top=`${e}px`,o.width=`${s}px`,o.height=`${i}px`}j(t,s){const{document:i,singleTap:n}=this._,{u:h}=this;o(i,["mousemove","touchmove"],this.M),o(i,["touchmove","mousemove"],this.$),o(i,["mouseup","touchcancel","touchend"],this.j),o(i,"scroll",this.O),t&&h&&n.allow?this.R(t):h||s||(this.F(),this.k("stop",t)),this.m={x:0,y:0},this.p&&o(i,"wheel",this.D,{passive:!0}),this.T.remove(),o(i,"selectstart",m),e(this.S,"display","none")}F(){const{o:t,_:e,i:s,h:i}=this,{stored:o,selected:n,touched:h}=s,{intersect:c,overlap:l}=e,a=[],d=[],u=[];for(let e=0;e<t.length;e++){const s=t[e];if(r(i,s.getBoundingClientRect(),c)){if(n.includes(s))o.includes(s)&&!h.includes(s)&&h.push(s);else{if("invert"===l&&o.includes(s)){u.push(s);continue}d.push(s)}a.push(s)}}"invert"===l&&d.push(...o.filter((t=>!n.includes(t))));for(let t=0;t<n.length;t++){const e=n[t];a.includes(e)||"keep"===l&&o.includes(e)||u.push(e)}s.selected=a,s.changed={added:d,removed:u}}k(t,e){return this.emit(t,{event:e,store:this.i})}trigger(t,e=!0){this.A(t,e)}resolveSelectables(){this.o=l(this._.selectables,this._.document)}keepSelection(){const{_:t,i:e}=this,{selected:s,changed:i,touched:o,stored:n}=e,h=s.filter((t=>!n.includes(t)));switch(t.overlap){case"drop":e.stored=h.concat(n.filter((t=>!o.includes(t))));break;case"invert":e.stored=h.concat(n.filter((t=>!i.removed.includes(t))));break;case"keep":e.stored=n.concat(s.filter((t=>!n.includes(t))))}}clearSelection(t=!0){this.i={stored:t?[]:this.i.stored,selected:[],touched:[],changed:{added:[],removed:[]}}}getSelection(){return this.i.stored}getSelectionArea(){return this.S}cancel(t=!1){this.j(null,!t)}destroy(){this.disable(),this.T.remove()}select(t,e=!1){const{changed:s,selected:i,stored:o}=this.i,n=l(t,this._.document).filter((t=>!i.includes(t)&&!o.includes(t)));return i.push(...n),s.added.push(...n),!e&&this.k("move",null),n}deselect(t,e=!1){const{selected:s,stored:i,changed:o}=this.i;return!(!s.includes(t)&&!i.includes(t))&&(o.removed.push(t),c(i,t),c(s,t),!e&&this.k("move",null),!0)}}SelectionArea.version="2.0.0-beta.5";/* harmony default export */ __webpack_exports__["default"] = (SelectionArea);
+/*! Selectionjs 2.0.2 MIT | https://github.com/Simonwep/selection */
+const t=(t,e="px")=>"number"==typeof t?t+e:t;function e({style:e},s,i){if("object"==typeof s)for(const[i,o]of Object.entries(s))e[i]=t(o);else void 0!==i&&(e[s]=t(i))}function s(t){return(e,s,i,o={})=>{e instanceof HTMLCollection||e instanceof NodeList?e=Array.from(e):Array.isArray(e)||(e=[e]),Array.isArray(s)||(s=[s]);for(const n of e)for(const e of s)n[t](e,i,{capture:!1,...o});return[e,s,i,o]}}const i=s("addEventListener"),o=s("removeEventListener"),n=t=>{const e=t.touches&&t.touches[0]||t;return{tap:e,x:e.clientX,y:e.clientY,target:e.target}};function h(t){let e=t.path||t.composedPath&&t.composedPath();if(e)return e;let s=t.target.parentElement;for(e=[t.target,s];s=s.parentElement;)e.push(s);return e.push(document,window),e}function r(t,e,s="touch"){switch(s){case"center":{const s=e.left+e.width/2,i=e.top+e.height/2;return s>=t.left&&s<=t.right&&i>=t.top&&i<=t.bottom}case"cover":return e.left>=t.left&&e.top>=t.top&&e.right<=t.right&&e.bottom<=t.bottom;case"touch":return t.right>=e.left&&t.left<=e.right&&t.bottom>=e.top&&t.top<=e.bottom;default:throw new Error(`Unkown intersection mode: ${s}`)}}function c(t,e){const s=t.indexOf(e);~s&&t.splice(s,1)}function l(t,e=document){const s=Array.isArray(t)?t:[t],i=[];for(let t=0,o=s.length;t<o;t++){const o=s[t];"string"==typeof o?i.push(...Array.from(e.querySelectorAll(o))):o instanceof HTMLElement&&i.push(o)}return i}const{abs:a,max:d,min:u,ceil:p}=Math;class SelectionArea extends class{constructor(){this.t=new Map,this.on=this.addEventListener,this.off=this.removeEventListener,this.emit=this.dispatchEvent}addEventListener(t,e){const s=this.t.get(t)||new Set;return this.t.set(t,s),s.add(e),this}removeEventListener(t,e){var s;return null===(s=this.t.get(t))||void 0===s||s.delete(e),this}dispatchEvent(t,...e){let s=!0;for(const i of this.t.get(t)||[])s=!1!==i(...e)&&s;return s}}{constructor(t){super(),this.i={touched:[],stored:[],selected:[],changed:{added:[],removed:[]}},this.o=[],this.h=new DOMRect,this.l={y1:0,x2:0,y2:0,x1:0},this.u=!0,this.p=!0,this.m={x:0,y:0},this.v={x:0,y:0},this.disable=this.g.bind(this,!1),this.enable=this.g,this._=Object.assign({class:"selection-area",document:window.document,intersect:"touch",startThreshold:10,singleClick:!0,allowTouch:!0,overlap:"invert",selectables:[],singleTap:{allow:!0,intersect:"native"},scrolling:{speedDivider:10,manualSpeed:750},startareas:["html"],boundaries:["html"],container:"body"},t);for(const t of Object.getOwnPropertyNames(Object.getPrototypeOf(this)))"function"==typeof this[t]&&(this[t]=this[t].bind(this));const{document:s}=this._;this.S=s.createElement("div"),this.T=s.createElement("div"),this.T.appendChild(this.S),this.S.classList.add(this._.class),e(this.S,{willChange:"top, left, bottom, right, width, height",top:0,left:0,position:"fixed"}),e(this.T,{overflow:"hidden",position:"fixed",transform:"translate3d(0, 0, 0)",pointerEvents:"none",zIndex:1}),this.enable()}g(t=!0){const{document:e,allowTouch:s}=this._,n=t?i:o;n(e,"mousedown",this.A),s&&n(e,"touchstart",this.A,{passive:!1})}A(t,e=!1){const{x:s,y:o,target:c}=n(t),{_:a}=this,{document:d}=this._,u=c.getBoundingClientRect(),p=l(a.startareas,a.document),m=l(a.boundaries,a.document);this.L=m.find((t=>r(t.getBoundingClientRect(),u)));const f=h(t);if(!this.L||!p.find((t=>f.includes(t)))||!m.find((t=>f.includes(t))))return;if(!e&&!1===this.k("beforestart",t))return;this.l={x1:s,y1:o,x2:0,y2:0};const v=d.scrollingElement||d.body;this.v={x:v.scrollLeft,y:v.scrollTop},this.u=!0,this.clearSelection(!1),i(d,["touchmove","mousemove"],this.M,{passive:!1}),i(d,["mouseup","touchcancel","touchend"],this.j),i(d,"scroll",this.O)}R(t){const{intersect:e}=this._.singleTap,s=n(t);let i=null;if("native"===e)i=s.target;else if("touch"===e){this.resolveSelectables();const{x:t,y:e}=s;i=this.o.find((s=>{const{right:i,left:o,top:n,bottom:h}=s.getBoundingClientRect();return t<i&&t>o&&e<h&&e>n}))}if(!i)return;for(this.resolveSelectables();!this.o.includes(i);){if(!i.parentElement)return;i=i.parentElement}const{stored:o}=this.i;if(this.k("start",t),t.shiftKey&&o.length){const t=o[o.length-1],[e,s]=4&t.compareDocumentPosition(i)?[i,t]:[t,i],n=[...this.o.filter((t=>4&t.compareDocumentPosition(e)&&2&t.compareDocumentPosition(s))),i];this.select(n)}else o.includes(i)?this.deselect(i):this.select(i);this.k("stop",t)}M(t){const{startThreshold:s,container:h,document:r}=this._,{x1:c,y1:d}=this.l,{x:u,y:p}=n(t),m=typeof s;("number"===m&&a(u+p-(c+d))>=s||"object"===m&&a(u-c)>=s.x||a(p-d)>=s.y)&&(o(r,["mousemove","touchmove"],this.M,{passive:!1}),i(r,["mousemove","touchmove"],this.$,{passive:!1}),e(this.S,"display","block"),l(h,r)[0].appendChild(this.T),this.resolveSelectables(),this.u=!1,this.C=this.L.getBoundingClientRect(),this.p=this.L.scrollHeight!==this.L.clientHeight||this.L.scrollWidth!==this.L.clientWidth,this.p&&(i(r,"wheel",this.D,{passive:!1}),this.o=this.o.filter((t=>this.L.contains(t)))),this.H(),this.k("start",t),this.$(t)),t.preventDefault()}H(){const{T:t,L:s,S:i}=this,o=this.C=s.getBoundingClientRect();this.p?(e(t,{top:o.top,left:o.left,width:o.width,height:o.height}),e(i,{marginTop:-o.top,marginLeft:-o.left})):(e(t,{top:0,left:0,width:"100%",height:"100%"}),e(i,{marginTop:0,marginLeft:0}))}$(t){const{x:e,y:s}=n(t),{m:i,l:o,_:h}=this,{speedDivider:r}=h.scrolling,c=this.L;if(o.x2=e,o.y2=s,this.p&&(i.y||i.x)){const e=()=>{if(!i.x&&!i.y)return;const{scrollTop:s,scrollLeft:n}=c;i.y&&(c.scrollTop+=p(i.y/r),o.y1-=c.scrollTop-s),i.x&&(c.scrollLeft+=p(i.x/r),o.x1-=c.scrollLeft-n),this.q(),this.F(),this.k("move",t),this.W(),requestAnimationFrame(e)};requestAnimationFrame(e)}else this.q(),this.F(),this.k("move",t),this.W();t.preventDefault()}O(){const{v:t,_:{document:e}}=this,{scrollTop:s,scrollLeft:i}=e.scrollingElement||e.body;this.l.x1+=t.x-i,this.l.y1+=t.y-s,t.x=i,t.y=s,this.H(),this.q(),this.F(),this.k("move",null),this.W()}D(t){const{manualSpeed:e}=this._.scrolling,s=t.deltaY?t.deltaY>0?1:-1:0,i=t.deltaX?t.deltaX>0?1:-1:0;this.m.y+=s*e,this.m.x+=i*e,this.$(t),t.preventDefault()}q(){const{m:t,l:e,h:s,L:i,C:o}=this,{scrollTop:n,scrollHeight:h,clientHeight:r,scrollLeft:c,scrollWidth:l,clientWidth:p}=i,m=o;let{x1:f,y1:v,x2:g,y2:_}=e;g<m.left?(t.x=c?-a(m.left-g):0,g=m.left):g>m.right?(t.x=l-c-p?a(m.left+m.width-g):0,g=m.right):t.x=0,_<m.top?(t.y=n?-a(m.top-_):0,_=m.top):_>m.bottom?(t.y=h-n-r?a(m.top+m.height-_):0,_=m.bottom):t.y=0;const y=u(f,g),x=u(v,_),w=d(f,g),S=d(v,_);s.x=y,s.y=x,s.width=w-y,s.height=S-x}W(){const{x:t,y:e,width:s,height:i}=this.h,{style:o}=this.S;o.left=`${t}px`,o.top=`${e}px`,o.width=`${s}px`,o.height=`${i}px`}j(t,s){const{document:i,singleTap:n}=this._,{u:h}=this;o(i,["mousemove","touchmove"],this.M),o(i,["touchmove","mousemove"],this.$),o(i,["mouseup","touchcancel","touchend"],this.j),o(i,"scroll",this.O),t&&h&&n.allow?this.R(t):h||s||(this.F(),this.k("stop",t)),this.m.x=0,this.m.y=0,this.p&&o(i,"wheel",this.D,{passive:!0}),this.T.remove(),e(this.S,"display","none")}F(){const{o:t,_:e,i:s,h:i}=this,{stored:o,selected:n,touched:h}=s,{intersect:c,overlap:l}=e,a=[],d=[],u=[];for(let e=0;e<t.length;e++){const s=t[e];if(r(i,s.getBoundingClientRect(),c)){if(n.includes(s))o.includes(s)&&!h.includes(s)&&h.push(s);else{if("invert"===l&&o.includes(s)){u.push(s);continue}d.push(s)}a.push(s)}}"invert"===l&&d.push(...o.filter((t=>!n.includes(t))));for(let t=0;t<n.length;t++){const e=n[t];a.includes(e)||"keep"===l&&o.includes(e)||u.push(e)}s.selected=a,s.changed={added:d,removed:u}}k(t,e){return this.emit(t,{event:e,store:this.i})}trigger(t,e=!0){this.A(t,e)}resolveSelectables(){this.o=l(this._.selectables,this._.document)}keepSelection(){const{_:t,i:e}=this,{selected:s,changed:i,touched:o,stored:n}=e,h=s.filter((t=>!n.includes(t)));switch(t.overlap){case"drop":e.stored=h.concat(n.filter((t=>!o.includes(t))));break;case"invert":e.stored=h.concat(n.filter((t=>!i.removed.includes(t))));break;case"keep":e.stored=n.concat(s.filter((t=>!n.includes(t))))}}clearSelection(t=!0){this.i={stored:t?[]:this.i.stored,selected:[],touched:[],changed:{added:[],removed:[]}}}getSelection(){return this.i.stored}getSelectionArea(){return this.S}cancel(t=!1){this.j(null,!t)}destroy(){this.disable(),this.T.remove()}select(t,e=!1){const{changed:s,selected:i,stored:o}=this.i,n=l(t,this._.document).filter((t=>!i.includes(t)&&!o.includes(t)));return i.push(...n),s.added.push(...n),!e&&this.k("move",null),n}deselect(t,e=!1){const{selected:s,stored:i,changed:o}=this.i;return!(!s.includes(t)&&!i.includes(t))&&(o.removed.push(t),c(i,t),c(s,t),!e&&this.k("move",null),!0)}}SelectionArea.version="2.0.2";/* harmony default export */ __webpack_exports__["default"] = (SelectionArea);
 //# sourceMappingURL=selection.min.mjs.map
 
 
@@ -109,206 +109,160 @@ const t=(t,e="px")=>"number"==typeof t?t+e:t;function e({style:e},s,i){if("objec
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 !function (t, e) {
-  "object" == ( false ? undefined : _typeof(exports)) && "undefined" != typeof module ? module.exports = e() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (e),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : undefined;
+   true ? module.exports = e() : undefined;
 }(this, function () {
   "use strict";
 
-  function t(e) {
-    return (t = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
-      return _typeof(t);
-    } : function (t) {
-      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : _typeof(t);
-    })(e);
-  }
+  const t = (t, e, i, s) => (t = "" + t, e = "" + e, s && (t = t.trim(), e = e.trim()), i ? t == e : t.toLowerCase() == e.toLowerCase());
 
-  function e(t, e, i) {
-    return e in t ? Object.defineProperty(t, e, {
-      value: i,
-      enumerable: !0,
-      configurable: !0,
-      writable: !0
-    }) : t[e] = i, t;
-  }
-
-  function i(t) {
-    return function (t) {
-      if (Array.isArray(t)) {
-        for (var e = 0, i = new Array(t.length); e < t.length; e++) {
-          i[e] = t[e];
-        }
-
-        return i;
-      }
-    }(t) || function (t) {
-      if (Symbol.iterator in Object(t) || "[object Arguments]" === Object.prototype.toString.call(t)) return Array.from(t);
-    }(t) || function () {
-      throw new TypeError("Invalid attempt to spread non-iterable instance");
-    }();
-  }
-
-  var s = function s(t, e, i, _s) {
-    return t = "" + t, e = "" + e, _s && (t = t.trim(), e = e.trim()), i ? t == e : t.toLowerCase() == e.toLowerCase();
-  };
-
-  function a(t) {
+  function e(t) {
     var e = document.createElement("div");
     return t.replace(/\&#?[0-9a-z]+;/gi, function (t) {
       return e.innerHTML = t, e.innerText;
     });
   }
 
-  function n(t, e) {
-    for (e = e || "previous"; t = t[e + "Sibling"];) {
-      if (3 == t.nodeType) return t;
-    }
+  function i(t, e) {
+    for (e = e || "previous"; t = t[e + "Sibling"];) if (3 == t.nodeType) return t;
   }
 
-  function o(t) {
+  function s(t) {
     return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/`|'/g, "&#039;");
   }
 
-  function r(t) {
+  function a(t) {
     return t instanceof Array;
   }
 
-  function l(t) {
+  function n(t) {
     var e = Object.prototype.toString.call(t).split(" ")[1].slice(0, -1);
     return t === Object(t) && "Array" != e && "Function" != e && "RegExp" != e && "HTMLUnknownElement" != e;
   }
 
-  function d(t, e, i) {
+  function o(t, e, i) {
     function s(t, e) {
-      for (var i in e) {
-        if (e.hasOwnProperty(i)) {
-          if (l(e[i])) {
-            l(t[i]) ? s(t[i], e[i]) : t[i] = Object.assign({}, e[i]);
-            continue;
-          }
-
-          if (r(e[i])) {
-            t[i] = Object.assign([], e[i]);
-            continue;
-          }
-
-          t[i] = e[i];
+      for (var i in e) if (e.hasOwnProperty(i)) {
+        if (n(e[i])) {
+          n(t[i]) ? s(t[i], e[i]) : t[i] = Object.assign({}, e[i]);
+          continue;
         }
+
+        if (a(e[i])) {
+          t[i] = Object.assign([], e[i]);
+          continue;
+        }
+
+        t[i] = e[i];
       }
     }
 
     return t instanceof Object || (t = {}), s(t, e), i && s(t, i), t;
   }
 
-  function c(t) {
+  function r(t) {
     return String.prototype.normalize ? "string" == typeof t ? t.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : void 0 : t;
   }
 
-  var h = /(?=.*chrome)(?=.*android)/i.test(navigator.userAgent),
-      g = {
-    init: function init() {
-      this.DOM.dropdown = this.parseTemplate("dropdown", [this.settings]), this.DOM.dropdown.content = this.DOM.dropdown.querySelector("." + this.settings.classNames.dropdownWrapper);
+  var l = () => /(?=.*chrome)(?=.*android)/i.test(navigator.userAgent),
+      d = {
+    init() {
+      this.DOM.dropdown = this.parseTemplate("dropdown", [this.settings]), this.DOM.dropdown.content = this.DOM.dropdown.querySelector(this.settings.classNames.dropdownWrapperSelector);
     },
-    show: function show(t) {
-      var e,
-          i,
+
+    show(e) {
+      var i,
+          s,
           a,
-          n = this,
           o = this.settings,
           r = window.getSelection(),
-          d = "mix" == o.mode && !o.enforceWhitelist,
-          c = !o.whitelist || !o.whitelist.length,
+          l = "mix" == o.mode && !o.enforceWhitelist,
+          d = !o.whitelist || !o.whitelist.length,
           h = "manual" == o.dropdown.position;
 
-      if (t = void 0 === t ? this.state.inputText : t, (!c || d || o.templates.dropdownItemNoMatch) && !1 !== o.dropdown.enable && !this.state.isLoading) {
-        if (clearTimeout(this.dropdownHide__bindEventsTimeout), this.suggestedListItems = this.dropdown.filterListItems.call(this, t), t && !this.suggestedListItems.length && (this.trigger("dropdown:noMatch", t), o.templates.dropdownItemNoMatch && (a = o.templates.dropdownItemNoMatch.call(this, {
-          value: t
+      if (e = void 0 === e ? this.state.inputText : e, (!d || l || o.templates.dropdownItemNoMatch) && !1 !== o.dropdown.enable && !this.state.isLoading) {
+        if (clearTimeout(this.dropdownHide__bindEventsTimeout), this.suggestedListItems = this.dropdown.filterListItems.call(this, e), e && !this.suggestedListItems.length && (this.trigger("dropdown:noMatch", e), o.templates.dropdownItemNoMatch && (a = o.templates.dropdownItemNoMatch.call(this, {
+          value: e
         }))), !a) {
-          if (this.suggestedListItems.length) t && d && !this.state.editing.scope && !s(this.suggestedListItems[0].value, t) && this.suggestedListItems.unshift({
-            value: t
+          if (this.suggestedListItems.length) e && l && !this.state.editing.scope && !t(this.suggestedListItems[0].value, e) && this.suggestedListItems.unshift({
+            value: e
           });else {
-            if (!t || !d || this.state.editing.scope) return this.input.autocomplete.suggest.call(this), void this.dropdown.hide.call(this);
+            if (!e || !l || this.state.editing.scope) return this.input.autocomplete.suggest.call(this), void this.dropdown.hide.call(this);
             this.suggestedListItems = [{
-              value: t
+              value: e
             }];
           }
-          i = "" + (l(e = this.suggestedListItems[0]) ? e.value : e), o.autoComplete && i && 0 == i.indexOf(t) && this.input.autocomplete.suggest.call(this, e);
+          s = "" + (n(i = this.suggestedListItems[0]) ? i.value : i), o.autoComplete && s && 0 == s.indexOf(e) && this.input.autocomplete.suggest.call(this, i);
         }
 
-        this.dropdown.fill.call(this, a), o.dropdown.highlightFirst && this.dropdown.highlightOption.call(this, this.DOM.dropdown.content.children[0]), this.state.dropdown.visible || setTimeout(this.dropdown.events.binding.bind(this)), this.state.dropdown.visible = t || !0, this.state.dropdown.query = t, this.state.selection = {
+        this.dropdown.fill.call(this, a), o.dropdown.highlightFirst && this.dropdown.highlightOption.call(this, this.DOM.dropdown.content.children[0]), this.state.dropdown.visible || setTimeout(this.dropdown.events.binding.bind(this)), this.state.dropdown.visible = e || !0, this.state.dropdown.query = e, this.state.selection = {
           anchorOffset: r.anchorOffset,
           anchorNode: r.anchorNode
-        }, h || setTimeout(function () {
-          n.dropdown.position.call(n), n.dropdown.render.call(n);
-        }), setTimeout(function () {
-          n.trigger("dropdown:show", n.DOM.dropdown);
+        }, h || setTimeout(() => {
+          this.dropdown.position.call(this), this.dropdown.render.call(this);
+        }), setTimeout(() => {
+          this.trigger("dropdown:show", this.DOM.dropdown);
         });
       }
     },
-    hide: function hide(t) {
-      var e = this,
-          i = this.DOM,
-          s = i.scope,
-          a = i.dropdown,
-          n = "manual" == this.settings.dropdown.position && !t;
-      if (a && document.body.contains(a) && !n) return window.removeEventListener("resize", this.dropdown.position), this.dropdown.events.binding.call(this, !1), s.setAttribute("aria-expanded", !1), a.parentNode.removeChild(a), setTimeout(function () {
-        e.state.dropdown.visible = !1;
-      }, 100), this.state.dropdown.query = this.state.ddItemData = this.state.ddItemElm = this.state.selection = null, this.state.tag && this.state.tag.value.length && (this.state.flaggedTags[this.state.tag.baseOffset] = this.state.tag), this.trigger("dropdown:hide", a), this;
+
+    hide(t) {
+      var e = this.DOM,
+          i = e.scope,
+          s = e.dropdown,
+          a = "manual" == this.settings.dropdown.position && !t;
+      if (s && document.body.contains(s) && !a) return window.removeEventListener("resize", this.dropdown.position), this.dropdown.events.binding.call(this, !1), i.setAttribute("aria-expanded", !1), s.parentNode.removeChild(s), setTimeout(() => {
+        this.state.dropdown.visible = !1;
+      }, 100), this.state.dropdown.query = this.state.ddItemData = this.state.ddItemElm = this.state.selection = null, this.state.tag && this.state.tag.value.length && (this.state.flaggedTags[this.state.tag.baseOffset] = this.state.tag), this.trigger("dropdown:hide", s), this;
     },
-    render: function render() {
+
+    render() {
       var t,
           e,
           i,
-          s = this,
-          a = (t = this.DOM.dropdown, (i = t.cloneNode(!0)).style.cssText = "position:fixed; top:-9999px; opacity:0", document.body.appendChild(i), e = i.clientHeight, i.parentNode.removeChild(i), e),
-          n = this.settings;
-      return this.DOM.scope.setAttribute("aria-expanded", !0), document.body.contains(this.DOM.dropdown) || (this.DOM.dropdown.classList.add(n.classNames.dropdownInital), this.dropdown.position.call(this, a), n.dropdown.appendTarget.appendChild(this.DOM.dropdown), setTimeout(function () {
-        return s.DOM.dropdown.classList.remove(n.classNames.dropdownInital);
-      })), this;
+          s = (t = this.DOM.dropdown, (i = t.cloneNode(!0)).style.cssText = "position:fixed; top:-9999px; opacity:0", document.body.appendChild(i), e = i.clientHeight, i.parentNode.removeChild(i), e),
+          a = this.settings;
+      return this.DOM.scope.setAttribute("aria-expanded", !0), document.body.contains(this.DOM.dropdown) || (this.DOM.dropdown.classList.add(a.classNames.dropdownInital), this.dropdown.position.call(this, s), a.dropdown.appendTarget.appendChild(this.DOM.dropdown), setTimeout(() => this.DOM.dropdown.classList.remove(a.classNames.dropdownInital))), this;
     },
-    fill: function fill(t) {
+
+    fill(t) {
       var e;
-      t = "string" == typeof t ? t : this.dropdown.createListHTML.call(this, t || this.suggestedListItems), this.DOM.dropdown.content.innerHTML = (e = t) ? e.replace(/\>[\r\n ]+\</g, "><").replace(/(<.*?>)|\s+/g, function (t, e) {
-        return e || " ";
-      }) : "";
+      t = "string" == typeof t ? t : this.dropdown.createListHTML.call(this, t || this.suggestedListItems), this.DOM.dropdown.content.innerHTML = (e = t) ? e.replace(/\>[\r\n ]+\</g, "><").replace(/(<.*?>)|\s+/g, (t, e) => e || " ") : "";
     },
-    refilter: function refilter(t) {
-      t = t || this.state.dropdown.query || "", this.suggestedListItems = this.dropdown.filterListItems.call(this, t), this.suggestedListItems.length ? this.dropdown.fill.call(this) : this.dropdown.hide.call(this), this.trigger("dropdown:updated", this.DOM.dropdown);
+
+    refilter(t) {
+      t = t || this.state.dropdown.query || "", this.suggestedListItems = this.dropdown.filterListItems.call(this, t), this.dropdown.fill.call(this), this.suggestedListItems.length || this.dropdown.hide.call(this), this.trigger("dropdown:updated", this.DOM.dropdown);
     },
-    position: function position(t) {
-      if ("manual" != this.settings.dropdown.position) {
-        var e,
-            i,
+
+    position(t) {
+      var e = this.settings.dropdown;
+
+      if ("manual" != e.position) {
+        var i,
             s,
             a,
             n,
             o,
             r,
             l = this.DOM.dropdown,
-            d = document.documentElement.clientHeight,
-            c = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) > 480 ? this.settings.dropdown.position : "all",
-            h = this.DOM["input" == c ? "input" : "scope"];
-        t = t || l.clientHeight, this.state.dropdown.visible && ("text" == c ? (a = (i = this.getCaretGlobalPosition()).bottom, s = i.top, n = i.left, o = "auto") : (r = function (t) {
-          for (var e = 0, i = 0; t;) {
-            e += t.offsetLeft || 0, i += t.offsetTop || 0, t = t.parentNode;
-          }
+            d = e.placeAbove,
+            h = document.documentElement.clientHeight,
+            g = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) > 480 ? e.position : "all",
+            c = this.DOM["input" == g ? "input" : "scope"];
+        t = t || l.clientHeight, this.state.dropdown.visible && ("text" == g ? (a = (i = this.getCaretGlobalPosition()).bottom, s = i.top, n = i.left, o = "auto") : (r = function (t) {
+          for (var e = 0, i = 0; t;) e += t.offsetLeft || 0, i += t.offsetTop || 0, t = t.parentNode;
 
           return {
             left: e,
             top: i
           };
-        }(this.settings.dropdown.appendTarget), s = (i = h.getBoundingClientRect()).top + 2 - r.top, a = i.bottom - 1 - r.top, n = i.left - r.left, o = i.width + "px"), s = Math.floor(s), a = Math.ceil(a), e = d - i.bottom < t, l.style.cssText = "left:" + (n + window.pageXOffset) + "px; width:" + o + ";" + (e ? "top: " + (s + window.pageYOffset) + "px" : "top: " + (a + window.pageYOffset) + "px"), l.setAttribute("placement", e ? "top" : "bottom"), l.setAttribute("position", c));
+        }(this.settings.dropdown.appendTarget), s = (i = c.getBoundingClientRect()).top - r.top, a = i.bottom - 1 - r.top, n = i.left - r.left, o = i.width + "px"), s = Math.floor(s), a = Math.ceil(a), d = void 0 === d ? h - i.bottom < t : d, l.style.cssText = "left:" + (n + window.pageXOffset) + "px; width:" + o + ";" + (d ? "top: " + (s + window.pageYOffset) + "px" : "top: " + (a + window.pageYOffset) + "px"), l.setAttribute("placement", d ? "top" : "bottom"), l.setAttribute("position", g));
       }
     },
+
     events: {
-      binding: function binding() {
-        var t = !(arguments.length > 0 && void 0 !== arguments[0]) || arguments[0],
-            e = this.dropdown.events.callbacks,
+      binding(t = !0) {
+        var e = this.dropdown.events.callbacks,
             i = this.listeners.dropdown = this.listeners.dropdown || {
           position: this.dropdown.position.bind(this),
           onKeyDown: e.onKeyDown.bind(this),
@@ -320,9 +274,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
             s = t ? "addEventListener" : "removeEventListener";
         "manual" != this.settings.dropdown.position && (window[s]("resize", i.position), window[s]("keydown", i.onKeyDown)), this.DOM.dropdown[s]("mouseover", i.onMouseOver), this.DOM.dropdown[s]("mouseleave", i.onMouseLeave), this.DOM.dropdown[s]("mousedown", i.onClick), this.DOM.dropdown.content[s]("scroll", i.onScroll);
       },
+
       callbacks: {
-        onKeyDown: function onKeyDown(t) {
-          var e = this.DOM.dropdown.querySelector("." + this.settings.classNames.dropdownItemActive),
+        onKeyDown(t) {
+          var e = this.DOM.dropdown.querySelector(this.settings.classNames.dropdownItemActiveSelector),
               i = e;
 
           switch (t.key) {
@@ -346,8 +301,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
               if ("mix" != this.settings.mode && i && !this.settings.autoComplete.rightKey && !this.state.editing) {
                 t.preventDefault();
                 var a = i.getAttribute("tagifySuggestionIdx"),
-                    n = a ? this.suggestedListItems[+a] : "";
-                return this.input.autocomplete.set.call(this, n.value || n), !1;
+                    n = a ? this.suggestedListItems[+a] : "",
+                    o = this.dropdown.getMappedValue.call(this, n);
+                return this.input.autocomplete.set.call(this, o), !1;
               }
 
               return !0;
@@ -357,126 +313,130 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
               break;
 
             case "Backspace":
-              if ("mix" == this.settings.mode || this.state.editing.scope) return;
-              var o = this.state.inputText.trim();
-              "" != o && 8203 != o.charCodeAt(0) || (!0 === this.settings.backspace ? this.removeTags() : "edit" == this.settings.backspace && setTimeout(this.editTag.bind(this), 0));
+              {
+                if ("mix" == this.settings.mode || this.state.editing.scope) return;
+                let t = this.state.inputText.trim();
+                "" != t && 8203 != t.charCodeAt(0) || (!0 === this.settings.backspace ? this.removeTags() : "edit" == this.settings.backspace && setTimeout(this.editTag.bind(this), 0));
+              }
           }
         },
-        onMouseOver: function onMouseOver(t) {
-          var e = t.target.closest("." + this.settings.classNames.dropdownItem);
+
+        onMouseOver(t) {
+          var e = t.target.closest(this.settings.classNames.dropdownItemSelector);
           e && this.dropdown.highlightOption.call(this, e);
         },
-        onMouseLeave: function onMouseLeave(t) {
+
+        onMouseLeave(t) {
           this.dropdown.highlightOption.call(this);
         },
-        onClick: function onClick(t) {
-          var e = this;
 
-          if (0 == t.button && t.target != this.DOM.dropdown) {
-            var i = t.target.closest("." + this.settings.classNames.dropdownItem);
-            this.state.actions.selectOption = !0, setTimeout(function () {
-              return e.state.actions.selectOption = !1;
-            }, 50), this.settings.hooks.suggestionClick(t, {
+        onClick(t) {
+          if (0 == t.button && t.target != this.DOM.dropdown && t.target != this.DOM.dropdown.content) {
+            var e = t.target.closest(this.settings.classNames.dropdownItemSelector);
+            this.state.actions.selectOption = !0, setTimeout(() => this.state.actions.selectOption = !1, 50), this.settings.hooks.suggestionClick(t, {
               tagify: this,
-              suggestionElm: i
-            }).then(function () {
-              i ? e.dropdown.selectOption.call(e, i) : e.dropdown.hide.call(e);
-            }).catch(function (t) {
-              return t;
-            });
+              suggestionElm: e
+            }).then(() => {
+              e ? this.dropdown.selectOption.call(this, e) : this.dropdown.hide.call(this);
+            }).catch(t => t);
           }
         },
-        onScroll: function onScroll(t) {
+
+        onScroll(t) {
           var e = t.target,
               i = e.scrollTop / (e.scrollHeight - e.parentNode.clientHeight) * 100;
           this.trigger("dropdown:scroll", {
             percentage: Math.round(i)
           });
         }
+
       }
     },
-    highlightOption: function highlightOption(t, e) {
+
+    highlightOption(t, e) {
       var i,
           s = this.settings.classNames.dropdownItemActive;
       if (this.state.ddItemElm && (this.state.ddItemElm.classList.remove(s), this.state.ddItemElm.removeAttribute("aria-selected")), !t) return this.state.ddItemData = null, this.state.ddItemElm = null, void this.input.autocomplete.suggest.call(this);
       i = this.suggestedListItems[this.getNodeIndex(t)], this.state.ddItemData = i, this.state.ddItemElm = t, t.classList.add(s), t.setAttribute("aria-selected", !0), e && (t.parentNode.scrollTop = t.clientHeight + t.offsetTop - t.parentNode.clientHeight), this.settings.autoComplete && (this.input.autocomplete.suggest.call(this, i), this.dropdown.position.call(this));
     },
-    selectOption: function selectOption(t) {
-      var e = this,
-          i = this.settings.dropdown,
-          s = i.clearOnSelect,
-          a = i.closeOnSelect;
-      if (!t) return this.addTags(this.state.inputText, !0), void (a && this.dropdown.hide.call(this));
-      var n = t.getAttribute("tagifySuggestionIdx"),
-          o = this.suggestedListItems[+n];
+
+    selectOption(t) {
+      var e = this.settings.dropdown,
+          i = e.clearOnSelect,
+          s = e.closeOnSelect;
+      if (!t) return this.addTags(this.state.inputText, !0), void (s && this.dropdown.hide.call(this));
+      var a = t.getAttribute("tagifySuggestionIdx"),
+          n = this.suggestedListItems[+a];
 
       if (this.trigger("dropdown:select", {
-        data: o,
+        data: n,
         elm: t
-      }), n && o) {
-        if (this.state.editing ? this.onEditTagDone(null, d({
+      }), a && n) {
+        if (this.state.editing ? this.onEditTagDone(null, o({
           __isValid: !0
-        }, o)) : this["mix" == this.settings.mode ? "addMixTags" : "addTags"]([o], s), setTimeout(function () {
-          e.DOM.input.focus(), e.toggleFocusClass(!0);
-        }), a) return this.dropdown.hide.call(this);
+        }, n)) : this["mix" == this.settings.mode ? "addMixTags" : "addTags"]([n], i), setTimeout(() => {
+          this.DOM.input.focus(), this.toggleFocusClass(!0);
+        }), s) return this.dropdown.hide.call(this);
         this.dropdown.refilter.call(this);
       } else this.dropdown.hide.call(this);
     },
-    selectAll: function selectAll() {
+
+    selectAll() {
       return this.suggestedListItems.length = 0, this.dropdown.hide.call(this), this.addTags(this.dropdown.filterListItems.call(this, ""), !0), this;
     },
-    filterListItems: function filterListItems(t, e) {
+
+    filterListItems(t, e) {
       var i,
           s,
           a,
-          n,
           o,
-          r = this,
+          l,
           d = this.settings,
           h = d.dropdown,
           g = (e = e || {}, []),
-          u = d.whitelist,
+          c = d.whitelist,
           p = h.maxItems || 1 / 0,
-          f = h.searchKeys,
+          u = h.searchKeys,
           m = 0;
-      if (!t || !f.length) return (d.duplicates ? u : u.filter(function (t) {
-        return !r.isTagDuplicate(l(t) ? t.value : t);
-      })).slice(0, p);
+      if (!t || !u.length) return (d.duplicates ? c : c.filter(t => !this.isTagDuplicate(n(t) ? t.value : t))).slice(0, p);
 
       function v(t, e) {
-        return e.toLowerCase().split(" ").every(function (e) {
-          return t.includes(e.toLowerCase());
-        });
+        return e.toLowerCase().split(" ").every(e => t.includes(e.toLowerCase()));
       }
 
-      for (o = h.caseSensitive ? "" + t : ("" + t).toLowerCase(); m < u.length && (i = u[m] instanceof Object ? u[m] : {
-        value: u[m]
-      }, h.fuzzySearch && !e.exact ? (a = f.reduce(function (t, e) {
-        return t + " " + (i[e] || "");
-      }, "").toLowerCase(), h.accentedSearch && (a = c(a), o = c(o)), s = v(a, o)) : s = f.some(function (t) {
-        var s = "" + (i[t] || "");
-        return h.accentedSearch && (s = c(s), o = c(o)), h.caseSensitive || (s = s.toLowerCase()), e.exact ? s == o : 0 == s.indexOf(o);
-      }), n = !d.duplicates && this.isTagDuplicate(l(i) ? i.value : i), s && !n && p-- && g.push(i), 0 != p); m++) {
-        ;
+      for (l = h.caseSensitive ? "" + t : ("" + t).toLowerCase(); m < c.length; m++) {
+        i = c[m] instanceof Object ? c[m] : {
+          value: c[m]
+        };
+        let t = !Object.keys(i).some(t => u.includes(t)) ? ["value"] : u;
+        if (h.fuzzySearch && !e.exact ? (a = t.reduce((t, e) => t + " " + (i[e] || ""), "").toLowerCase(), h.accentedSearch && (a = r(a), l = r(l)), s = v(a, l)) : s = t.some(t => {
+          var s = "" + (i[t] || "");
+          return h.accentedSearch && (s = r(s), l = r(l)), h.caseSensitive || (s = s.toLowerCase()), e.exact ? s == l : 0 == s.indexOf(l);
+        }), o = !d.duplicates && this.isTagDuplicate(n(i) ? i.value : i), s && !o && p-- && g.push(i), 0 == p) break;
       }
 
       return g;
     },
-    createListHTML: function createListHTML(t) {
-      var e = this;
-      return d([], t).map(function (t, i) {
+
+    getMappedValue(t) {
+      var e = this.settings.dropdown.mapValueTo;
+      return e ? "function" == typeof e ? e(t) : t[e] || t.value : t.value;
+    },
+
+    createListHTML(t) {
+      return o([], t).map((t, e) => {
         "string" != typeof t && "number" != typeof t || (t = {
           value: t
         });
-        var s = e.settings.dropdown.mapValueTo,
-            a = s ? "function" == typeof s ? s(t) : t[s] || t.value : t.value;
-        t.value = a && "string" == typeof a ? o(a) : a;
-        var n = e.settings.templates.dropdownItem.call(e, t);
-        return n = n.replace(/\s*tagifySuggestionIdx=(["'])(.*?)\1/gim, "").replace(">", ' tagifySuggestionIdx="'.concat(i, '">'));
+        var i = this.dropdown.getMappedValue.call(this, t);
+        t.value = i && "string" == typeof i ? s(i) : i;
+        var a = this.settings.templates.dropdownItem.call(this, t);
+        return a = a.replace(/\s*tagifySuggestionIdx=(["'])(.*?)\1/gim, "").replace(">", ` tagifySuggestionIdx="${e}">`);
       }).join("");
     }
+
   },
-      u = {
+      h = {
     delimiters: ",",
     pattern: null,
     tagTextProp: "value",
@@ -496,7 +456,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       clicks: 2,
       keepInvalid: !0
     },
-    transformTag: function transformTag() {},
+    transformTag: () => {},
     trim: !0,
     mixMode: {
       insertAfterTag: " "
@@ -547,39 +507,54 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       appendTarget: null
     },
     hooks: {
-      beforeRemoveTag: function beforeRemoveTag() {
-        return Promise.resolve();
-      },
-      suggestionClick: function suggestionClick() {
-        return Promise.resolve();
-      }
+      beforeRemoveTag: () => Promise.resolve(),
+      suggestionClick: () => Promise.resolve()
     }
+  },
+      g = {
+    wrapper: (t, e) => `<tags class="${e.classNames.namespace} ${e.mode ? `${e.classNames[e.mode + "Mode"]}` : ""} ${t.className}"\n                    ${e.readonly ? "readonly" : ""}\n                    ${e.required ? "required" : ""}\n                    tabIndex="-1">\n            <span ${e.readonly && "mix" == e.mode ? "" : "contenteditable"} data-placeholder="${e.placeholder || "&#8203;"}" aria-placeholder="${e.placeholder || ""}"\n                class="${e.classNames.input}"\n                role="textbox"\n                aria-autocomplete="both"\n                aria-multiline="${"mix" == e.mode}"></span>\n        </tags>`,
+
+    tag(t) {
+      return `<tag title="${t.title || t.value}"\n                    contenteditable='false'\n                    spellcheck='false'\n                    tabIndex="-1"\n                    class="${this.settings.classNames.tag} ${t.class ? t.class : ""}"\n                    ${this.getAttributes(t)}>\n            <x title='' class="${this.settings.classNames.tagX}" role='button' aria-label='remove tag'></x>\n            <div>\n                <span class="${this.settings.classNames.tagText}">${t[this.settings.tagTextProp] || t.value}</span>\n            </div>\n        </tag>`;
+    },
+
+    dropdown(t) {
+      var e = t.dropdown,
+          i = "manual" == e.position,
+          s = `${t.classNames.dropdown}`;
+      return `<div class="${i ? "" : s} ${e.classname}" role="listbox" aria-labelledby="dropdown">\n                    <div class="${t.classNames.dropdownWrapper}"></div>\n                </div>`;
+    },
+
+    dropdownItem(t) {
+      return `<div ${this.getAttributes(t)}\n                    class='${this.settings.classNames.dropdownItem} ${t.class ? t.class : ""}'\n                    tabindex="0"\n                    role="option">${t.value}</div>`;
+    },
+
+    dropdownItemNoMatch: null
   };
-  var p = {
-    customBinding: function customBinding() {
-      var t = this;
-      this.customEventsList.forEach(function (e) {
-        t.on(e, t.settings.callbacks[e]);
+
+  var c = {
+    customBinding() {
+      this.customEventsList.forEach(t => {
+        this.on(t, this.settings.callbacks[t]);
       });
     },
-    binding: function binding() {
-      var t,
-          e = !(arguments.length > 0 && void 0 !== arguments[0]) || arguments[0],
+
+    binding(t = !0) {
+      var e,
           i = this.events.callbacks,
-          s = e ? "addEventListener" : "removeEventListener";
-      if (!this.state.mainEvents || !e) for (var a in this.state.mainEvents = e, e && !this.listeners.main && (this.DOM.input.addEventListener(this.isIE ? "keydown" : "input", i[this.isIE ? "onInputIE" : "onInput"].bind(this)), this.settings.isJQueryPlugin && jQuery(this.DOM.originalInput).on("tagify.removeAllTags", this.removeAllTags.bind(this))), t = this.listeners.main = this.listeners.main || {
+          s = t ? "addEventListener" : "removeEventListener";
+      if (!this.state.mainEvents || !t) for (var a in this.state.mainEvents = t, t && !this.listeners.main && (this.DOM.input.addEventListener(this.isIE ? "keydown" : "input", i[this.isIE ? "onInputIE" : "onInput"].bind(this)), this.settings.isJQueryPlugin && jQuery(this.DOM.originalInput).on("tagify.removeAllTags", this.removeAllTags.bind(this))), e = this.listeners.main = this.listeners.main || {
         focus: ["input", i.onFocusBlur.bind(this)],
         blur: ["input", i.onFocusBlur.bind(this)],
         keydown: ["input", i.onKeydown.bind(this)],
         click: ["scope", i.onClickScope.bind(this)],
         dblclick: ["scope", i.onDoubleClickScope.bind(this)],
         paste: ["input", i.onPaste.bind(this)]
-      }) {
-        ("blur" != a || e) && this.DOM[t[a][0]][s](a, t[a][1]);
-      }
+      }) ("blur" != a || t) && this.DOM[e[a][0]][s](a, e[a][1]);
     },
+
     callbacks: {
-      onFocusBlur: function onFocusBlur(t) {
+      onFocusBlur(t) {
         var e = t.target ? this.trim(t.target.textContent) : "",
             i = this.settings,
             s = t.type,
@@ -600,9 +575,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
           "blur" == s && (this.trigger("blur", n), this.loading(!1), ("select" == this.settings.mode ? !this.value.length || this.value[0].value != e : e && !this.state.actions.selectOption && i.addTagOnBlur) && this.addTags(e, !0)), this.DOM.input.removeAttribute("style"), this.dropdown.hide.call(this);
         } else "focus" == s ? this.trigger("focus", n) : "blur" == t.type && (this.trigger("blur", n), this.loading(!1), this.dropdown.hide.call(this), this.state.dropdown.visible = void 0, this.setStateSelection());
       },
-      onKeydown: function onKeydown(t) {
-        var e = this,
-            i = this.trim(t.target.textContent);
+
+      onKeydown(t) {
+        var s = this.trim(t.target.textContent);
 
         if (this.trigger("keydown", {
           originalEvent: this.cloneEvent(t)
@@ -616,36 +591,34 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
             case "Delete":
             case "Backspace":
               if (this.state.editing) return;
-              var s,
-                  o,
-                  r = document.getSelection(),
-                  l = "Delete" == t.key && r.anchorOffset == (r.anchorNode.length || 0),
-                  d = 1 == r.anchorNode.nodeType || !r.anchorOffset && r.anchorNode.previousElementSibling,
-                  c = a(this.DOM.input.innerHTML),
+              var a,
+                  n,
+                  o = document.getSelection(),
+                  r = "Delete" == t.key && o.anchorOffset == (o.anchorNode.length || 0),
+                  d = 1 == o.anchorNode.nodeType || !o.anchorOffset && o.anchorNode.previousElementSibling,
+                  h = e(this.DOM.input.innerHTML),
                   g = this.getTagElms();
-              if (h && d) return o = n(d), d.hasAttribute("readonly") || d.remove(), this.DOM.input.focus(), void setTimeout(function () {
-                e.placeCaretAfterNode(o), e.DOM.input.click();
+              if (l() && d) return n = i(d), d.hasAttribute("readonly") || d.remove(), this.DOM.input.focus(), void setTimeout(() => {
+                this.placeCaretAfterNode(n), this.DOM.input.click();
               });
-              if ("BR" == r.anchorNode.nodeName) return;
-              if ((l || d) && 1 == r.anchorNode.nodeType ? s = 0 == r.anchorOffset ? l ? g[0] : null : g[r.anchorOffset - 1] : l ? s = r.anchorNode.nextElementSibling : d && (s = d), 3 == r.anchorNode.nodeType && !r.anchorNode.nodeValue && r.anchorNode.previousElementSibling && t.preventDefault(), (d || l) && !this.settings.backspace) return void t.preventDefault();
-              if ("Range" != r.type && !r.anchorOffset && r.anchorNode == this.DOM.input && "Delete" != t.key) return void t.preventDefault();
-              if ("Range" != r.type && s && s.hasAttribute("readonly")) return void this.placeCaretAfterNode(n(s));
-              this.isFirefox && 1 == r.anchorNode.nodeType && 0 != r.anchorOffset && (this.removeTags(), this.placeCaretAfterNode(this.setRangeAtStartEnd())), setTimeout(function () {
+              if ("BR" == o.anchorNode.nodeName) return;
+              if ((r || d) && 1 == o.anchorNode.nodeType ? a = 0 == o.anchorOffset ? r ? g[0] : null : g[o.anchorOffset - 1] : r ? a = o.anchorNode.nextElementSibling : d && (a = d), 3 == o.anchorNode.nodeType && !o.anchorNode.nodeValue && o.anchorNode.previousElementSibling && t.preventDefault(), (d || r) && !this.settings.backspace) return void t.preventDefault();
+              if ("Range" != o.type && !o.anchorOffset && o.anchorNode == this.DOM.input && "Delete" != t.key) return void t.preventDefault();
+              if ("Range" != o.type && a && a.hasAttribute("readonly")) return void this.placeCaretAfterNode(i(a));
+              setTimeout(() => {
                 var t = document.getSelection(),
-                    i = a(e.DOM.input.innerHTML),
+                    i = e(this.DOM.input.innerHTML),
                     s = t.anchorNode.previousElementSibling;
-                if (!h && i.length >= c.length && s && !s.hasAttribute("readonly") && (e.removeTags(s), e.fixFirefoxLastTagNoCaret(), 2 == e.DOM.input.children.length && "BR" == e.DOM.input.children[1].tagName)) return e.DOM.input.innerHTML = "", e.value.length = 0, !0;
-                e.value = [].map.call(g, function (t, i) {
-                  var s = e.tagData(t);
-                  if (t.parentNode || s.readonly) return s;
-                  e.trigger("remove", {
+                if (!l() && i.length >= h.length && s && !s.hasAttribute("readonly") && (this.removeTags(s), this.fixFirefoxLastTagNoCaret(), 2 == this.DOM.input.children.length && "BR" == this.DOM.input.children[1].tagName)) return this.DOM.input.innerHTML = "", this.value.length = 0, !0;
+                this.value = [].map.call(g, (t, e) => {
+                  var i = this.tagData(t);
+                  if (t.parentNode || i.readonly) return i;
+                  this.trigger("remove", {
                     tag: t,
-                    index: i,
-                    data: s
+                    index: e,
+                    data: i
                   });
-                }).filter(function (t) {
-                  return t;
-                });
+                }).filter(t => t);
               }, 50);
           }
 
@@ -654,7 +627,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
         switch (t.key) {
           case "Backspace":
-            this.state.dropdown.visible && "manual" != this.settings.dropdown.position || "" != i && 8203 != i.charCodeAt(0) || (!0 === this.settings.backspace ? this.removeTags() : "edit" == this.settings.backspace && setTimeout(this.editTag.bind(this), 0));
+            this.state.dropdown.visible && "manual" != this.settings.dropdown.position || "" != s && 8203 != s.charCodeAt(0) || (!0 === this.settings.backspace ? this.removeTags() : "edit" == this.settings.backspace && setTimeout(this.editTag.bind(this), 0));
             break;
 
           case "Esc":
@@ -669,23 +642,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
             break;
 
           case "ArrowRight":
-            var u = this.state.inputSuggestion || this.state.ddItemData;
-            if (u && this.settings.autoComplete.rightKey) return void this.addTags([u], !0);
-            break;
+            {
+              let t = this.state.inputSuggestion || this.state.ddItemData;
+              if (t && this.settings.autoComplete.rightKey) return void this.addTags([t], !0);
+              break;
+            }
 
           case "Tab":
-            var p = "select" == this.settings.mode;
-            if (!i || p) return !0;
-            t.preventDefault();
+            {
+              let e = "select" == this.settings.mode;
+              if (!s || e) return !0;
+              t.preventDefault();
+            }
 
           case "Enter":
             if (this.state.dropdown.visible || 229 == t.keyCode) return;
-            t.preventDefault(), setTimeout(function () {
-              e.state.actions.selectOption || e.addTags(i, !0);
+            t.preventDefault(), setTimeout(() => {
+              this.state.actions.selectOption || this.addTags(s, !0);
             });
         }
       },
-      onInput: function onInput(t) {
+
+      onInput(t) {
         if ("mix" == this.settings.mode) return this.events.callbacks.onMixTagsInput.call(this, t);
         var e = this.input.normalize.call(this),
             i = e.length >= this.settings.dropdown.enabled,
@@ -697,69 +675,67 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
           value: e
         }), this.trigger("input", s), this.state.inputText != e && (this.input.set.call(this, e, !1), -1 != e.search(this.settings.delimiters) ? this.addTags(e) && this.input.set.call(this) : this.settings.dropdown.enabled >= 0 && this.dropdown[i ? "show" : "hide"].call(this, e));
       },
-      onMixTagsInput: function onMixTagsInput(t) {
+
+      onMixTagsInput(t) {
         var e,
             i,
             s,
             a,
             n,
-            o,
             r,
-            l,
-            c = this,
+            d,
+            h,
             g = this.settings,
-            u = this.value.length,
+            c = this.value.length,
             p = this.getTagElms(),
-            f = document.createDocumentFragment(),
+            u = document.createDocumentFragment(),
             m = window.getSelection().getRangeAt(0),
-            v = [].map.call(p, function (t) {
-          return c.tagData(t).value;
-        });
-        if ("deleteContentBackward" == t.inputType && h && this.events.callbacks.onKeydown.call(this, {
+            v = [].map.call(p, t => this.tagData(t).value);
+        if ("deleteContentBackward" == t.inputType && l() && this.events.callbacks.onKeydown.call(this, {
           target: t.target,
           key: "Backspace"
-        }), this.value.slice().forEach(function (t) {
-          t.readonly && !v.includes(t.value) && f.appendChild(c.createTagElem(t));
-        }), f.childNodes.length && (m.insertNode(f), this.setRangeAtStartEnd(!1, f.lastChild)), p.length != u) return this.value = [].map.call(this.getTagElms(), function (t) {
-          return c.tagData(t);
-        }), void this.update({
+        }), this.value.slice().forEach(t => {
+          t.readonly && !v.includes(t.value) && u.appendChild(this.createTagElem(t));
+        }), u.childNodes.length && (m.insertNode(u), this.setRangeAtStartEnd(!1, u.lastChild)), p.length != c) return this.value = [].map.call(this.getTagElms(), t => this.tagData(t)), void this.update({
           withoutChangeEvent: !0
         });
         if (this.hasMaxTags()) return !0;
 
-        if (window.getSelection && (o = window.getSelection()).rangeCount > 0 && 3 == o.anchorNode.nodeType) {
-          if ((m = o.getRangeAt(0).cloneRange()).collapse(!0), m.setStart(o.focusNode, 0), s = (e = m.toString().slice(0, m.endOffset)).split(g.pattern).length - 1, (i = e.match(g.pattern)) && (a = e.slice(e.lastIndexOf(i[i.length - 1]))), a) {
+        if (window.getSelection && (r = window.getSelection()).rangeCount > 0 && 3 == r.anchorNode.nodeType) {
+          if ((m = r.getRangeAt(0).cloneRange()).collapse(!0), m.setStart(r.focusNode, 0), s = (e = m.toString().slice(0, m.endOffset)).split(g.pattern).length - 1, (i = e.match(g.pattern)) && (a = e.slice(e.lastIndexOf(i[i.length - 1]))), a) {
             if (this.state.actions.ArrowLeft = !1, this.state.tag = {
               prefix: a.match(g.pattern)[0],
               value: a.replace(g.pattern, "")
-            }, this.state.tag.baseOffset = o.baseOffset - this.state.tag.value.length, l = this.state.tag.value.match(g.delimiters)) return this.state.tag.value = this.state.tag.value.replace(g.delimiters, ""), this.state.tag.delimiters = l[0], this.addTags(this.state.tag.value, g.dropdown.clearOnSelect), void this.dropdown.hide.call(this);
+            }, this.state.tag.baseOffset = r.baseOffset - this.state.tag.value.length, h = this.state.tag.value.match(g.delimiters)) return this.state.tag.value = this.state.tag.value.replace(g.delimiters, ""), this.state.tag.delimiters = h[0], this.addTags(this.state.tag.value, g.dropdown.clearOnSelect), void this.dropdown.hide.call(this);
             n = this.state.tag.value.length >= g.dropdown.enabled;
 
             try {
-              r = (r = this.state.flaggedTags[this.state.tag.baseOffset]).prefix == this.state.tag.prefix && r.value[0] == this.state.tag.value[0], this.state.flaggedTags[this.state.tag.baseOffset] && !this.state.tag.value && delete this.state.flaggedTags[this.state.tag.baseOffset];
+              d = (d = this.state.flaggedTags[this.state.tag.baseOffset]).prefix == this.state.tag.prefix && d.value[0] == this.state.tag.value[0], this.state.flaggedTags[this.state.tag.baseOffset] && !this.state.tag.value && delete this.state.flaggedTags[this.state.tag.baseOffset];
             } catch (t) {}
 
-            (r || s < this.state.mixMode.matchedPatternCount) && (n = !1);
+            (d || s < this.state.mixMode.matchedPatternCount) && (n = !1);
           } else this.state.flaggedTags = {};
 
           this.state.mixMode.matchedPatternCount = s;
         }
 
-        setTimeout(function () {
-          c.update({
+        setTimeout(() => {
+          this.update({
             withoutChangeEvent: !0
-          }), c.trigger("input", d({}, c.state.tag, {
-            textContent: c.DOM.input.textContent
-          })), c.state.tag && c.dropdown[n ? "show" : "hide"].call(c, c.state.tag.value);
+          }), this.trigger("input", o({}, this.state.tag, {
+            textContent: this.DOM.input.textContent
+          })), this.state.tag && this.dropdown[n ? "show" : "hide"].call(this, this.state.tag.value);
         }, 10);
       },
-      onInputIE: function onInputIE(t) {
+
+      onInputIE(t) {
         var e = this;
         setTimeout(function () {
           e.events.callbacks.onInput.call(e, t);
         });
       },
-      onClickScope: function onClickScope(t) {
+
+      onClickScope(t) {
         var e = this.settings,
             i = t.target.closest("." + e.classNames.tag),
             s = +new Date() - this.state.hasFocus;
@@ -774,61 +750,73 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
           this.removeTags(t.target.parentNode);
         } else this.state.hasFocus || this.DOM.input.focus();
       },
-      onPaste: function onPaste(t) {
+
+      onPaste(t) {
         var e;
         t.preventDefault(), this.settings.readonly || (e = (t.clipboardData || window.clipboardData).getData("Text"), this.injectAtCaret(e, window.getSelection().getRangeAt(0)), "mix" != this.settings.mode && this.addTags(this.DOM.input.textContent, !0));
       },
-      onEditTagInput: function onEditTagInput(t, i) {
-        var s = t.closest("." + this.settings.classNames.tag),
-            a = this.getNodeIndex(s),
-            n = this.tagData(s),
-            o = this.input.normalize.call(this, t),
-            r = s.innerHTML != s.__tagifyTagData.__originalHTML,
-            l = this.validateTag(e({}, this.settings.tagTextProp, o));
-        r || !0 !== t.originalIsValid || (l = !0), s.classList.toggle(this.settings.classNames.tagInvalid, !0 !== l), n.__isValid = l, s.title = !0 === l ? n.title || n.value : l, o.length >= this.settings.dropdown.enabled && (this.state.editing && (this.state.editing.value = o), this.dropdown.show.call(this, o)), this.trigger("edit:input", {
-          tag: s,
-          index: a,
-          data: d({}, this.value[a], {
-            newValue: o
+
+      onEditTagInput(t, e) {
+        var i = t.closest("." + this.settings.classNames.tag),
+            s = this.getNodeIndex(i),
+            a = this.tagData(i),
+            n = this.input.normalize.call(this, t),
+            r = i.innerHTML != i.__tagifyTagData.__originalHTML,
+            l = this.validateTag({
+          [this.settings.tagTextProp]: n
+        });
+        r || !0 !== t.originalIsValid || (l = !0), i.classList.toggle(this.settings.classNames.tagInvalid, !0 !== l), a.__isValid = l, i.title = !0 === l ? a.title || a.value : l, n.length >= this.settings.dropdown.enabled && (this.state.editing && (this.state.editing.value = n), this.dropdown.show.call(this, n)), this.trigger("edit:input", {
+          tag: i,
+          index: s,
+          data: o({}, this.value[s], {
+            newValue: n
           }),
-          originalEvent: this.cloneEvent(i)
+          originalEvent: this.cloneEvent(e)
         });
       },
-      onEditTagFocus: function onEditTagFocus(t) {
+
+      onEditTagFocus(t) {
         this.state.editing = {
           scope: t,
           input: t.querySelector("[contenteditable]")
         };
       },
-      onEditTagBlur: function onEditTagBlur(t) {
-        var i;
 
+      onEditTagBlur(t) {
         if (this.state.hasFocus || this.toggleFocusClass(), this.DOM.scope.contains(t)) {
-          var s,
-              a = this.settings,
-              n = t.closest("." + a.classNames.tag),
-              o = this.input.normalize.call(this, t),
-              r = this.tagData(n).__originalData,
-              l = n.innerHTML != n.__tagifyTagData.__originalHTML,
-              d = this.validateTag(e({}, a.tagTextProp, o));
+          var e,
+              i = this.settings,
+              s = t.closest("." + i.classNames.tag),
+              a = this.input.normalize.call(this, t),
+              n = this.tagData(s).__originalData,
+              r = s.innerHTML != s.__tagifyTagData.__originalHTML,
+              l = this.validateTag({
+            [i.tagTextProp]: a
+          });
 
-          if (o) {
-            if (l) {
-              if (s = this.getWhitelistItem(o) || (e(i = {}, a.tagTextProp, o), e(i, "value", o), i), a.transformTag.call(this, s, r), !0 !== (d = this.validateTag(e({}, a.tagTextProp, s[a.tagTextProp])))) {
+          if (a) {
+            if (r) {
+              if (e = this.getWhitelistItem(a) || o({}, n, {
+                [i.tagTextProp]: a,
+                value: a
+              }), i.transformTag.call(this, e, n), !0 !== (l = this.validateTag({
+                [i.tagTextProp]: e[i.tagTextProp]
+              }))) {
                 if (this.trigger("invalid", {
-                  data: s,
-                  tag: n,
-                  message: d
-                }), a.editTags.keepInvalid) return;
-                a.keepInvalidTags ? s.__isValid = d : s = r;
+                  data: e,
+                  tag: s,
+                  message: l
+                }), i.editTags.keepInvalid) return;
+                i.keepInvalidTags ? e.__isValid = l : e = n;
               }
 
-              this.onEditTagDone(n, s);
-            } else this.onEditTagDone(n, r);
-          } else this.onEditTagDone(n);
+              this.onEditTagDone(s, e);
+            } else this.onEditTagDone(s, n);
+          } else this.onEditTagDone(s);
         }
       },
-      onEditTagkeydown: function onEditTagkeydown(t, e) {
+
+      onEditTagkeydown(t, e) {
         switch (this.trigger("edit:keydown", {
           originalEvent: this.cloneEvent(t)
         }), t.key) {
@@ -841,7 +829,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
             t.preventDefault(), t.target.blur();
         }
       },
-      onDoubleClickScope: function onDoubleClickScope(t) {
+
+      onDoubleClickScope(t) {
         var e,
             i,
             s = t.target.closest("." + this.settings.classNames.tag),
@@ -852,59 +841,61 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
           data: this.tagData(s)
         }));
       }
+
     }
   };
 
-  function f(e, i) {
-    return e ? e.previousElementSibling && e.previousElementSibling.classList.contains("tagify") ? (console.warn("Tagify: ", "input element is already Tagified", e), this) : (d(this, function (e) {
-      var i = document.createTextNode("");
+  function p(t, e) {
+    return t ? t.previousElementSibling && t.previousElementSibling.classList.contains("tagify") ? (console.warn("Tagify: ", "input element is already Tagified", t), this) : (o(this, function (t) {
+      var e = document.createTextNode("");
 
-      function s(t, e, s) {
-        s && e.split(/\s+/g).forEach(function (e) {
-          return i[t + "EventListener"].call(i, e, s);
-        });
+      function i(t, i, s) {
+        s && i.split(/\s+/g).forEach(i => e[t + "EventListener"].call(e, i, s));
       }
 
       return {
-        off: function off(t, e) {
-          return s("remove", t, e), this;
+        off(t, e) {
+          return i("remove", t, e), this;
         },
-        on: function on(t, e) {
-          return e && "function" == typeof e && s("add", t, e), this;
+
+        on(t, e) {
+          return e && "function" == typeof e && i("add", t, e), this;
         },
-        trigger: function trigger(s, a) {
+
+        trigger(i, s, a) {
           var n;
-          if (s) if (e.settings.isJQueryPlugin) "remove" == s && (s = "removeTag"), jQuery(e.DOM.originalInput).triggerHandler(s, [a]);else {
+          if (a = a || {
+            cloneData: !0
+          }, i) if (t.settings.isJQueryPlugin) "remove" == i && (i = "removeTag"), jQuery(t.DOM.originalInput).triggerHandler(i, [s]);else {
             try {
-              var o = d({}, "object" === t(a) ? a : {
-                value: a
-              });
-              if (o.tagify = this, a instanceof Object) for (var r in a) {
-                a[r] instanceof HTMLElement && (o[r] = a[r]);
-              }
-              n = new CustomEvent(s, {
-                detail: o
+              var r = "object" == typeof s ? s : {
+                value: s
+              };
+              if ((r = a.cloneData ? o({}, r) : r).tagify = this, s instanceof Object) for (var l in s) s[l] instanceof HTMLElement && (r[l] = s[l]);
+              n = new CustomEvent(i, {
+                detail: r
               });
             } catch (t) {
               console.warn(t);
             }
 
-            i.dispatchEvent(n);
+            e.dispatchEvent(n);
           }
         }
+
       };
-    }(this)), this.isFirefox = "undefined" != typeof InstallTrigger, this.isIE = window.document.documentMode, this.applySettings(e, i || {}), this.state = {
+    }(this)), this.isFirefox = "undefined" != typeof InstallTrigger, this.isIE = window.document.documentMode, this.applySettings(t, e || {}), this.state = {
       inputText: "",
       editing: !1,
       actions: {},
       mixMode: {},
       dropdown: {},
       flaggedTags: {}
-    }, this.value = [], this.listeners = {}, this.DOM = {}, this.build(e), this.getCSSVars(), this.loadOriginalValues(), this.events.customBinding.call(this), this.events.binding.call(this), void (e.autofocus && this.DOM.input.focus())) : (console.warn("Tagify: ", "input element not found", e), this);
+    }, this.value = [], this.listeners = {}, this.DOM = {}, this.build(t), this.getCSSVars(), this.loadOriginalValues(), this.events.customBinding.call(this), this.events.binding.call(this), void (t.autofocus && this.DOM.input.focus())) : (console.warn("Tagify: ", "input element not found", t), this);
   }
 
-  return f.prototype = {
-    dropdown: g,
+  return p.prototype = {
+    dropdown: d,
     TEXTS: {
       empty: "empty",
       exceed: "number of tags exceeded",
@@ -912,41 +903,37 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       duplicate: "already exists",
       notAllowed: "not allowed"
     },
-    customEventsList: ["change", "add", "remove", "invalid", "input", "click", "keydown", "focus", "blur", "edit:input", "edit:updated", "edit:start", "edit:keydown", "dropdown:show", "dropdown:hide", "dropdown:select", "dropdown:updated", "dropdown:noMatch"],
-    trim: function trim(t) {
+    customEventsList: ["change", "add", "remove", "invalid", "input", "click", "keydown", "focus", "blur", "edit:input", "edit:beforeUpdate", "edit:updated", "edit:start", "edit:keydown", "dropdown:show", "dropdown:hide", "dropdown:select", "dropdown:updated", "dropdown:noMatch"],
+
+    trim(t) {
       return this.settings.trim && t && "string" == typeof t ? t.trim() : t;
     },
-    parseHTML: function parseHTML(t) {
+
+    parseHTML: function (t) {
       return new DOMParser().parseFromString(t.trim(), "text/html").body.firstElementChild;
     },
-    templates: {
-      wrapper: function wrapper(t, e) {
-        return '<tags class="'.concat(e.classNames.namespace, " ").concat(e.mode ? "".concat(e.classNames[e.mode + "Mode"]) : "", " ").concat(t.className, '"\n                    ').concat(e.readonly ? "readonly" : "", "\n                    ").concat(e.required ? "required" : "", '\n                    tabIndex="-1">\n            <span ').concat(e.readonly && "mix" == e.mode ? "" : "contenteditable", ' data-placeholder="').concat(e.placeholder || "&#8203;", '" aria-placeholder="').concat(e.placeholder || "", '"\n                class="').concat(e.classNames.input, '"\n                role="textbox"\n                aria-autocomplete="both"\n                aria-multiline="').concat("mix" == e.mode, '"></span>\n        </tags>');
-      },
-      tag: function tag(t) {
-        return '<tag title="'.concat(t.title || t.value, "\"\n                    contenteditable='false'\n                    spellcheck='false'\n                    tabIndex=\"-1\"\n                    class=\"").concat(this.settings.classNames.tag, " ").concat(t.class ? t.class : "", '"\n                    ').concat(this.getAttributes(t), ">\n            <x title='' class=\"").concat(this.settings.classNames.tagX, "\" role='button' aria-label='remove tag'></x>\n            <div>\n                <span class=\"").concat(this.settings.classNames.tagText, '">').concat(t[this.settings.tagTextProp] || t.value, "</span>\n            </div>\n        </tag>");
-      },
-      dropdown: function dropdown(t) {
-        var e = t.dropdown,
-            i = "manual" == e.position,
-            s = "".concat(t.classNames.dropdown);
-        return '<div class="'.concat(i ? "" : s, " ").concat(e.classname, '" role="listbox" aria-labelledby="dropdown">\n                    <div class="').concat(t.classNames.dropdownWrapper, '"></div>\n                </div>');
-      },
-      dropdownItem: function dropdownItem(t) {
-        return "<div ".concat(this.getAttributes(t), "\n                    class='").concat(this.settings.classNames.dropdownItem, " ").concat(t.class ? t.class : "", '\'\n                    tabindex="0"\n                    role="option">').concat(t.value, "</div>");
-      },
-      dropdownItemNoMatch: null
-    },
-    parseTemplate: function parseTemplate(t, e) {
+    templates: g,
+
+    parseTemplate(t, e) {
       return t = this.settings.templates[t] || t, this.parseHTML(t.apply(this, e));
     },
-    applySettings: function applySettings(t, e) {
-      u.templates = this.templates;
-      var i = this.settings = d({}, u, e);
-      if (i.readonly = t.hasAttribute("readonly"), i.placeholder = t.getAttribute("placeholder") || i.placeholder || "", i.required = t.hasAttribute("required"), this.isIE && (i.autoComplete = !1), ["whitelist", "blacklist"].forEach(function (e) {
+
+    applySettings(t, e) {
+      h.templates = this.templates;
+      var i = this.settings = o({}, h, e);
+      i.readonly = t.hasAttribute("readonly"), i.placeholder = t.getAttribute("placeholder") || i.placeholder || "", i.required = t.hasAttribute("required");
+
+      for (let t in i.classNames) Object.defineProperty(i.classNames, t + "Selector", {
+        get() {
+          return "." + this[t].split(" ").join(".");
+        }
+
+      });
+
+      if (this.isIE && (i.autoComplete = !1), ["whitelist", "blacklist"].forEach(e => {
         var s = t.getAttribute("data-" + e);
         s && (s = s.split(i.delimiters)) instanceof Array && (i[e] = s);
-      }), "autoComplete" in e && !l(e.autoComplete) && (i.autoComplete = u.autoComplete, i.autoComplete.enabled = e.autoComplete), "mix" == i.mode && (i.autoComplete.rightKey = !0, i.delimiters = e.delimiters || null, i.tagTextProp && !i.dropdown.searchKeys.includes(i.tagTextProp) && i.dropdown.searchKeys.push(i.tagTextProp)), t.pattern) try {
+      }), "autoComplete" in e && !n(e.autoComplete) && (i.autoComplete = h.autoComplete, i.autoComplete.enabled = e.autoComplete), "mix" == i.mode && (i.autoComplete.rightKey = !0, i.delimiters = e.delimiters || null, i.tagTextProp && !i.dropdown.searchKeys.includes(i.tagTextProp) && i.dropdown.searchKeys.push(i.tagTextProp)), t.pattern) try {
         i.pattern = new RegExp(t.pattern);
       } catch (t) {}
       if (this.settings.delimiters) try {
@@ -954,20 +941,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       } catch (t) {}
       "select" == i.mode && (i.dropdown.enabled = 0), i.dropdown.appendTarget = e.dropdown && e.dropdown.appendTarget ? e.dropdown.appendTarget : document.body;
     },
-    getAttributes: function getAttributes(t) {
+
+    getAttributes(t) {
       if ("[object Object]" != Object.prototype.toString.call(t)) return "";
       var e,
           i,
           s = Object.keys(t),
           a = "";
 
-      for (i = s.length; i--;) {
-        "class" != (e = s[i]) && t.hasOwnProperty(e) && void 0 !== t[e] && (a += " " + e + (void 0 !== t[e] ? '="'.concat(t[e], '"') : ""));
-      }
+      for (i = s.length; i--;) "class" != (e = s[i]) && t.hasOwnProperty(e) && void 0 !== t[e] && (a += " " + e + (void 0 !== t[e] ? `="${t[e]}"` : ""));
 
       return a;
     },
-    setStateSelection: function setStateSelection() {
+
+    setStateSelection() {
       var t = window.getSelection(),
           e = {
         anchorOffset: t.anchorOffset,
@@ -976,21 +963,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       };
       return this.state.selection = e, e;
     },
-    getCaretGlobalPosition: function getCaretGlobalPosition() {
-      var t = document.getSelection();
+
+    getCaretGlobalPosition() {
+      const t = document.getSelection();
 
       if (t.rangeCount) {
-        var e,
-            i,
-            s = t.getRangeAt(0),
-            a = s.startContainer,
-            n = s.startOffset;
-        if (n > 0) return (i = document.createRange()).setStart(a, n - 1), i.setEnd(a, n), {
-          left: (e = i.getBoundingClientRect()).right,
-          top: e.top,
-          bottom: e.bottom
+        const e = t.getRangeAt(0),
+              i = e.startContainer,
+              s = e.startOffset;
+        let a, n;
+        if (s > 0) return n = document.createRange(), n.setStart(i, s - 1), n.setEnd(i, s), a = n.getBoundingClientRect(), {
+          left: a.right,
+          top: a.top,
+          bottom: a.bottom
         };
-        if (a.getBoundingClientRect) return a.getBoundingClientRect();
+        if (i.getBoundingClientRect) return i.getBoundingClientRect();
       }
 
       return {
@@ -998,72 +985,76 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         top: -9999
       };
     },
-    getCSSVars: function getCSSVars() {
-      var t,
-          e = getComputedStyle(this.DOM.scope, null);
+
+    getCSSVars() {
+      var t = getComputedStyle(this.DOM.scope, null);
+      var e;
       this.CSSVars = {
-        tagHideTransition: function (t) {
-          var e = t.value;
-          return "s" == t.unit ? 1e3 * e : e;
-        }(function (t) {
+        tagHideTransition: (({
+          value: t,
+          unit: e
+        }) => "s" == e ? 1e3 * t : t)(function (t) {
           if (!t) return {};
-          var e = (t = t.trim().split(" ")[0]).split(/\d+/g).filter(function (t) {
-            return t;
-          }).pop().trim();
+          var e = (t = t.trim().split(" ")[0]).split(/\d+/g).filter(t => t).pop().trim();
           return {
-            value: +t.split(e).filter(function (t) {
-              return t;
-            })[0].trim(),
+            value: +t.split(e).filter(t => t)[0].trim(),
             unit: e
           };
-        }((t = "tag-hide-transition", e.getPropertyValue("--" + t))))
+        }((e = "tag-hide-transition", t.getPropertyValue("--" + e))))
       };
     },
-    build: function build(t) {
+
+    build(t) {
       var e = this.DOM;
-      this.settings.mixMode.integrated ? (e.originalInput = null, e.scope = t, e.input = t) : (e.originalInput = t, e.scope = this.parseTemplate("wrapper", [t, this.settings]), e.input = e.scope.querySelector("." + this.settings.classNames.input), t.parentNode.insertBefore(e.scope, t)), this.settings.dropdown.enabled >= 0 && this.dropdown.init.call(this);
+      this.settings.mixMode.integrated ? (e.originalInput = null, e.scope = t, e.input = t) : (e.originalInput = t, e.scope = this.parseTemplate("wrapper", [t, this.settings]), e.input = e.scope.querySelector(this.settings.classNames.inputSelector), t.parentNode.insertBefore(e.scope, t)), this.settings.dropdown.enabled >= 0 && this.dropdown.init.call(this);
     },
-    destroy: function destroy() {
+
+    destroy() {
       this.DOM.scope.parentNode.removeChild(this.DOM.scope), this.dropdown.hide.call(this, !0), clearTimeout(this.dropdownHide__bindEventsTimeout);
     },
-    loadOriginalValues: function loadOriginalValues(t) {
+
+    loadOriginalValues(t) {
       var e,
           i = this.settings;
       if (t = t || (i.mixMode.integrated ? this.DOM.input.textContent : this.DOM.originalInput.value)) {
-        if (this.removeAllTags(), "mix" == i.mode) this.parseMixTags(t.trim()), (e = this.DOM.input.lastChild) && "BR" == e.tagName || this.DOM.input.insertAdjacentHTML("beforeend", "<br>");else {
+        if (this.removeAllTags({
+          withoutChangeEvent: !0
+        }), "mix" == i.mode) this.parseMixTags(t.trim()), (e = this.DOM.input.lastChild) && "BR" == e.tagName || this.DOM.input.insertAdjacentHTML("beforeend", "<br>");else {
           try {
             JSON.parse(t) instanceof Array && (t = JSON.parse(t));
           } catch (t) {}
 
-          this.addTags(t).forEach(function (t) {
-            return t && t.classList.add(i.classNames.tagNoAnimation);
-          });
+          this.addTags(t).forEach(t => t && t.classList.add(i.classNames.tagNoAnimation));
         }
       } else this.postUpdate();
       this.state.lastOriginalValueReported = i.mixMode.integrated ? "" : this.DOM.originalInput.value, this.state.loadedOriginalValues = !0;
     },
-    cloneEvent: function cloneEvent(t) {
+
+    cloneEvent(t) {
       var e = {};
 
-      for (var i in t) {
-        e[i] = t[i];
-      }
+      for (var i in t) e[i] = t[i];
 
       return e;
     },
-    loading: function loading(t) {
+
+    loading(t) {
       return this.state.isLoading = t, this.DOM.scope.classList[t ? "add" : "remove"](this.settings.classNames.scopeLoading), this;
     },
-    tagLoading: function tagLoading(t, e) {
+
+    tagLoading(t, e) {
       return t && t.classList[e ? "add" : "remove"](this.settings.classNames.tagLoading), this;
     },
-    toggleClass: function toggleClass(t, e) {
+
+    toggleClass(t, e) {
       "string" == typeof t && this.DOM.scope.classList.toggle(t, e);
     },
-    toggleFocusClass: function toggleFocusClass(t) {
+
+    toggleFocusClass(t) {
       this.toggleClass(this.settings.classNames.focus, !!t);
     },
-    triggerChangeEvent: function triggerChangeEvent() {
+
+    triggerChangeEvent: function () {
       if (!this.settings.mixMode.integrated) {
         var t = this.DOM.originalInput,
             e = this.state.lastOriginalValueReported !== t.value,
@@ -1073,9 +1064,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         e && (this.state.lastOriginalValueReported = t.value, i.simulated = !0, t._valueTracker && t._valueTracker.setValue(Math.random()), t.dispatchEvent(i), this.trigger("change", this.state.lastOriginalValueReported), t.value = this.state.lastOriginalValueReported);
       }
     },
-    events: p,
-    fixFirefoxLastTagNoCaret: function fixFirefoxLastTagNoCaret() {},
-    placeCaretAfterNode: function placeCaretAfterNode(t) {
+    events: c,
+
+    fixFirefoxLastTagNoCaret() {},
+
+    placeCaretAfterNode(t) {
       if (t && t.parentNode) {
         var e = t.nextSibling,
             i = window.getSelection(),
@@ -1083,50 +1076,49 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         i.rangeCount && (s.setStartBefore(e || t), s.setEndBefore(e || t), i.removeAllRanges(), i.addRange(s));
       }
     },
-    insertAfterTag: function insertAfterTag(t, e) {
+
+    insertAfterTag(t, e) {
       if (e = e || this.settings.mixMode.insertAfterTag, t && t.parentNode && e) return e = "string" == typeof e ? document.createTextNode(e) : e, t.parentNode.insertBefore(e, t.nextSibling), e;
     },
-    editTag: function editTag(t, e) {
-      var i = this;
-      t = t || this.getLastTag(), e = e || {}, this.dropdown.hide.call(this);
-      var s = this.settings;
 
-      function a() {
-        return t.querySelector("." + s.classNames.tagText);
+    editTag(t, e) {
+      t = t || this.getLastTag(), e = e || {}, this.dropdown.hide.call(this);
+      var i = this.settings;
+
+      function s() {
+        return t.querySelector(i.classNames.tagTextSelector);
       }
 
-      var n = a(),
-          o = this.getNodeIndex(t),
+      var a = s(),
+          n = this.getNodeIndex(t),
           r = this.tagData(t),
           l = this.events.callbacks,
-          c = this,
+          d = this,
           h = !0;
 
-      if (n) {
-        if (!(r instanceof Object && "editable" in r) || r.editable) return n.setAttribute("contenteditable", !0), t.classList.add(s.classNames.tagEditing), this.tagData(t, {
-          __originalData: d({}, r),
+      if (a) {
+        if (!(r instanceof Object && "editable" in r) || r.editable) return a.setAttribute("contenteditable", !0), t.classList.add(i.classNames.tagEditing), this.tagData(t, {
+          __originalData: o({}, r),
           __originalHTML: t.innerHTML
-        }), n.addEventListener("focus", l.onEditTagFocus.bind(this, t)), n.addEventListener("blur", function () {
-          setTimeout(function () {
-            return l.onEditTagBlur.call(c, a());
-          });
-        }), n.addEventListener("input", l.onEditTagInput.bind(this, n)), n.addEventListener("keydown", function (e) {
-          return l.onEditTagkeydown.call(i, e, t);
-        }), n.focus(), this.setRangeAtStartEnd(!1, n), e.skipValidation || (h = this.editTagToggleValidity(t, r.value)), n.originalIsValid = h, this.trigger("edit:start", {
+        }), a.addEventListener("focus", l.onEditTagFocus.bind(this, t)), a.addEventListener("blur", function () {
+          setTimeout(() => l.onEditTagBlur.call(d, s()));
+        }), a.addEventListener("input", l.onEditTagInput.bind(this, a)), a.addEventListener("keydown", e => l.onEditTagkeydown.call(this, e, t)), a.focus(), this.setRangeAtStartEnd(!1, a), e.skipValidation || (h = this.editTagToggleValidity(t, r.value)), a.originalIsValid = h, this.trigger("edit:start", {
           tag: t,
-          index: o,
+          index: n,
           data: r,
           isValid: h
         }), this;
-      } else console.warn("Cannot find element in Tag template: .", s.classNames.tagText);
+      } else console.warn("Cannot find element in Tag template: .", i.classNames.tagTextSelector);
     },
-    editTagToggleValidity: function editTagToggleValidity(t, e) {
+
+    editTagToggleValidity(t, e) {
       var i,
           s = this.tagData(t);
       if (s) return i = !(!s.__isValid || 1 == s.__isValid), t.classList.toggle(this.settings.classNames.tagInvalid, i), s.__isValid;
       console.warn("tag has no data: ", t, s);
     },
-    onEditTagDone: function onEditTagDone(t, e) {
+
+    onEditTagDone(t, e) {
       e = e || {};
       var i = {
         tag: t = t || this.state.editing.scope,
@@ -1134,53 +1126,55 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         previousData: this.tagData(t),
         data: e
       };
-      this.trigger("edit:beforeUpdate", i), this.state.editing = !1, delete e.__originalData, delete e.__originalHTML, t && e[this.settings.tagTextProp] ? (this.editTagToggleValidity(t), this.replaceTag(t, e)) : t && this.removeTags(t), this.trigger("edit:updated", i), this.dropdown.hide.call(this), this.settings.keepInvalidTags && this.reCheckInvalidTags();
+      this.trigger("edit:beforeUpdate", i, {
+        cloneData: !1
+      }), this.state.editing = !1, delete e.__originalData, delete e.__originalHTML, t && e[this.settings.tagTextProp] ? (this.editTagToggleValidity(t), this.replaceTag(t, e)) : t && this.removeTags(t), this.trigger("edit:updated", i), this.dropdown.hide.call(this), this.settings.keepInvalidTags && this.reCheckInvalidTags();
     },
-    replaceTag: function replaceTag(t, e) {
-      e && e.value || (e = t.__tagifyTagData), e.__isValid && 1 != e.__isValid && d(e, this.getInvalidTagAttrs(e, e.__isValid));
+
+    replaceTag(t, e) {
+      e && e.value || (e = t.__tagifyTagData), e.__isValid && 1 != e.__isValid && o(e, this.getInvalidTagAttrs(e, e.__isValid));
       var i = this.createTagElem(e);
       t.parentNode.replaceChild(i, t), this.updateValueByDOMTags();
     },
-    updateValueByDOMTags: function updateValueByDOMTags() {
-      var t = this;
-      this.value.length = 0, [].forEach.call(this.getTagElms(), function (e) {
-        e.classList.contains(t.settings.classNames.tagNotAllowed) || t.value.push(t.tagData(e));
+
+    updateValueByDOMTags() {
+      this.value.length = 0, [].forEach.call(this.getTagElms(), t => {
+        t.classList.contains(this.settings.classNames.tagNotAllowed.split(" ")[0]) || this.value.push(this.tagData(t));
       }), this.update();
     },
-    setRangeAtStartEnd: function setRangeAtStartEnd(t, e) {
+
+    setRangeAtStartEnd(t, e) {
       t = "number" == typeof t ? t : !!t, e = (e = e || this.DOM.input).lastChild || e;
       var i = document.getSelection();
 
       try {
-        i.rangeCount >= 1 && ["Start", "End"].forEach(function (s) {
-          return i.getRangeAt(0)["set" + s](e, t || e.length);
-        });
+        i.rangeCount >= 1 && ["Start", "End"].forEach(s => i.getRangeAt(0)["set" + s](e, t || e.length));
       } catch (t) {
         console.warn("Tagify: ", t);
       }
     },
-    injectAtCaret: function injectAtCaret(t, e) {
+
+    injectAtCaret(t, e) {
       if (e = e || this.state.selection.range) return "string" == typeof t && (t = document.createTextNode(t)), e.deleteContents(), e.insertNode(t), this.setRangeAtStartEnd(!1, t), this.updateValueByDOMTags(), this.update(), this;
     },
+
     input: {
-      set: function set() {
-        var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
-            e = !(arguments.length > 1 && void 0 !== arguments[1]) || arguments[1],
-            i = this.settings.dropdown.closeOnSelect;
-        this.state.inputText = t, e && (this.DOM.input.innerHTML = t), !t && i && this.dropdown.hide.bind(this), this.input.autocomplete.suggest.call(this), this.input.validate.call(this);
+      set(t = "", e = !0) {
+        var i = this.settings.dropdown.closeOnSelect;
+        this.state.inputText = t, e && (this.DOM.input.innerHTML = s("" + t)), !t && i && this.dropdown.hide.bind(this), this.input.autocomplete.suggest.call(this), this.input.validate.call(this);
       },
-      validate: function validate() {
+
+      validate() {
         var t = !this.state.inputText || !0 === this.validateTag({
           value: this.state.inputText
         });
         return this.DOM.input.classList.toggle(this.settings.classNames.inputInvalid, !t), t;
       },
-      normalize: function normalize(t) {
+
+      normalize(t) {
         var e = t || this.DOM.input,
             i = [];
-        e.childNodes.forEach(function (t) {
-          return 3 == t.nodeType && i.push(t.nodeValue);
-        }), i = i.join("\n");
+        e.childNodes.forEach(t => 3 == t.nodeType && i.push(t.nodeValue)), i = i.join("\n");
 
         try {
           i = i.replace(/(?:\r\n|\r|\n)/g, this.settings.delimiters.source.charAt(0));
@@ -1188,8 +1182,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
         return i = i.replace(/\s/g, " "), this.settings.trim && (i = i.replace(/^\s+/, "")), i;
       },
+
       autocomplete: {
-        suggest: function suggest(t) {
+        suggest(t) {
           if (this.settings.autoComplete.enabled) {
             "string" == typeof (t = t || {}) && (t = {
               value: t
@@ -1200,185 +1195,173 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
             e && this.state.inputText && i == this.state.inputText.toLowerCase() ? (this.DOM.input.setAttribute("data-suggest", s), this.state.inputSuggestion = t) : (this.DOM.input.removeAttribute("data-suggest"), delete this.state.inputSuggestion);
           }
         },
-        set: function set(t) {
+
+        set(t) {
           var e = this.DOM.input.getAttribute("data-suggest"),
               i = t || (e ? this.state.inputText + e : null);
           return !!i && ("mix" == this.settings.mode ? this.replaceTextWithNode(document.createTextNode(this.state.tag.prefix + i)) : (this.input.set.call(this, i), this.setRangeAtStartEnd()), this.input.autocomplete.suggest.call(this), this.dropdown.hide.call(this), !0);
         }
+
       }
     },
-    getTagIdx: function getTagIdx(t) {
-      return this.value.findIndex(function (e) {
-        return e.value == t.value;
-      });
+
+    getTagIdx(t) {
+      return this.value.findIndex(e => e.value == (t || {}).value);
     },
-    getNodeIndex: function getNodeIndex(t) {
+
+    getNodeIndex(t) {
       var e = 0;
-      if (t) for (; t = t.previousElementSibling;) {
-        e++;
-      }
+      if (t) for (; t = t.previousElementSibling;) e++;
       return e;
     },
-    getTagElms: function getTagElms() {
-      for (var t = arguments.length, e = new Array(t), i = 0; i < t; i++) {
-        e[i] = arguments[i];
-      }
 
-      var s = ["." + this.settings.classNames.tag].concat(e).join(".");
-      return [].slice.call(this.DOM.scope.querySelectorAll(s));
+    getTagElms(...t) {
+      var e = "." + [...this.settings.classNames.tag.split(" "), ...t].join(".");
+      return [].slice.call(this.DOM.scope.querySelectorAll(e));
     },
-    getLastTag: function getLastTag() {
-      var t = this.DOM.scope.querySelectorAll(".".concat(this.settings.classNames.tag, ":not(.").concat(this.settings.classNames.tagHide, "):not([readonly])"));
+
+    getLastTag() {
+      var t = this.DOM.scope.querySelectorAll(`${this.settings.classNames.tagSelector}:not(.${this.settings.classNames.tagHide}):not([readonly])`);
       return t[t.length - 1];
     },
-    tagData: function tagData(t, e, i) {
-      return t ? (e && (t.__tagifyTagData = i ? e : d({}, t.__tagifyTagData || {}, e)), t.__tagifyTagData) : (console.warn("tag elment doesn't exist", t, e), e);
+
+    tagData: (t, e, i) => t ? (e && (t.__tagifyTagData = i ? e : o({}, t.__tagifyTagData || {}, e)), t.__tagifyTagData) : (console.warn("tag elment doesn't exist", t, e), e),
+
+    isTagDuplicate(e, i) {
+      var s = this.settings;
+      return "select" != s.mode && this.value.reduce((a, n) => t(this.trim("" + e), n.value, i || s.dropdown.caseSensitive) ? a + 1 : a, 0);
     },
-    isTagDuplicate: function isTagDuplicate(t, e) {
-      var i = this,
-          a = this.settings;
-      return "select" != a.mode && this.value.reduce(function (n, o) {
-        return s(i.trim("" + t), o.value, e || a.dropdown.caseSensitive) ? n + 1 : n;
-      }, 0);
-    },
-    getTagIndexByValue: function getTagIndexByValue(t) {
-      var e = this,
-          i = [];
-      return this.getTagElms().forEach(function (a, n) {
-        s(e.trim(a.textContent), t, e.settings.dropdown.caseSensitive) && i.push(n);
+
+    getTagIndexByValue(e) {
+      var i = [];
+      return this.getTagElms().forEach((s, a) => {
+        t(this.trim(s.textContent), e, this.settings.dropdown.caseSensitive) && i.push(a);
       }), i;
     },
-    getTagElmByValue: function getTagElmByValue(t) {
+
+    getTagElmByValue(t) {
       var e = this.getTagIndexByValue(t)[0];
       return this.getTagElms()[e];
     },
-    flashTag: function flashTag(t) {
-      var e = this;
-      t && (t.classList.add(this.settings.classNames.tagFlash), setTimeout(function () {
-        t.classList.remove(e.settings.classNames.tagFlash);
+
+    flashTag(t) {
+      t && (t.classList.add(this.settings.classNames.tagFlash), setTimeout(() => {
+        t.classList.remove(this.settings.classNames.tagFlash);
       }, 100));
     },
-    isTagBlacklisted: function isTagBlacklisted(t) {
-      return t = this.trim(t.toLowerCase()), this.settings.blacklist.filter(function (e) {
-        return ("" + e).toLowerCase() == t;
-      }).length;
+
+    isTagBlacklisted(t) {
+      return t = this.trim(t.toLowerCase()), this.settings.blacklist.filter(e => ("" + e).toLowerCase() == t).length;
     },
-    isTagWhitelisted: function isTagWhitelisted(t) {
+
+    isTagWhitelisted(t) {
       return !!this.getWhitelistItem(t);
     },
-    getWhitelistItem: function getWhitelistItem(t, e, i) {
-      e = e || "value";
+
+    getWhitelistItem(e, i, s) {
+      i = i || "value";
       var a,
           n = this.settings;
-      return (i = i || n.whitelist).some(function (i) {
-        var o = "string" == typeof i ? i : i[e] || i.value;
-        if (s(o, t, n.dropdown.caseSensitive, n.trim)) return a = "string" == typeof i ? {
-          value: i
-        } : i, !0;
-      }), a || "value" != e || "value" == n.tagTextProp || (a = this.getWhitelistItem(t, n.tagTextProp, i)), a;
+      return (s = s || n.whitelist).some(s => {
+        var o = "string" == typeof s ? s : s[i] || s.value;
+        if (t(o, e, n.dropdown.caseSensitive, n.trim)) return a = "string" == typeof s ? {
+          value: s
+        } : s, !0;
+      }), a || "value" != i || "value" == n.tagTextProp || (a = this.getWhitelistItem(e, n.tagTextProp, s)), a;
     },
-    validateTag: function validateTag(t) {
+
+    validateTag(t) {
       var e = this.settings,
           i = "value" in t ? "value" : e.tagTextProp,
           s = this.trim(t[i] + "");
       return (t[i] + "").trim() ? e.pattern && e.pattern instanceof RegExp && !e.pattern.test(s) ? this.TEXTS.pattern : !e.duplicates && this.isTagDuplicate(s, this.state.editing) ? this.TEXTS.duplicate : this.isTagBlacklisted(s) || e.enforceWhitelist && !this.isTagWhitelisted(s) ? this.TEXTS.notAllowed : !e.validate || e.validate(t) : this.TEXTS.empty;
     },
-    getInvalidTagAttrs: function getInvalidTagAttrs(t, e) {
+
+    getInvalidTagAttrs(t, e) {
       return {
         "aria-invalid": !0,
-        class: "".concat(t.class || "", " ").concat(this.settings.classNames.tagNotAllowed).trim(),
+        class: `${t.class || ""} ${this.settings.classNames.tagNotAllowed}`.trim(),
         title: e
       };
     },
-    hasMaxTags: function hasMaxTags() {
+
+    hasMaxTags() {
       return this.value.length >= this.settings.maxTags && this.TEXTS.exceed;
     },
-    setReadonly: function setReadonly(t) {
+
+    setReadonly(t) {
       var e = this.settings;
       document.activeElement.blur(), e.readonly = t, this.DOM.scope[(t ? "set" : "remove") + "Attribute"]("readonly", !0), "mix" == e.mode && (this.DOM.input.contentEditable = !t);
     },
-    normalizeTags: function normalizeTags(t) {
-      var s = this,
-          a = this.settings,
-          n = a.whitelist,
-          o = a.delimiters,
-          r = a.mode,
-          l = a.tagTextProp,
-          d = a.enforceWhitelist,
-          c = [],
-          h = !!n && n[0] instanceof Object,
-          g = t instanceof Array,
-          u = function u(t) {
-        return (t + "").split(o).filter(function (t) {
-          return t;
-        }).map(function (t) {
-          var i;
-          return e(i = {}, l, s.trim(t)), e(i, "value", s.trim(t)), i;
-        });
-      };
+
+    normalizeTags(t) {
+      var e = this.settings,
+          i = e.whitelist,
+          s = e.delimiters,
+          a = e.mode,
+          n = e.tagTextProp;
+      e.enforceWhitelist;
+
+      var o = [],
+          r = !!i && i[0] instanceof Object,
+          l = t instanceof Array,
+          d = t => (t + "").split(s).filter(t => t).map(t => ({
+        [n]: this.trim(t),
+        value: this.trim(t)
+      }));
 
       if ("number" == typeof t && (t = t.toString()), "string" == typeof t) {
         if (!t.trim()) return [];
-        t = u(t);
-      } else if (g) {
-        var p;
-        t = (p = []).concat.apply(p, i(t.map(function (t) {
-          return t.value ? t : u(t);
-        })));
-      }
+        t = d(t);
+      } else l && (t = [].concat(...t.map(t => t.value ? t : d(t))));
 
-      return h && (t.forEach(function (t) {
-        var e = c.map(function (t) {
-          return t.value;
-        }),
-            i = s.dropdown.filterListItems.call(s, t[l], {
+      return r && (t.forEach(t => {
+        var e = o.map(t => t.value),
+            i = this.dropdown.filterListItems.call(this, t[n], {
           exact: !0
-        }).filter(function (t) {
-          return !e.includes(t.value);
-        }),
-            a = i.length > 1 ? s.getWhitelistItem(t[l], l, i) : i[0];
-        a && a instanceof Object ? c.push(a) : "mix" == r || d || (null == t.value && (t.value = t[l]), c.push(t));
-      }), t = c), t;
+        }).filter(t => !e.includes(t.value)),
+            s = i.length > 1 ? this.getWhitelistItem(t[n], n, i) : i[0];
+        s && s instanceof Object ? o.push(s) : "mix" != a && (null == t.value && (t.value = t[n]), o.push(t));
+      }), t = o), t;
     },
-    parseMixTags: function parseMixTags(t) {
-      var e = this,
-          i = this.settings,
-          s = i.mixTagsInterpolator,
-          a = i.duplicates,
-          n = i.transformTag,
-          o = i.enforceWhitelist,
-          r = i.maxTags,
-          l = i.tagTextProp,
-          d = [];
-      return t = t.split(s[0]).map(function (t, i) {
-        var c,
+
+    parseMixTags(t) {
+      var e = this.settings,
+          i = e.mixTagsInterpolator,
+          s = e.duplicates,
+          a = e.transformTag,
+          n = e.enforceWhitelist,
+          o = e.maxTags,
+          r = e.tagTextProp,
+          l = [];
+      return t = t.split(i[0]).map((t, e) => {
+        var d,
             h,
             g,
-            u = t.split(s[1]),
-            p = u[0],
-            f = d.length == r;
+            c = t.split(i[1]),
+            p = c[0],
+            u = l.length == o;
 
         try {
           if (p == +p) throw Error;
           h = JSON.parse(p);
         } catch (t) {
-          h = e.normalizeTags(p)[0] || {
+          h = this.normalizeTags(p)[0] || {
             value: p
           };
         }
 
-        if (f || !(u.length > 1) || o && !e.isTagWhitelisted(h.value) || !a && e.isTagDuplicate(h.value)) {
-          if (t) return i ? s[0] + t : t;
-        } else n.call(e, h), h[c = h[l] ? l : "value"] = e.trim(h[c]), g = e.createTagElem(h), d.push(h), g.classList.add(e.settings.classNames.tagNoAnimation), u[0] = g.outerHTML, e.value.push(h);
+        if (u || !(c.length > 1) || n && !this.isTagWhitelisted(h.value) || !s && this.isTagDuplicate(h.value)) {
+          if (t) return e ? i[0] + t : t;
+        } else a.call(this, h), h[d = h[r] ? r : "value"] = this.trim(h[d]), g = this.createTagElem(h), l.push(h), g.classList.add(this.settings.classNames.tagNoAnimation), c[0] = g.outerHTML, this.value.push(h);
 
-        return u.join("");
-      }).join(""), this.DOM.input.innerHTML = t, this.DOM.input.appendChild(document.createTextNode("")), this.DOM.input.normalize(), this.getTagElms().forEach(function (t, i) {
-        return e.tagData(t, d[i]);
-      }), this.update({
+        return c.join("");
+      }).join(""), this.DOM.input.innerHTML = t, this.DOM.input.appendChild(document.createTextNode("")), this.DOM.input.normalize(), this.getTagElms().forEach((t, e) => this.tagData(t, l[e])), this.update({
         withoutChangeEvent: !0
       }), t;
     },
-    replaceTextWithNode: function replaceTextWithNode(t, e) {
+
+    replaceTextWithNode(t, e) {
       if (this.state.tag || e) {
         e = e || this.state.tag.prefix + this.state.tag.value;
         var i,
@@ -1389,14 +1372,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         return n.splitText(a.anchorOffset - o), i = n.nodeValue.lastIndexOf(e), s = n.splitText(i), t && n.parentNode.replaceChild(t, s), !0;
       }
     },
-    selectTag: function selectTag(t, e) {
+
+    selectTag(t, e) {
       if (!this.settings.enforceWhitelist || this.isTagWhitelisted(e.value)) return this.input.set.call(this, e.value, !0), this.state.actions.selectOption && setTimeout(this.setRangeAtStartEnd.bind(this)), this.getLastTag() ? this.replaceTag(this.getLastTag(), e) : this.appendTag(t), this.value[0] = e, this.trigger("add", {
         tag: t,
         data: e
       }), this.update(), [t];
     },
-    addEmptyTag: function addEmptyTag(t) {
-      var e = d({
+
+    addEmptyTag(t) {
+      var e = o({
         value: ""
       }, t || {}),
           i = this.createTagElem(e);
@@ -1404,116 +1389,109 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         skipValidation: !0
       });
     },
-    addTags: function addTags(t, e) {
-      var i = this,
-          s = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : this.settings.skipInvalid,
-          a = [],
-          n = this.settings;
-      return t && 0 != t.length ? (t = this.normalizeTags(t), "mix" == n.mode ? this.addMixTags(t) : ("select" == n.mode && (e = !1), this.DOM.input.removeAttribute("style"), t.forEach(function (t) {
+
+    addTags(t, e, i = this.settings.skipInvalid) {
+      var s = [],
+          a = this.settings;
+      return t && 0 != t.length ? (t = this.normalizeTags(t), "mix" == a.mode ? this.addMixTags(t) : ("select" == a.mode && (e = !1), this.DOM.input.removeAttribute("style"), t.forEach(t => {
         var e,
-            o = {},
+            n = {},
             r = Object.assign({}, t, {
           value: t.value + ""
         });
 
-        if ((t = Object.assign({}, r)).__isValid = i.hasMaxTags() || i.validateTag(t), n.transformTag.call(i, t), !0 !== t.__isValid) {
-          if (s) return;
-          d(o, i.getInvalidTagAttrs(t, t.__isValid), {
+        if ((t = Object.assign({}, r)).__isValid = this.hasMaxTags() || this.validateTag(t), a.transformTag.call(this, t), !0 !== t.__isValid) {
+          if (i) return;
+          o(n, this.getInvalidTagAttrs(t, t.__isValid), {
             __preInvalidData: r
-          }), t.__isValid == i.TEXTS.duplicate && i.flashTag(i.getTagElmByValue(t.value));
+          }), t.__isValid == this.TEXTS.duplicate && this.flashTag(this.getTagElmByValue(t.value));
         }
 
-        if (t.readonly && (o["aria-readonly"] = !0), e = i.createTagElem(d({}, t, o)), a.push(e), "select" == n.mode) return i.selectTag(e, t);
-        i.appendTag(e), t.__isValid && !0 === t.__isValid ? (i.value.push(t), i.update(), i.trigger("add", {
+        if (t.readonly && (n["aria-readonly"] = !0), e = this.createTagElem(o({}, t, n)), s.push(e), "select" == a.mode) return this.selectTag(e, t);
+        this.appendTag(e), t.__isValid && !0 === t.__isValid ? (this.value.push(t), this.update(), this.trigger("add", {
           tag: e,
-          index: i.value.length - 1,
+          index: this.value.length - 1,
           data: t
-        })) : (i.trigger("invalid", {
+        })) : (this.trigger("invalid", {
           data: t,
-          index: i.value.length,
+          index: this.value.length,
           tag: e,
           message: t.__isValid
-        }), n.keepInvalidTags || setTimeout(function () {
-          return i.removeTags(e, !0);
-        }, 1e3)), i.dropdown.position.call(i);
-      }), t.length && e && this.input.set.call(this), this.dropdown.refilter.call(this), a)) : ("select" == n.mode && this.removeAllTags(), a);
+        }), a.keepInvalidTags || setTimeout(() => this.removeTags(e, !0), 1e3)), this.dropdown.position.call(this);
+      }), t.length && e && this.input.set.call(this), this.dropdown.refilter.call(this), s)) : ("select" == a.mode && this.removeAllTags(), s);
     },
-    addMixTags: function addMixTags(t) {
-      var e = this;
+
+    addMixTags(t) {
       if (t[0].prefix || this.state.tag) this.prefixedTextToTag(t[0]);else {
         "string" == typeof t && (t = [{
           value: t
         }]);
-        var i = !!this.state.selection,
-            s = document.createDocumentFragment();
-        t.forEach(function (t) {
-          var i = e.createTagElem(t);
-          s.appendChild(i), e.insertAfterTag(i);
-        }), i ? this.injectAtCaret(s) : (this.DOM.input.focus(), (i = this.setStateSelection()).range.setStart(this.DOM.input, i.range.endOffset), i.range.setEnd(this.DOM.input, i.range.endOffset), this.DOM.input.appendChild(s), this.updateValueByDOMTags(), this.update());
+        var e = !!this.state.selection,
+            i = document.createDocumentFragment();
+        t.forEach(t => {
+          var e = this.createTagElem(t);
+          i.appendChild(e), this.insertAfterTag(e);
+        }), e ? this.injectAtCaret(i) : (this.DOM.input.focus(), (e = this.setStateSelection()).range.setStart(this.DOM.input, e.range.endOffset), e.range.setEnd(this.DOM.input, e.range.endOffset), this.DOM.input.appendChild(i), this.updateValueByDOMTags(), this.update());
       }
     },
-    prefixedTextToTag: function prefixedTextToTag(t) {
-      var e,
-          i = this,
-          s = this.settings,
-          a = this.state.tag.delimiters;
 
-      if (s.transformTag.call(this, t), t.prefix = t.prefix || this.state.tag ? this.state.tag.prefix : (s.pattern.source || s.pattern)[0], e = this.createTagElem(t), this.replaceTextWithNode(e) || this.DOM.input.appendChild(e), setTimeout(function () {
-        return e.classList.add(i.settings.classNames.tagNoAnimation);
-      }, 300), this.value.push(t), this.update(), !a) {
-        var n = this.insertAfterTag(e) || e;
-        this.placeCaretAfterNode(n);
+    prefixedTextToTag(t) {
+      var e,
+          i = this.settings,
+          s = this.state.tag.delimiters;
+
+      if (i.transformTag.call(this, t), t.prefix = t.prefix || this.state.tag ? this.state.tag.prefix : (i.pattern.source || i.pattern)[0], e = this.createTagElem(t), this.replaceTextWithNode(e) || this.DOM.input.appendChild(e), setTimeout(() => e.classList.add(this.settings.classNames.tagNoAnimation), 300), this.value.push(t), this.update(), !s) {
+        var a = this.insertAfterTag(e) || e;
+        this.placeCaretAfterNode(a);
       }
 
-      return this.state.tag = null, this.trigger("add", d({}, {
+      return this.state.tag = null, this.trigger("add", o({}, {
         tag: e
       }, {
         data: t
       })), e;
     },
-    appendTag: function appendTag(t) {
+
+    appendTag(t) {
       var e = this.DOM.scope.lastElementChild;
       e === this.DOM.input ? this.DOM.scope.insertBefore(t, e) : this.DOM.scope.appendChild(t);
     },
-    createTagElem: function createTagElem(t) {
+
+    createTagElem(t) {
       var e,
-          i = d({}, t, {
-        value: o(t.value + "")
+          i = o({}, t, {
+        value: s(t.value + "")
       });
       return function (t) {
-        for (var e, i = document.createNodeIterator(t, NodeFilter.SHOW_TEXT, null, !1); e = i.nextNode();) {
-          e.textContent.trim() || e.parentNode.removeChild(e);
-        }
+        for (var e, i = document.createNodeIterator(t, NodeFilter.SHOW_TEXT, null, !1); e = i.nextNode();) e.textContent.trim() || e.parentNode.removeChild(e);
       }(e = this.parseTemplate("tag", [i])), this.tagData(e, t), e;
     },
-    reCheckInvalidTags: function reCheckInvalidTags() {
-      var t = this,
-          e = this.settings,
-          i = ".".concat(e.classNames.tag, ".").concat(e.classNames.tagNotAllowed),
-          s = this.DOM.scope.querySelectorAll(i);
-      [].forEach.call(s, function (e) {
-        var i = t.tagData(e),
-            s = e.getAttribute("title") == t.TEXTS.duplicate,
-            a = !0 === t.validateTag(i);
-        s && a && (i = i.__preInvalidData ? i.__preInvalidData : {
-          value: i.value
-        }, t.replaceTag(e, i));
+
+    reCheckInvalidTags() {
+      var t = this.settings,
+          e = `${t.classNames.tagSelector}${t.classNames.tagNotAllowedSelector}`,
+          i = this.DOM.scope.querySelectorAll(e);
+      [].forEach.call(i, t => {
+        var e = this.tagData(t),
+            i = t.getAttribute("title") == this.TEXTS.duplicate,
+            s = !0 === this.validateTag(e);
+        i && s && (e = e.__preInvalidData ? e.__preInvalidData : {
+          value: e.value
+        }, this.replaceTag(t, e));
       });
     },
-    removeTags: function removeTags(t, e, i) {
-      var s,
-          a = this;
-      t = t && t instanceof HTMLElement ? [t] : t instanceof Array ? t : t ? [t] : [this.getLastTag()], s = t.reduce(function (t, e) {
-        return e && "string" == typeof e && (e = a.getTagElmByValue(e)), e && t.push({
-          node: e,
-          idx: a.getTagIdx(a.tagData(e)),
-          data: a.tagData(e, {
-            __removed: !0
-          })
-        }), t;
-      }, []), i = "number" == typeof i ? i : this.CSSVars.tagHideTransition, "select" == this.settings.mode && (i = 0, this.input.set.call(this)), 1 == s.length && s[0].node.classList.contains(this.settings.classNames.tagNotAllowed) && (e = !0), s.length && this.settings.hooks.beforeRemoveTag(s, {
+
+    removeTags(t, e, i) {
+      var s;
+      t = t && t instanceof HTMLElement ? [t] : t instanceof Array ? t : t ? [t] : [this.getLastTag()], s = t.reduce((t, e) => (e && "string" == typeof e && (e = this.getTagElmByValue(e)), e && t.push({
+        node: e,
+        idx: this.getTagIdx(this.tagData(e)),
+        data: this.tagData(e, {
+          __removed: !0
+        })
+      }), t), []), i = "number" == typeof i ? i : this.CSSVars.tagHideTransition, "select" == this.settings.mode && (i = 0, this.input.set.call(this)), 1 == s.length && s[0].node.classList.contains(this.settings.classNames.tagNotAllowed) && (e = !0), s.length && this.settings.hooks.beforeRemoveTag(s, {
         tagify: this
-      }).then(function () {
+      }).then(() => {
         function t(t) {
           t.node.parentNode && (t.node.parentNode.removeChild(t.node), e ? this.settings.keepInvalidTags && this.trigger("remove", {
             tag: t.node,
@@ -1527,46 +1505,46 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
         i && i > 10 && 1 == s.length ? function (e) {
           e.node.style.width = parseFloat(window.getComputedStyle(e.node).width) + "px", document.body.clientTop, e.node.classList.add(this.settings.classNames.tagHide), setTimeout(t.bind(this), i, e);
-        }.call(a, s[0]) : s.forEach(t.bind(a)), e || (s.forEach(function (t) {
+        }.call(this, s[0]) : s.forEach(t.bind(this)), e || (s.forEach(t => {
           var e = Object.assign({}, t.data);
           delete e.__removed;
-          var i = a.getTagIdx(e);
-          i > -1 && a.value.splice(i, 1);
-        }), a.update());
-      }).catch(function (t) {});
+          var i = this.getTagIdx(e);
+          i > -1 && this.value.splice(i, 1);
+        }), this.update());
+      }).catch(t => {});
     },
-    removeAllTags: function removeAllTags() {
-      this.value = [], "mix" == this.settings.mode ? this.DOM.input.innerHTML = "" : Array.prototype.slice.call(this.getTagElms()).forEach(function (t) {
-        return t.parentNode.removeChild(t);
-      }), this.dropdown.position.call(this), "select" == this.settings.mode && this.input.set.call(this), this.update();
+
+    removeAllTags(t) {
+      t = t || {}, this.value = [], "mix" == this.settings.mode ? this.DOM.input.innerHTML = "" : Array.prototype.slice.call(this.getTagElms()).forEach(t => t.parentNode.removeChild(t)), this.dropdown.position.call(this), "select" == this.settings.mode && this.input.set.call(this), this.update(t);
     },
-    postUpdate: function postUpdate() {
+
+    postUpdate() {
       var t = this.settings.classNames,
           e = "mix" == this.settings.mode ? this.settings.mixMode.integrated ? this.DOM.input.textContent : this.DOM.originalInput.value : this.value.length;
       this.toggleClass(t.hasMaxTags, this.value.length >= this.settings.maxTags), this.toggleClass(t.hasNoTags, !this.value.length), this.toggleClass(t.empty, !e);
     },
-    update: function update(t) {
+
+    update(t) {
       var e,
           i,
           s = this.DOM.originalInput,
           a = (t || {}).withoutChangeEvent,
-          n = (e = this.value, i = ["__isValid", "__removed"], e.map(function (t) {
+          n = (e = this.value, i = ["__isValid", "__removed"], e.map(t => {
         var e = {};
 
-        for (var s in t) {
-          i.indexOf(s) < 0 && (e[s] = t[s]);
-        }
+        for (var s in t) i.indexOf(s) < 0 && (e[s] = t[s]);
 
         return e;
       }));
       this.settings.mixMode.integrated || (s.value = "mix" == this.settings.mode ? this.getMixedTagsAsString(n) : n.length ? this.settings.originalInputValueFormat ? this.settings.originalInputValueFormat(n) : JSON.stringify(n) : ""), this.postUpdate(), !a && this.state.loadedOriginalValues && this.triggerChangeEvent();
     },
-    getMixedTagsAsString: function getMixedTagsAsString() {
+
+    getMixedTagsAsString() {
       var t = "",
           e = this,
           i = this.settings.mixTagsInterpolator;
       return function s(a) {
-        a.childNodes.forEach(function (a) {
+        a.childNodes.forEach(a => {
           if (1 == a.nodeType) {
             if (a.classList.contains(e.settings.classNames.tag) && e.tagData(a)) {
               if (e.tagData(a).__removed) return;
@@ -1578,7 +1556,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         });
       }(this.DOM.input), t;
     }
-  }, f.prototype.removeTag = f.prototype.removeTags, f;
+
+  }, p.prototype.removeTag = p.prototype.removeTags, p;
 });
 
 /***/ }),
@@ -1839,7 +1818,7 @@ var bricks = function bricks() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Foundation integration for DataTables' Buttons
  * ©2016 SpryMedia Ltd - datatables.net/license
@@ -1921,7 +1900,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*!
  * Column visibility buttons for Buttons and DataTables.
@@ -2086,7 +2065,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*!
  * HTML5 export buttons for Buttons and DataTables.
@@ -2152,7 +2131,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
       return view.URL || view.webkitURL || view;
     },
         save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a"),
-        can_use_save_link = "download" in save_link,
+        can_use_save_link = ("download" in save_link),
         click = function click(node) {
       var event = new MouseEvent("click");
       node.dispatchEvent(event);
@@ -3256,7 +3235,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Buttons for DataTables 1.7.0
  * ©2016-2021 SpryMedia Ltd - datatables.net/license
@@ -5202,7 +5181,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Foundation styling wrapper for ColReorder
  * ©2018 SpryMedia Ltd - datatables.net/license
@@ -5228,7 +5207,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! ColReorder 1.5.3
  * ©2010-2020 SpryMedia Ltd - datatables.net/license
@@ -6610,7 +6589,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Foundation styling wrapper for FixedColumns
  * ©2018 SpryMedia Ltd - datatables.net/license
@@ -6636,7 +6615,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! FixedColumns 3.3.2
  * ©2010-2020 SpryMedia Ltd - datatables.net/license
@@ -8159,7 +8138,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Foundation styling wrapper for FixedHeader
  * ©2018 SpryMedia Ltd - datatables.net/license
@@ -8185,7 +8164,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! FixedHeader 3.1.8
  * ©2009-2021 SpryMedia Ltd - datatables.net/license
@@ -8838,7 +8817,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! Foundation styling wrapper for RowGroup
  * ©2018 SpryMedia Ltd - datatables.net/license
@@ -8864,7 +8843,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! RowGroup 1.1.2
  * ©2017-2020 SpryMedia Ltd - datatables.net/license
@@ -9291,7 +9270,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function (factory) {
   if (true) {
@@ -9336,7 +9315,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! SearchPanes 1.2.1
  * 2019-2020 SpryMedia Ltd - datatables.net/license
@@ -12327,7 +12306,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! DataTables Foundation integration
  * ©2011-2015 SpryMedia Ltd - datatables.net/license
@@ -12475,7 +12454,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*! DataTables 1.10.24
  * ©2008-2021 SpryMedia Ltd - datatables.net/license
@@ -26685,7 +26664,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onImagesLoaded", function() { return onImagesLoaded; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+function _typeof2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
 
 
 
@@ -26998,9 +26977,7 @@ function ignoreMousedisappear(handler) {
   };
 }
 
-var foundation_core_utils =
-/*#__PURE__*/
-Object.freeze({
+var foundation_core_utils = /*#__PURE__*/Object.freeze({
   rtl: rtl,
   GetYoDigits: GetYoDigits,
   RegExpEscape: RegExpEscape,
@@ -28332,9 +28309,7 @@ function init() {
   this.addEventListener && this.addEventListener('touchstart', onTouchStart, false);
 }
 
-var SpotSwipe =
-/*#__PURE__*/
-function () {
+var SpotSwipe = /*#__PURE__*/function () {
   function SpotSwipe($) {
     _classCallCheck(this, SpotSwipe);
 
@@ -28707,9 +28682,7 @@ Triggers.init = function ($, Foundation) {
 // {function} _destroy (replaces previous destroy)
 
 
-var Plugin =
-/*#__PURE__*/
-function () {
+var Plugin = /*#__PURE__*/function () {
   function Plugin(element, options) {
     _classCallCheck(this, Plugin);
 
@@ -28771,9 +28744,7 @@ function getPluginName(obj) {
  */
 
 
-var Abide =
-/*#__PURE__*/
-function (_Plugin) {
+var Abide = /*#__PURE__*/function (_Plugin) {
   _inherits(Abide, _Plugin);
 
   function Abide() {
@@ -29715,9 +29686,7 @@ Abide.defaults = {
  * @requires foundation.util.keyboard
  */
 
-var Accordion =
-/*#__PURE__*/
-function (_Plugin) {
+var Accordion = /*#__PURE__*/function (_Plugin) {
   _inherits(Accordion, _Plugin);
 
   function Accordion() {
@@ -30164,9 +30133,7 @@ Accordion.defaults = {
  * @requires foundation.util.nest
  */
 
-var AccordionMenu =
-/*#__PURE__*/
-function (_Plugin) {
+var AccordionMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(AccordionMenu, _Plugin);
 
   function AccordionMenu() {
@@ -30554,9 +30521,7 @@ AccordionMenu.defaults = {
  * @requires foundation.util.box
  */
 
-var Drilldown =
-/*#__PURE__*/
-function (_Plugin) {
+var Drilldown = /*#__PURE__*/function (_Plugin) {
   _inherits(Drilldown, _Plugin);
 
   function Drilldown() {
@@ -31290,9 +31255,7 @@ function nextItem(item, array) {
   }
 }
 
-var Positionable =
-/*#__PURE__*/
-function (_Plugin) {
+var Positionable = /*#__PURE__*/function (_Plugin) {
   _inherits(Positionable, _Plugin);
 
   function Positionable() {
@@ -31524,9 +31487,7 @@ Positionable.defaults = {
  * @requires foundation.util.triggers
  */
 
-var Dropdown =
-/*#__PURE__*/
-function (_Positionable) {
+var Dropdown = /*#__PURE__*/function (_Positionable) {
   _inherits(Dropdown, _Positionable);
 
   function Dropdown() {
@@ -32012,9 +31973,7 @@ Dropdown.defaults = {
  * @requires foundation.util.touch
  */
 
-var DropdownMenu =
-/*#__PURE__*/
-function (_Plugin) {
+var DropdownMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(DropdownMenu, _Plugin);
 
   function DropdownMenu() {
@@ -32554,9 +32513,7 @@ DropdownMenu.defaults = {
  * @requires foundation.util.imageLoader if equalizer contains images
  */
 
-var Equalizer =
-/*#__PURE__*/
-function (_Plugin) {
+var Equalizer = /*#__PURE__*/function (_Plugin) {
   _inherits(Equalizer, _Plugin);
 
   function Equalizer() {
@@ -32938,9 +32895,7 @@ Equalizer.defaults = {
  * @requires foundation.util.mediaQuery
  */
 
-var Interchange =
-/*#__PURE__*/
-function (_Plugin) {
+var Interchange = /*#__PURE__*/function (_Plugin) {
   _inherits(Interchange, _Plugin);
 
   function Interchange() {
@@ -33209,9 +33164,7 @@ Interchange.SPECIAL_QUERIES = {
  * @module foundation.smoothScroll
  */
 
-var SmoothScroll =
-/*#__PURE__*/
-function (_Plugin) {
+var SmoothScroll = /*#__PURE__*/function (_Plugin) {
   _inherits(SmoothScroll, _Plugin);
 
   function SmoothScroll() {
@@ -33373,9 +33326,7 @@ SmoothScroll.defaults = {
  * @requires foundation.util.triggers
  */
 
-var Magellan =
-/*#__PURE__*/
-function (_Plugin) {
+var Magellan = /*#__PURE__*/function (_Plugin) {
   _inherits(Magellan, _Plugin);
 
   function Magellan() {
@@ -33696,9 +33647,7 @@ Magellan.defaults = {
  * @requires foundation.util.triggers
  */
 
-var OffCanvas =
-/*#__PURE__*/
-function (_Plugin) {
+var OffCanvas = /*#__PURE__*/function (_Plugin) {
   _inherits(OffCanvas, _Plugin);
 
   function OffCanvas() {
@@ -34475,9 +34424,7 @@ OffCanvas.defaults = {
  * @requires foundation.util.touch
  */
 
-var Orbit =
-/*#__PURE__*/
-function (_Plugin) {
+var Orbit = /*#__PURE__*/function (_Plugin) {
   _inherits(Orbit, _Plugin);
 
   function Orbit() {
@@ -35102,9 +35049,7 @@ var MenuPlugins = {
  * @requires foundation.util.mediaQuery
  */
 
-var ResponsiveMenu =
-/*#__PURE__*/
-function (_Plugin) {
+var ResponsiveMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveMenu, _Plugin);
 
   function ResponsiveMenu() {
@@ -35245,9 +35190,7 @@ ResponsiveMenu.defaults = {};
  * @requires foundation.util.motion
  */
 
-var ResponsiveToggle =
-/*#__PURE__*/
-function (_Plugin) {
+var ResponsiveToggle = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveToggle, _Plugin);
 
   function ResponsiveToggle() {
@@ -35414,9 +35357,7 @@ ResponsiveToggle.defaults = {
  * @requires foundation.util.motion if using animations
  */
 
-var Reveal =
-/*#__PURE__*/
-function (_Plugin) {
+var Reveal = /*#__PURE__*/function (_Plugin) {
   _inherits(Reveal, _Plugin);
 
   function Reveal() {
@@ -36133,9 +36074,7 @@ Reveal.defaults = {
  * @requires foundation.util.touch
  */
 
-var Slider =
-/*#__PURE__*/
-function (_Plugin) {
+var Slider = /*#__PURE__*/function (_Plugin) {
   _inherits(Slider, _Plugin);
 
   function Slider() {
@@ -36931,9 +36870,7 @@ function baseLog(base, value) {
  */
 
 
-var Sticky =
-/*#__PURE__*/
-function (_Plugin) {
+var Sticky = /*#__PURE__*/function (_Plugin) {
   _inherits(Sticky, _Plugin);
 
   function Sticky() {
@@ -37510,9 +37447,7 @@ function emCalc(em) {
  */
 
 
-var Tabs =
-/*#__PURE__*/
-function (_Plugin) {
+var Tabs = /*#__PURE__*/function (_Plugin) {
   _inherits(Tabs, _Plugin);
 
   function Tabs() {
@@ -38075,9 +38010,7 @@ Tabs.defaults = {
  * @requires foundation.util.triggers
  */
 
-var Toggler =
-/*#__PURE__*/
-function (_Plugin) {
+var Toggler = /*#__PURE__*/function (_Plugin) {
   _inherits(Toggler, _Plugin);
 
   function Toggler() {
@@ -38267,9 +38200,7 @@ Toggler.defaults = {
  * @requires foundation.util.triggers
  */
 
-var Tooltip =
-/*#__PURE__*/
-function (_Positionable) {
+var Tooltip = /*#__PURE__*/function (_Positionable) {
   _inherits(Tooltip, _Positionable);
 
   function Tooltip() {
@@ -38796,9 +38727,7 @@ var MenuPlugins$1 = {
  * @requires foundation.tabs
  */
 
-var ResponsiveAccordionTabs =
-/*#__PURE__*/
-function (_Plugin) {
+var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveAccordionTabs, _Plugin);
 
   function ResponsiveAccordionTabs(element, options) {
@@ -39157,7 +39086,7 @@ Foundation.plugin(ResponsiveAccordionTabs, 'ResponsiveAccordionTabs');
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var DateFormatter;
 !function () {
@@ -40625,7 +40554,7 @@ var datetimepickerFactory = function datetimepickerFactory(L) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*!
  * jQuery Mousewheel 3.1.13
@@ -40863,7 +40792,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*!
  * jQuery JavaScript Library v3.6.0
@@ -50640,7 +50569,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Afrikaans [af]
@@ -50727,7 +50656,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic (Algeria) [ar-dz]
@@ -50843,7 +50772,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic (Kuwait) [ar-kw]
@@ -50916,7 +50845,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic (Lybia) [ar-ly]
@@ -51045,7 +50974,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic (Morocco) [ar-ma]
@@ -51119,7 +51048,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic (Saudi Arabia) [ar-sa]
@@ -51237,7 +51166,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale  :  Arabic (Tunisia) [ar-tn]
@@ -51310,7 +51239,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Arabic [ar]
@@ -51455,7 +51384,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Azerbaijani [az]
@@ -51575,7 +51504,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Belarusian [be]
@@ -51726,7 +51655,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Bulgarian [bg]
@@ -51834,7 +51763,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Bambara [bm]
@@ -51906,7 +51835,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Bengali (Bangladesh) [bn-bd]
@@ -52049,7 +51978,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Bengali [bn]
@@ -52180,7 +52109,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Tibetan [bo]
@@ -52313,7 +52242,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Breton [br]
@@ -52469,7 +52398,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Bosnian [bs]
@@ -52654,7 +52583,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Catalan [ca]
@@ -52755,7 +52684,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Czech [cs]
@@ -52969,7 +52898,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Chuvash [cv]
@@ -53046,7 +52975,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Welsh [cy]
@@ -53142,7 +53071,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Danish [da]
@@ -53216,7 +53145,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : German (Austria) [de-at]
@@ -53312,7 +53241,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : German (Switzerland) [de-ch]
@@ -53405,7 +53334,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : German [de]
@@ -53500,7 +53429,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Maldivian [dv]
@@ -53591,7 +53520,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Greek [el]
@@ -53709,7 +53638,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (Australia) [en-au]
@@ -53787,7 +53716,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (Canada) [en-ca]
@@ -53859,7 +53788,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (United Kingdom) [en-gb]
@@ -53937,7 +53866,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (Ireland) [en-ie]
@@ -54015,7 +53944,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (Israel) [en-il]
@@ -54087,7 +54016,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (India) [en-in]
@@ -54165,7 +54094,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (New Zealand) [en-nz]
@@ -54243,7 +54172,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : English (Singapore) [en-sg]
@@ -54321,7 +54250,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Esperanto [eo]
@@ -54411,7 +54340,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Spanish (Dominican Republic) [es-do]
@@ -54517,7 +54446,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Spanish (Mexico) [es-mx]
@@ -54625,7 +54554,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Spanish (United States) [es-us]
@@ -54733,7 +54662,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Spanish [es]
@@ -54841,7 +54770,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Estonian [et]
@@ -54938,7 +54867,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Basque [eu]
@@ -55018,7 +54947,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Persian [fa]
@@ -55138,7 +55067,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Finnish [fi]
@@ -55274,7 +55203,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Filipino [fil]
@@ -55351,7 +55280,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Faroese [fo]
@@ -55426,7 +55355,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : French (Canada) [fr-ca]
@@ -55512,7 +55441,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : French (Switzerland) [fr-ch]
@@ -55604,7 +55533,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : French [fr]
@@ -55713,7 +55642,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Frisian [fy]
@@ -55801,7 +55730,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Irish or Irish Gaelic [ga]
@@ -55884,7 +55813,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Scottish Gaelic [gd]
@@ -55967,7 +55896,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Galician [gl]
@@ -56059,7 +55988,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Konkani Devanagari script [gom-deva]
@@ -56202,7 +56131,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Konkani Latin script [gom-latn]
@@ -56345,7 +56274,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Gujarati [gu]
@@ -56483,7 +56412,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Hebrew [he]
@@ -56598,7 +56527,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Hindi [hi]
@@ -56747,7 +56676,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Croatian [hr]
@@ -56936,7 +56865,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Hungarian [hu]
@@ -57077,7 +57006,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Armenian [hy-am]
@@ -57188,7 +57117,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Indonesian [id]
@@ -57286,7 +57215,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Icelandic [is]
@@ -57455,7 +57384,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Italian (Switzerland) [it-ch]
@@ -57539,7 +57468,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Italian [it]
@@ -57633,7 +57562,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Japanese [ja]
@@ -57794,7 +57723,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Javanese [jv]
@@ -57892,7 +57821,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Georgian [ka]
@@ -57996,7 +57925,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Kazakh [kk]
@@ -58096,7 +58025,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Cambodian [km]
@@ -58216,7 +58145,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Kannada [kn]
@@ -58356,7 +58285,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Korean [ko]
@@ -58453,7 +58382,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Kurdish [ku]
@@ -58572,7 +58501,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Kyrgyz [ky]
@@ -58672,7 +58601,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Luxembourgish [lb]
@@ -58839,7 +58768,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Lao [lo]
@@ -58921,7 +58850,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Lithuanian [lt]
@@ -59060,7 +58989,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Latvian [lv]
@@ -59176,7 +59105,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Montenegrin [me]
@@ -59297,7 +59226,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Maori [mi]
@@ -59375,7 +59304,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Macedonian [mk]
@@ -59482,7 +59411,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Malayalam [ml]
@@ -59574,7 +59503,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Mongolian [mn]
@@ -59698,7 +59627,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Marathi [mr]
@@ -59940,7 +59869,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Malay [ms-my]
@@ -60038,7 +59967,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Malay [ms]
@@ -60135,7 +60064,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Maltese (Malta) [mt]
@@ -60209,7 +60138,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Burmese [my]
@@ -60317,7 +60246,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Norwegian Bokmål [nb]
@@ -60397,7 +60326,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Nepalese [ne]
@@ -60534,7 +60463,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Dutch (Belgium) [nl-be]
@@ -60631,7 +60560,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Dutch [nl]
@@ -60730,7 +60659,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Nynorsk [nn]
@@ -60809,7 +60738,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Occitan, lengadocian dialecte [oc-lnc]
@@ -60899,7 +60828,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Punjabi (India) [pa-in]
@@ -61037,7 +60966,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Polish [pl]
@@ -61193,7 +61122,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Portuguese (Brazil) [pt-br]
@@ -61266,7 +61195,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Portuguese [pt]
@@ -61346,7 +61275,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Romanian [ro]
@@ -61442,7 +61371,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Russian [ru]
@@ -61647,7 +61576,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Sindhi [sd]
@@ -61738,7 +61667,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Northern Sami [se]
@@ -61812,7 +61741,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Sinhalese [si]
@@ -61896,7 +61825,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Slovak [sk]
@@ -62097,7 +62026,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Slovenian [sl]
@@ -62307,7 +62236,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Albanian [sq]
@@ -62391,7 +62320,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Serbian Cyrillic [sr-cyrl]
@@ -62513,7 +62442,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Serbian [sr]
@@ -62635,7 +62564,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : siSwati [ss]
@@ -62739,7 +62668,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Swedish [sv]
@@ -62819,7 +62748,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Swahili [sw]
@@ -62892,7 +62821,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Tamil [ta]
@@ -63036,7 +62965,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Telugu [te]
@@ -63140,7 +63069,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Tetun Dili (East Timor) [tet]
@@ -63220,7 +63149,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Tajik [tg]
@@ -63353,7 +63282,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Thai [th]
@@ -63435,7 +63364,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Turkmen [tk]
@@ -63546,7 +63475,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Tagalog (Philippines) [tl-ph]
@@ -63622,7 +63551,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Klingon [tlh]
@@ -63756,7 +63685,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Turkish [tr]
@@ -63882,7 +63811,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Talossan [tzl]
@@ -63989,7 +63918,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Central Atlas Tamazight Latin [tzm-latn]
@@ -64061,7 +63990,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Central Atlas Tamazight [tzm]
@@ -64133,7 +64062,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Uyghur (China) [ug-cn]
@@ -64259,7 +64188,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Ukrainian [uk]
@@ -64431,7 +64360,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Urdu [ur]
@@ -64523,7 +64452,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Uzbek Latin [uz-latn]
@@ -64595,7 +64524,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Uzbek [uz]
@@ -64667,7 +64596,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Vietnamese [vi]
@@ -64763,7 +64692,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Pseudo [x-pseudo]
@@ -64842,7 +64771,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Yoruba Nigeria [yo]
@@ -64916,7 +64845,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Chinese (China) [zh-cn]
@@ -65060,7 +64989,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Chinese (Hong Kong) [zh-hk]
@@ -65183,7 +65112,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Chinese (Macau) [zh-mo]
@@ -65305,7 +65234,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js locale configuration
 //! locale : Chinese (Taiwan) [zh-tw]
@@ -65426,7 +65355,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //! moment.js
 //! version : 2.29.1
@@ -70583,11 +70512,11 @@ module.exports = function (module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /**
  * what-input - A global utility for tracking the current input method (mouse, keyboard or touch).
- * @version v5.1.2
+ * @version v5.2.10
  * @link https://github.com/ten1seven/what-input
  * @license MIT
  */
@@ -70733,23 +70662,13 @@ module.exports = function (module) {
 
         var currentInput = 'initial'; // last used input intent
 
-        var currentIntent = currentInput; // check for sessionStorage support
-        // then check for session variables and use if available
+        var currentIntent = currentInput; // UNIX timestamp of current event
 
-        try {
-          if (window.sessionStorage.getItem('what-input')) {
-            currentInput = window.sessionStorage.getItem('what-input');
-          }
+        var currentTimestamp = Date.now(); // check for a `data-whatpersist` attribute on either the `html` or `body` elements, defaults to `true`
 
-          if (window.sessionStorage.getItem('what-intent')) {
-            currentIntent = window.sessionStorage.getItem('what-intent');
-          }
-        } catch (e) {} // event buffer timer
+        var shouldPersist = 'false'; // form input types
 
-
-        var eventTimer = null; // form input types
-
-        var formInputs = ['input', 'select', 'textarea']; // empty array for holding callback functions
+        var formInputs = ['button', 'input', 'select', 'textarea']; // empty array for holding callback functions
 
         var functionList = []; // list of modifier keys commonly used with the mouse and
         // can be safely ignored to prevent false keyboard detection
@@ -70771,11 +70690,10 @@ module.exports = function (module) {
           MSPointerMove: 'pointer',
           pointerdown: 'pointer',
           pointermove: 'pointer',
-          touchstart: 'touch' // boolean: true if touch buffer is active
+          touchstart: 'touch',
+          touchend: 'touch' // boolean: true if the page is being scrolled
 
         };
-        var isBuffering = false; // boolean: true if the page is being scrolled
-
         var isScrolling = false; // store current mouse position
 
         var mousePos = {
@@ -70799,7 +70717,8 @@ module.exports = function (module) {
             }
           });
           window.addEventListener('test', null, opts);
-        } catch (e) {}
+        } catch (e) {} // fail silently
+
         /*
          * set up
          */
@@ -70809,8 +70728,6 @@ module.exports = function (module) {
           // add correct mouse wheel event mapping to `inputMap`
           inputMap[detectWheel()] = 'mouse';
           addListeners();
-          doUpdate('input');
-          doUpdate('intent');
         };
         /*
          * events
@@ -70823,7 +70740,8 @@ module.exports = function (module) {
           // and are treated separately
           var options = supportsPassive ? {
             passive: true
-          } : false; // pointer events (mouse, pen, touch)
+          } : false;
+          document.addEventListener('DOMContentLoaded', setPersist); // pointer events (mouse, pen, touch)
 
           if (window.PointerEvent) {
             window.addEventListener('pointerdown', setInput);
@@ -70837,7 +70755,7 @@ module.exports = function (module) {
             window.addEventListener('mousemove', setIntent); // touch events
 
             if ('ontouchstart' in window) {
-              window.addEventListener('touchstart', eventBuffer, options);
+              window.addEventListener('touchstart', setInput, options);
               window.addEventListener('touchend', setInput);
             }
           } // mouse wheel
@@ -70845,52 +70763,69 @@ module.exports = function (module) {
 
           window.addEventListener(detectWheel(), setIntent, options); // keyboard events
 
-          window.addEventListener('keydown', eventBuffer);
-          window.addEventListener('keyup', eventBuffer); // focus events
+          window.addEventListener('keydown', setInput);
+          window.addEventListener('keyup', setInput); // focus events
 
           window.addEventListener('focusin', setElement);
           window.addEventListener('focusout', clearElement);
+        }; // checks if input persistence should happen and
+        // get saved state from session storage if true (defaults to `false`)
+
+
+        var setPersist = function setPersist() {
+          shouldPersist = !(docElem.getAttribute('data-whatpersist') || document.body.getAttribute('data-whatpersist') === 'false');
+
+          if (shouldPersist) {
+            // check for session variables and use if available
+            try {
+              if (window.sessionStorage.getItem('what-input')) {
+                currentInput = window.sessionStorage.getItem('what-input');
+              }
+
+              if (window.sessionStorage.getItem('what-intent')) {
+                currentIntent = window.sessionStorage.getItem('what-intent');
+              }
+            } catch (e) {// fail silently
+            }
+          } // always run these so at least `initial` state is set
+
+
+          doUpdate('input');
+          doUpdate('intent');
         }; // checks conditions before updating new input
 
 
         var setInput = function setInput(event) {
-          // only execute if the event buffer timer isn't running
-          if (!isBuffering) {
-            var eventKey = event.which;
-            var value = inputMap[event.type];
+          var eventKey = event.which;
+          var value = inputMap[event.type];
 
-            if (value === 'pointer') {
-              value = pointerType(event);
-            }
+          if (value === 'pointer') {
+            value = pointerType(event);
+          }
 
-            var ignoreMatch = !specificMap.length && ignoreMap.indexOf(eventKey) === -1;
-            var specificMatch = specificMap.length && specificMap.indexOf(eventKey) !== -1;
-            var shouldUpdate = value === 'keyboard' && eventKey && (ignoreMatch || specificMatch) || value === 'mouse' || value === 'touch';
+          var ignoreMatch = !specificMap.length && ignoreMap.indexOf(eventKey) === -1;
+          var specificMatch = specificMap.length && specificMap.indexOf(eventKey) !== -1;
+          var shouldUpdate = value === 'keyboard' && eventKey && (ignoreMatch || specificMatch) || value === 'mouse' || value === 'touch'; // prevent touch detection from being overridden by event execution order
 
-            if (currentInput !== value && shouldUpdate) {
-              currentInput = value;
+          if (validateTouch(value)) {
+            shouldUpdate = false;
+          }
 
-              try {
-                window.sessionStorage.setItem('what-input', currentInput);
-              } catch (e) {}
+          if (shouldUpdate && currentInput !== value) {
+            currentInput = value;
+            persistInput('input', currentInput);
+            doUpdate('input');
+          }
 
-              doUpdate('input');
-            }
+          if (shouldUpdate && currentIntent !== value) {
+            // preserve intent for keyboard interaction with form fields
+            var activeElem = document.activeElement;
+            var notFormInput = activeElem && activeElem.nodeName && (formInputs.indexOf(activeElem.nodeName.toLowerCase()) === -1 || activeElem.nodeName.toLowerCase() === 'button' && !checkClosest(activeElem, 'form'));
 
-            if (currentIntent !== value && shouldUpdate) {
-              // preserve intent for keyboard typing in form fields
-              var activeElem = document.activeElement;
-              var notFormInput = activeElem && activeElem.nodeName && formInputs.indexOf(activeElem.nodeName.toLowerCase()) === -1;
-
-              if (notFormInput) {
-                currentIntent = value;
-
-                try {
-                  window.sessionStorage.setItem('what-intent', currentIntent);
-                } catch (e) {}
-
-                doUpdate('intent');
-              }
+            if (notFormInput) {
+              currentIntent = value;
+              persistInput('intent', currentIntent);
+              doUpdate('intent');
             }
           }
         }; // updates the doc and `inputTypes` array with new input
@@ -70903,26 +70838,19 @@ module.exports = function (module) {
 
 
         var setIntent = function setIntent(event) {
-          // test to see if `mousemove` happened relative to the screen to detect scrolling versus mousemove
-          detectScrolling(event); // only execute if the event buffer timer isn't running
-          // or scrolling isn't happening
+          var value = inputMap[event.type];
 
-          if (!isBuffering && !isScrolling) {
-            var value = inputMap[event.type];
+          if (value === 'pointer') {
+            value = pointerType(event);
+          } // test to see if `mousemove` happened relative to the screen to detect scrolling versus mousemove
 
-            if (value === 'pointer') {
-              value = pointerType(event);
-            }
 
-            if (currentIntent !== value) {
-              currentIntent = value;
+          detectScrolling(event); // only execute if scrolling isn't happening
 
-              try {
-                window.sessionStorage.setItem('what-intent', currentIntent);
-              } catch (e) {}
-
-              doUpdate('intent');
-            }
+          if ((!isScrolling && !validateTouch(value) || isScrolling && event.type === 'wheel' || event.type === 'mousewheel' || event.type === 'DOMMouseScroll') && currentIntent !== value) {
+            currentIntent = value;
+            persistInput('intent', currentIntent);
+            doUpdate('intent');
           }
         };
 
@@ -70946,21 +70874,15 @@ module.exports = function (module) {
           currentElement = null;
           docElem.removeAttribute('data-whatelement');
           docElem.removeAttribute('data-whatclasses');
-        }; // buffers events that frequently also fire mouse events
+        };
 
-
-        var eventBuffer = function eventBuffer(event) {
-          // set the current input
-          setInput(event); // clear the timer if it happens to be running
-
-          window.clearTimeout(eventTimer); // set the isBuffering to `true`
-
-          isBuffering = true; // run the timer
-
-          eventTimer = window.setTimeout(function () {
-            // if the timer runs out, set isBuffering back to `false`
-            isBuffering = false;
-          }, 100);
+        var persistInput = function persistInput(which, value) {
+          if (shouldPersist) {
+            try {
+              window.sessionStorage.setItem('what-' + which, value);
+            } catch (e) {// fail silently
+            }
+          }
         };
         /*
          * utilities
@@ -70974,12 +70896,20 @@ module.exports = function (module) {
             // treat pen like touch
             return event.pointerType === 'pen' ? 'touch' : event.pointerType;
           }
+        }; // prevent touch detection from being overridden by event execution order
+
+
+        var validateTouch = function validateTouch(value) {
+          var timestamp = Date.now();
+          var touchIsValid = value === 'mouse' && currentInput === 'touch' && timestamp - currentTimestamp < 200;
+          currentTimestamp = timestamp;
+          return touchIsValid;
         }; // detect version of mouse wheel event to use
-        // via https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+        // via https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
 
 
         var detectWheel = function detectWheel() {
-          var wheelType = void 0; // Modern browsers support "wheel"
+          var wheelType = null; // Modern browsers support "wheel"
 
           if ('onwheel' in document.createElement('div')) {
             wheelType = 'wheel';
@@ -71011,12 +70941,35 @@ module.exports = function (module) {
         };
 
         var detectScrolling = function detectScrolling(event) {
-          if (mousePos['x'] !== event.screenX || mousePos['y'] !== event.screenY) {
+          if (mousePos.x !== event.screenX || mousePos.y !== event.screenY) {
             isScrolling = false;
-            mousePos['x'] = event.screenX;
-            mousePos['y'] = event.screenY;
+            mousePos.x = event.screenX;
+            mousePos.y = event.screenY;
           } else {
             isScrolling = true;
+          }
+        }; // manual version of `closest()`
+
+
+        var checkClosest = function checkClosest(elem, tag) {
+          var ElementPrototype = window.Element.prototype;
+
+          if (!ElementPrototype.matches) {
+            ElementPrototype.matches = ElementPrototype.msMatchesSelector || ElementPrototype.webkitMatchesSelector;
+          }
+
+          if (!ElementPrototype.closest) {
+            do {
+              if (elem.matches(tag)) {
+                return elem;
+              }
+
+              elem = elem.parentElement || elem.parentNode;
+            } while (elem !== null && elem.nodeType === 1);
+
+            return null;
+          } else {
+            return elem.closest(tag);
           }
         };
         /*
@@ -71069,6 +71022,9 @@ module.exports = function (module) {
             if (position || position === 0) {
               functionList.splice(position, 1);
             }
+          },
+          clearStorage: function clearStorage() {
+            window.sessionStorage.clear();
           }
         };
       }();
@@ -71106,6 +71062,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _yaireo_tagify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_yaireo_tagify__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 
 
 
@@ -71174,29 +71136,19 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
   // Remove class if the user isn't pressing the control key or ⌘ key
   if (!event.ctrlKey && !event.metaKey) {
     // Unselect all elements
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(store.stored),
+        _step;
 
     try {
-      for (var _iterator = store.stored[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var el = _step.value;
         el.classList.remove('selected');
       } // Clear previous selection
 
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     selection.clearSelection();
@@ -71205,56 +71157,37 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
   var _ref3$store$changed = _ref3.store.changed,
       added = _ref3$store$changed.added,
       removed = _ref3$store$changed.removed;
+
   // Add a custom class to the elements that where selected.
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+  var _iterator2 = _createForOfIteratorHelper(added),
+      _step2;
 
   try {
-    for (var _iterator2 = added[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var el = _step2.value;
       el.classList.add('selected');
     } // Remove the class from elements that where removed
     // since the last selection
 
   } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
+    _iterator2.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
+    _iterator2.f();
   }
 
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+  var _iterator3 = _createForOfIteratorHelper(removed),
+      _step3;
 
   try {
-    for (var _iterator3 = removed[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
       var _el = _step3.value;
 
       _el.classList.remove('selected');
     }
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _iterator3.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-        _iterator3.return();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
+    _iterator3.f();
   }
 }).on('stop', function (_ref4) {
   var store = _ref4.store,
@@ -71420,7 +71353,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/colin/development/kaimika/photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/dev/Photic/assets/src/js/app.js */"./src/js/app.js");
 
 
 /***/ })
