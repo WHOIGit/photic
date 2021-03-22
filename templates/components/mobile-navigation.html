@@ -15,7 +15,11 @@
         <li><a href="{% url 'manage:users' %}">User Management</a></li>
     </ul>
   </li>
-        <li><a href="{% url 'manage:login' %}">Login</a></li>
+  {% if user.is_authenticated %}
+      <li><a href="{% url 'manage:logout' %}">Logout</a></li>
+  {% else %}
+      <li><a href="{% url 'manage:login' %}">Login</a></li>
+  {% endif %}
     
 </ul>
 </div>
