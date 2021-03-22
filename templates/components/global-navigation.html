@@ -15,7 +15,8 @@
         <a href="/"><h1><b> <i class="fas fa-expand" aria-hidden="true"></i> PHOTIC</b></h1></a>
       </div>
       <div class="top-bar-right">
-        <ul class="dropdown menu" data-dropdown-menu>            
+        <ul class="dropdown menu" data-dropdown-menu>    
+          {% if user.is_staff %}        
           <li class="is-dropdown-submenu-parent">
             <a href="{% url 'manage:index' %}">Admin</a>
             <ul class="menu">
@@ -23,6 +24,7 @@
               </li>
             </ul>
           </li>
+          {% endif %}
           {% if user.is_authenticated %}
               <li><a href="{% url 'manage:logout' %}">Logout</a></li>
           {% else %}

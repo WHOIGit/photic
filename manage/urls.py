@@ -20,5 +20,7 @@ urlpatterns = [
     path('edit-user/<int:id>', views.edit_user, name="edit-user"),
     path('edit-user', views.edit_user, name="create-user"),
     path('api/get-users', views.get_users, name="get-users"),
-    path('api/delete-user/<int:id>', views.delete_user, name="delete-user"),
+    # path('api/delete-user/<int:id>', views.delete_user, name="delete-user"),
+    path('api/deactivate-user/<int:id>', views.deactivate_user, name="deactivate-user"),
+    path('api/activate-user/<int:id>', views.activate_user, name="activate-user"),
 ]

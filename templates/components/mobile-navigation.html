@@ -8,13 +8,14 @@
 </div>
 <div class="margin-top-1">
 <ul class="vertical menu drilldown" data-drilldown>
-    
+  {% if user.is_staff %}
   <li><a href="#">Admin</a>
     <ul class="menu vertical nested">
         <li><a href="/">Home</a></li>
         <li><a href="{% url 'manage:users' %}">User Management</a></li>
     </ul>
   </li>
+  {% endif %}
   {% if user.is_authenticated %}
       <li><a href="{% url 'manage:logout' %}">Logout</a></li>
   {% else %}

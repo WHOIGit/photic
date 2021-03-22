@@ -72,13 +72,6 @@
                         data: "last_name"
                     },
                     {
-                        title: "Active?",
-                        data: "is_active",
-                        render: function(data) {
-                            return data ? "Yes" : "No";
-                        }
-                    },
-                    {
                         title: "Staff?",
                         data: "is_staff",
                         render: function(data) {
@@ -94,26 +87,50 @@
                         }
                     },
                     {
-                        title: "",
-                        data: "id",
-                        orderable: false,
+                        title: "Active?",
+                        data: "is_active",
                         render: function(data) {
-                            return "<a href='#' class='delete-user' data-id='" + data + "'>Delete</a>"
+                            return data ? "Yes" : "No";
+                        }
+                    },
+                    {
+                        title: "",
+                        data: "is_active",
+                        orderable: false,
+                        render: function(data, type, row) {
+                            if (data){
+                                return "<a href='#' class='deactivate-user' data-id='" + row.id + "'>Deactivate</a>"
+                            }else{
+                                return "<a href='#' class='activate-user' data-id='" + row.id + "'>Activate</a>"
+                            }
+
                         }
                     }
                 ]
             });
 
-            $("#users").on("click", ".delete-user", function(e){
+            $("#users").on("click", ".deactivate-user", function(e){
                 e.preventDefault();
-
-                if (!confirm("Are you sure you want to delete this user?"))
-                    return;
 
                 let id = $(this).data("id");
 
                 $.post(
-                    "api/delete-user/" + id,
+                    "api/deactivate-user/" + id,
+                    {
+                        "csrfmiddlewaretoken": "{{ csrf_token }}"
+                    },
+                    function(resp) {
+                        usersTable.ajax.reload();
+                    }
+                );
+            });
+            $("#users").on("click", ".activate-user", function(e){
+                e.preventDefault();
+
+                let id = $(this).data("id");
+
+                $.post(
+                    "api/activate-user/" + id,
                     {
                         "csrfmiddlewaretoken": "{{ csrf_token }}"
                     },

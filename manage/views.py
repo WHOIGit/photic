@@ -58,7 +58,7 @@ def edit_user(request, id=None):
 
 @staff_required
 @require_POST
-def delete_user(request, id):
+def delete_user(request, id): #no longer used by front end
     user = get_object_or_404(User, pk=id)
     user.delete()
 
@@ -67,3 +67,24 @@ def delete_user(request, id):
     })
 
 
+@staff_required
+@require_POST
+def deactivate_user(request, id):
+    user = get_object_or_404(User, pk=id)
+    user.is_active = False
+    user.save()
+    
+    return JsonResponse({
+        "success": True
+    })
+
+@staff_required
+@require_POST
+def activate_user(request, id):
+    user = get_object_or_404(User, pk=id)
+    user.is_active = True
+    user.save()
+    
+    return JsonResponse({
+        "success": True
+    })
