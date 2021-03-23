@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models, transaction
 from django.db.models import F
 from django.db.models.expressions import Window, ValueRange
-from django.db.models.functions import LastValue, FirstValue
+from django.db.models.functions import LastValue
 
 from django.utils import timezone
 
@@ -55,13 +55,27 @@ class ROIManager(models.Manager):
     def get_queryset(self):
         return ROIQuerySet(self.model, using=self._db)
 
-    def create_roi(self, path):
+    def create_or_update_roi(self, path, collection=None):
         if not path.endswith('.png') and not path.endswith('.jpg'):
             raise NameError(f'{path} is not the path to a ROI image')
-        roi_id = os.path.basename(path)[:-4]  # we know it ends with an image extension
-        image = Image.open(path)
-        width, height = image.size
-        return self.create(roi_id=roi_id, width=width, height=height, path=path)
+        roi_id = os.path.basename(path)[:-4]  # we know it ends with a 3-character image extension
+
+        with transaction.atomic():
+            try:
+                roi = self.get(roi_id=roi_id)
+                if roi.path != path:
+                    roi.path = path
+                    roi.save()
+                if collection is not None:
+                    if not roi.collections.filter(id=collection.id).exists():
+                        roi.collections.add(collection)
+            except ROI.DoesNotExist:
+                with Image.open(path) as image:
+                    width, height = image.size
+                roi = self.create(roi_id=roi_id, width=width, height=height, path=path)
+                if collection is not None:
+                    roi.collections.add(collection)
+        return roi
 
     def with_label(self, label):
         return self.get_queryset().with_label(label)

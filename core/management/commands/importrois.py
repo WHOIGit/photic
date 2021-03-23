@@ -49,20 +49,16 @@ class Command(BaseCommand):
                 labeled[label] = scan(label_dir_path)
         if len(labeled) > 0 and not user:
             raise CommandError('labeled ROIs found but no username specified')
-        print(f'found {len(unlabeled)} images and {len(labeled)} label directories')
+        print(f'found {len(unlabeled)} unlabeled images and {len(labeled)} label directories')
         # now create ROI records in the database
         for roi_filename in unlabeled:
             path = os.path.join(directory, roi_filename)
-            roi = ROI.objects.create_roi(path)
-            if collection:
-                collection.rois.add(roi)
+            roi = ROI.objects.create_or_update_roi(path, collection=collection)
         for label_name, rois in labeled.items():
             label, created = Label.objects.get_or_create(name=label_name)
             for roi_filename in rois:
                 roi_path = os.path.join(directory, label_name, roi_filename)
-                roi = ROI.objects.create_roi(roi_path)
-                if collection:
-                    collection.rois.add(roi)
-                Annotation.objects.create_annotation(roi, label, user)
+                roi = ROI.objects.create_or_update_roi(roi_path, collection=collection)
+                Annotation.objects.create_or_verify(roi, label, user)
 
 
