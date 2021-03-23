@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid-y grid-frame">
+    <div class="grid-x grid-padding-x align-center padding-top-1">
+        <div class="cell medium-10 large-8">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs">
+                  <li><a href="/manage">Manage</a></li>
+                  <li><a href="/manage/users">User Management</a></li>
+                  <li>
+                    <span class="show-for-sr">Current: </span> Add / Edit User
+                  </li>
+                </ul>
+              </nav>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x padding-top-1 align-center">
+        <div class="cell medium-10 large-8">
+            <h1>{% if user.id %}Edit{% else %}Create New{% endif %} User</h1>
+        </div>
+    </div>
+    <div class="grid-x align-center">
+        <div class="cell medium-10 large-8">
+            <hr>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell medium-10 large-8">
+            <form method="post" id="createUserForm" data-abide novalidate>
+                {% csrf_token %}
+                <div data-abide-error class="alert callout" style="display: none;">
+                    <p><i class="alert-icon"></i> There are errors with the form below.  Please confirm your entries.</p>
+                  </div>
+                <div class="grid-x grid-padding-x small-up-2 padding-vertical-2">
+                    <div class="cell">
+                        <label>{{ form.username.label_tag }}
+                            {{ form.username }}
+                            <span class="form-error">
+                                Username is Required.
+                              </span>
+                        </label>
+                        {% if form.username.errors %}
+                        <div class="form-error is-visible">{{ form.username.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.email.label_tag }}
+                            {{ form.email }}
+                            <span class="form-error">
+                                Email Address is Required.
+                              </span>
+                        </label>
+                        {% if form.email.errors %}
+                        <div class="form-error is-visible">{{ form.email.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                            <span class="form-error">
+                                First Name is Required.
+                              </span>                            
+                        </label>
+                        {% if form.first_name.errors %}
+                        <div class="form-error is-visible">{{ form.first_name.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                            <span class="form-error">
+                                Last Name is Required.
+                              </span>                            
+                        </label>
+                        {% if form.last_name.errors %}
+                        <div class="form-error is-visible">{{ form.last_name.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.new_password.label_tag }}
+                            {{ form.new_password }}
+                        </label>
+                        {% if form.new_password.errors %}
+                        <div class="form-error is-visible">{{ form.new_password.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.confirm_password.label_tag }}
+                            {{ form.confirm_password }}
+                        </label>
+                        {% if form.confirm_password.errors %}
+                        <div class="form-error is-visible">{{ form.confirm_password.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label for="{{ form.is_active.id_for_label }}">
+                        Is Active? {{ form.is_active }}
+                        </label>
+                        {% if form.is_active.errors %}
+                            <div class="form-error is-visible">{{ form.is_active.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label for="{{ form.is_staff.id_for_label }}">
+                        Is Staff? {{ form.is_staff }}
+                        </label>
+                        {% if form.is_staff.errors %}
+                            <div class="form-error is-visible">{{ form.is_staff.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12">
+                        <div class="callout">
+                            <div class="grid-x">
+                                <div class="cell text-right">
+                                    <a href="{% url 'manage:users' %}"
+                                        class="button secondary hollow margin-0">Cancel</a>
+                                    <button type="submit" class="button primary margin-0">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

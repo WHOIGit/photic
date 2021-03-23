@@ -14,7 +14,15 @@ import moment from 'moment';
 window.jQuery = $;
 window.$ = $;
 
-var dt = require('datatables');
+require('datatables.net-zf');
+require('datatables.net-buttons-zf');
+require('datatables.net-buttons/js/buttons.colVis.js');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-colreorder-zf');
+require('datatables.net-fixedcolumns-zf');
+require('datatables.net-fixedheader-zf');
+require('datatables.net-rowgroup-zf');
+require('datatables.net-searchpanes-zf');
 window.moment = require('moment');
 
 $('#filter-before-date').datetimepicker({
@@ -125,6 +133,31 @@ $('#filter-collection').select(function(ev) {
     ev.preventDefault();
     updateFilters();
 })
+
+
+$("#add_label").on('click', function(ev){
+    ev.preventDefault();
+    let label_name = $("#add_label_text").val()
+    let re = /^[a-z0-9_ ]+$/i;
+    
+    if(!re.test(label_name)){
+        alert("label characters can only be alphanumeric, [underscore], or [space]");   
+    }
+    
+    $.post('api/create_label', {
+        'name': label_name,
+    },
+        function(r) {
+            console.log(r)
+            //add to select element here
+        }
+    )
+
+})
+
+function add_label_callback(evt){
+
+}
 
 function updateQuery(obj){
     var url = new URL(document.location);

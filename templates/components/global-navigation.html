@@ -8,7 +8,6 @@
             <span class="search-icon"></span>
           </button>
           <button type="button" class="button hide-for-large margin-0" data-toggle="offCanvasMenu"><span class="hamburgermenu-icon"></span></button>
-
     </div>
   </div>
 <div class="top-bar show-for-large">
@@ -16,17 +15,21 @@
         <a href="/"><h1><b> <i class="fas fa-expand" aria-hidden="true"></i> PHOTIC</b></h1></a>
       </div>
       <div class="top-bar-right">
-        <ul class="dropdown menu" data-dropdown-menu>            
+        <ul class="dropdown menu" data-dropdown-menu>    
+          {% if user.is_staff %}        
           <li class="is-dropdown-submenu-parent">
-            <a href="#">Admin</a>
+            <a href="{% url 'manage:index' %}">Admin</a>
             <ul class="menu">
-                <li><a href="#">User Management</a></li>
+                <li><a href="{% url 'manage:users' %}">User Management</a></li>
               </li>
             </ul>
           </li>
-
-                <li><a href="#">Login</a></li>
-
+          {% endif %}
+          {% if user.is_authenticated %}
+              <li><a href="{% url 'manage:logout' %}">Logout</a></li>
+          {% else %}
+              <li><a href="{% url 'manage:login' %}">Login</a></li>
+          {% endif %}
         </ul>        
       </div>    
   </div>

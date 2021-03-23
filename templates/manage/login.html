@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="grid-y grid-frame align-middle align-center" id="loginPagePanel">
+        <div class="grid-x align-middle align-center">
+            <div class="cell shrink">
+                <form method="post" id="managementLoginForm">
+                    <div class="card padding-horizontal-1 padding-vertical-2">
+                        {% csrf_token %}
+                        <div class="card-divider">
+                            <h1>Login</h1>
+                        </div>
+                        {% if form.errors %}
+                        <div class="card-divider">
+                            <div class="callout alert">
+                                {% for error in form.non_field_errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="card-section">
+                            <div class="grid-x padding-vertical-2">
+                                <div class="cell padding-bottom-1">
+                                    <label>Username
+                                    {{ form.username }}
+                                </label>
+                                </div>
+                                <div class="cell">
+                                    <label>Password
+                                    {{ form.password }}
+                                </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="button primary expanded">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function(){
+       $("#id_username").focus();
+    });
+</script>
+{% endblock %}

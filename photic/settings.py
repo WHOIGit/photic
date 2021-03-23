@@ -130,6 +130,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = './assets/django/'
 
+# Authentication
+LOGIN_REDIRECT_URL = "/manage"
+LOGIN_URL = "/manage/login"
+
 try:
     from .local_settings import *
 except ImportError as e:

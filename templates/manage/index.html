@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid-y grid-frame align-middle">
+    <div class="grid-x grid-padding-x align-center padding-top-1">
+        <div class="cell medium-10 large-8">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs">
+                  <li>
+                    <span class="show-for-sr">Current: </span> Manage
+                  </li>
+                </ul>
+              </nav>
+        </div>
+    </div>    
+    <div class="grid-x grid-padding-x padding-top-1 align-center">
+        <div class="cell medium-10 large-8">
+            <h1>Admin Area</h1>
+        </div>
+    </div>
+    <div class="grid-x align-center">
+        <div class="cell medium-10 large-8">
+            <hr>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell medium-10 large-8">
+            <div class="grid-x grid-padding-x medium-up-2">
+                <div class="cell">
+                    <h2 class="separator-left">User Management</h2>
+                    <a class="button small expanded align-middle margin-top-3" href="{% url 'manage:users' %}">
+                        <p class="lead margin-0">Manage Users</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
