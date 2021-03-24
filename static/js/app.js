@@ -71302,14 +71302,19 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').select(funct
   ev.preventDefault();
   updateFilters();
 });
+
+function getSelectedWrapper() {
+  return selection.getSelection();
+}
+
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label").on('click', function (ev) {
   ev.preventDefault();
-  var getSelect = selection.getSelection();
+  var selected_rois = getSelectedWrapper();
   var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_select").val();
   var annotations = [];
 
-  for (var i = 0; i < getSelect.length; i++) {
-    var roi = jquery__WEBPACK_IMPORTED_MODULE_0___default()(getSelect[i]).data("roi-id");
+  for (var i = 0; i < selected_rois.length; i++) {
+    var roi = jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).data("roi-id");
     annotations.push({
       label: label_name,
       roi_id: roi
@@ -71329,7 +71334,13 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label").on('click', functi
 });
 
 function apply_label_callback(evt) {
-  console.log(evt);
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_hide").is(':checked')) {
+    var selected_rois = getSelectedWrapper();
+
+    for (var i = 0; i < selected_rois.length; i++) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeOut();
+    }
+  }
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label").on('click', function (ev) {

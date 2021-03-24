@@ -126,14 +126,16 @@ $('#filter-collection').select(function(ev) {
     ev.preventDefault();
     updateFilters();
 });
-
+function getSelectedWrapper(){
+    return selection.getSelection();
+}
 $("#apply_label").on('click', function(ev){
     ev.preventDefault();
-    let getSelect = selection.getSelection();
+    let selected_rois = getSelectedWrapper();
     let label_name = $("#apply_label_select").val();
     let annotations = [];
-    for (let i=0; i<getSelect.length; i++){
-        let roi = $(getSelect[i]).data("roi-id");
+    for (let i=0; i<selected_rois.length; i++){
+        let roi = $(selected_rois[i]).data("roi-id");
         annotations.push({label:label_name, roi_id: roi});
     }
     $.ajax({
@@ -146,10 +148,16 @@ $("#apply_label").on('click', function(ev){
         }),
         success: apply_label_callback,
     });
-})
+
+});
 
 function apply_label_callback(evt){
-    console.log(evt);
+    if($("#add_label_hide").is(':checked')){
+        let selected_rois = getSelectedWrapper();
+        for (let i=0; i<selected_rois.length; i++){
+            $(selected_rois[i]).fadeOut();
+        }
+    }
 }
 
 $("#add_label").on('click', function(ev){
