@@ -131,7 +131,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = './assets/django/'
 
 # Authentication
-LOGIN_REDIRECT_URL = "/manage"
+LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/manage/login"
 
 try:
