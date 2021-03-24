@@ -109,13 +109,6 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     return false;
 });
 
-// $("#filter-label").change(function(ev){
-//     updateQuery({"label": $("#filter-label").val()});
-// });
-
-// $("#filter-annotator").change(function(ev){
-//     updateQuery({"annotator": $("#filter-annotator").val()});
-// });
 function updateFilters() {
     let filters = {}
     filters["annotator"] = $("#filter-annotator").val();
@@ -127,13 +120,37 @@ function updateFilters() {
 $("#filter-button").on('click', function(ev){
     ev.preventDefault();
     updateFilters();
-})
+});
 
 $('#filter-collection').select(function(ev) {
     ev.preventDefault();
     updateFilters();
+});
+
+$("#apply_label").on('click', function(ev){
+    ev.preventDefault();
+    let getSelect = selection.getSelection();
+    let label_name = $("#apply_label_select").val();
+    let annotations = [];
+    for (let i=0; i<getSelect.length; i++){
+        let roi = $(getSelect[i]).data("roi-id");
+        annotations.push({label:label_name, roi_id: roi});
+    }
+    $.ajax({
+        url: '/api/create_or_verify_annotations',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify({
+            'annotations': annotations,
+        }),
+        success: apply_label_callback,
+    });
 })
 
+function apply_label_callback(evt){
+    console.log(evt);
+}
 
 $("#add_label").on('click', function(ev){
     ev.preventDefault();
