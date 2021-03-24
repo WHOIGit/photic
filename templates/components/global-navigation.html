@@ -16,7 +16,7 @@
       </div>
       <div class="top-bar-right">
         <ul class="dropdown menu" data-dropdown-menu>    
-          <li><a href="{% url 'web:index' %}">Annontate</a></li>
+          <li><a href="{% url 'web:index' %}">Home</a></li>
           {% if user.is_staff %}        
           <li class="is-dropdown-submenu-parent">
             <a href="{% url 'manage:index' %}">Admin</a>

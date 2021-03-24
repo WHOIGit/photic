@@ -49,12 +49,13 @@
 
       </ul>    
     </div> 
-    {% if user.is_authenticated %}
     <div class="cell">
       <ul class="accordion" data-accordion data-allow-all-closed="true">
         <li class="accordion-item is-active" data-accordion-item>
           <a href="#" class="accordion-title">Actions</a>
-          <div class="accordion-content" data-tab-content>           
+          <div class="accordion-content" data-tab-content>      
+            
+            {% if user.is_authenticated %}     
             <fieldset class="fieldset">
               <legend>Assign Label</legend>
               <div class="">
@@ -77,10 +78,12 @@
                 
               </div>
             </fieldset>
+            {% else %}
+              To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
+            {% endif %}
           </div>
         </li>
       </ul>
     </div>
-    {% endif %}
   </div>
 </form>
