@@ -71334,11 +71334,13 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label").on('click', functi
 });
 
 function apply_label_callback(evt) {
-  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_hide").is(':checked')) {
-    var selected_rois = getSelectedWrapper();
+  var selected_rois = getSelectedWrapper();
 
-    for (var i = 0; i < selected_rois.length; i++) {
+  for (var i = 0; i < selected_rois.length; i++) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_hide").is(':checked')) {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeOut();
+    } else {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
     }
   }
 }

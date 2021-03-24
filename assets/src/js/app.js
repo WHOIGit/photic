@@ -152,12 +152,15 @@ $("#apply_label").on('click', function(ev){
 });
 
 function apply_label_callback(evt){
-    if($("#add_label_hide").is(':checked')){
-        let selected_rois = getSelectedWrapper();
-        for (let i=0; i<selected_rois.length; i++){
+    let selected_rois = getSelectedWrapper();
+    for (let i=0; i<selected_rois.length; i++){
+        if($("#add_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
+        }else{
+            $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
     }
+
 }
 
 $("#add_label").on('click', function(ev){
