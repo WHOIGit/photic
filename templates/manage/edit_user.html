@@ -94,8 +94,16 @@
                         {% endif %}
                     </div>
                     <div class="cell">
+                        <label for="{{ form.is_active.id_for_label }}">
+                        Is Active? {{ form.is_active }}
+                        </label>
+                        {% if form.is_active.errors %}
+                            <div class="form-error is-visible">{{ form.is_active.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
                         <label for="{{ form.is_staff.id_for_label }}">
-                        Staff? {{ form.is_staff }}
+                        Is Staff? {{ form.is_staff }}
                         </label>
                         {% if form.is_staff.errors %}
                             <div class="form-error is-visible">{{ form.is_staff.errors.as_text }}</div>

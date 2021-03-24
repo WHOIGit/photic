@@ -79,14 +79,6 @@
                         }
                     },
                     {
-                        title: "",
-                        data: "id",
-                        orderable: false,
-                        render: function(data) {
-                            return "<a href='edit-user/" + data + "'>Edit</a>"
-                        }
-                    },
-                    {
                         title: "Active?",
                         data: "is_active",
                         render: function(data) {
@@ -95,15 +87,10 @@
                     },
                     {
                         title: "",
-                        data: "is_active",
+                        data: "id",
                         orderable: false,
-                        render: function(data, type, row) {
-                            if (data){
-                                return "<a href='#' class='deactivate-user' data-id='" + row.id + "'>Deactivate</a>"
-                            }else{
-                                return "<a href='#' class='activate-user' data-id='" + row.id + "'>Activate</a>"
-                            }
-
+                        render: function(data) {
+                            return "<a href='edit-user/" + data + "'>Edit</a>"
                         }
                     }
                 ]
