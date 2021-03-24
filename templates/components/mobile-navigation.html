@@ -11,7 +11,7 @@
   {% if user.is_staff %}
   <li><a href="#">Admin</a>
     <ul class="menu vertical nested">
-        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'web:index' %}">Annontate</a></li>
         <li><a href="{% url 'manage:users' %}">User Management</a></li>
     </ul>
   </li>
