@@ -87,8 +87,11 @@ def create_or_verify_annotations(request):
     body = json.loads(request.body.decode("utf-8"))
 
     # FIXME should just use the logged-in user as the annotator
-    annotator_name = body['annotator']
-    annotator = get_object_or_404(User, username=annotator_name)
+    try:
+        annotator_name = body['annotator']
+        annotator = User.objects.get(username=annotator_name)
+    except KeyError:
+        annotator = request.user
 
     batch = body['annotations']
 
