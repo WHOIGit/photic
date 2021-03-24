@@ -8,10 +8,10 @@
 </div>
 <div class="margin-top-1">
 <ul class="vertical menu drilldown" data-drilldown>
+  <li><a href="{% url 'web:index' %}">Annontate</a></li>
   {% if user.is_staff %}
-  <li><a href="#">Admin</a>
+  <li><a href="{% url 'manage:index' %}">Admin</a>
     <ul class="menu vertical nested">
-        <li><a href="{% url 'web:index' %}">Annontate</a></li>
         <li><a href="{% url 'manage:users' %}">User Management</a></li>
     </ul>
   </li>
