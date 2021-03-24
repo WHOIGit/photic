@@ -33,7 +33,7 @@
                     {% endfor %}
                   </select>
                 </label>
-                <label>Annotator
+                <label class="hide">Annotator
                   <select id="filter-annotator">
                     <option value="">All</option>
                     {% for annotator in annotation_users %}
@@ -42,12 +42,12 @@
                   </select>
                 </label>        
               </div>            
-            <div class="cell">
+            <div class="cell hide">
               <label>Before
                 <input type="text" id="filter-before-date" placeholder="Start Date" disabled>
               </label>
             </div>
-            <div class="cell">
+            <div class="cell hide">
               <label>After
                 <input type="text" id="filter-after-date" placeholder="End Date" disabled>
               </label>
