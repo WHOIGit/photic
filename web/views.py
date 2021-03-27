@@ -7,7 +7,23 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from core.models import Annotation, Label, ImageCollection, ROI, Annotator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+import logging
+
+log = logging.getLogger(__name__)
+
+def home(request):
+    numbers_list = range(1, 1000)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(numbers_list, 20)
+    try:
+        numbers = paginator.page(page)
+    except PageNotAnInteger:
+        numbers = paginator.page(1)
+    except EmptyPage:
+        numbers = paginator.page(paginator.num_pages)
+    return render(request, 'web/home.html', {'numbers': numbers})
 
 def index(request):
     annotation_users = User.objects.all()
@@ -17,12 +33,28 @@ def index(request):
     requested_label = request.GET.get('label')
     requested_collection = request.GET.get('collection')
 
+    is_filtered = requested_label is not None
+
+    return render(request, "web/index.html", {
+        "annotation_users": annotation_users,
+        "labels": labels,
+        "is_filtered": is_filtered,
+        "collections": collections
+    })
+
+
+def roi_list(request):
+    requested_label = request.POST.get('label')
+    requested_collection = request.POST.get('collection')
+    page = request.POST.get('page', 1)
+
     qs = ROI.objects
 
     if requested_collection:
         qs = qs.filter(collections__name=requested_collection)
 
     if requested_label:
+        qs = qs.filter(collections__name=requested_collection)
         if requested_label == 'unlabeled':
             rois = qs.unlabeled()
         else:
@@ -31,19 +63,31 @@ def index(request):
     else:
         rois = qs.all()
 
-    # TODO: Hook up annotator filter
+    # numbers_list = range(1, 1000)
+    # paginator = Paginator(numbers_list, 20)
+    
+    # try:
+    #     numbers = paginator.page(page)
+    # except PageNotAnInteger:
+    #     numbers = paginator.page(1)
+    # except EmptyPage:
+    #     numbers = paginator.page(paginator.num_pages)
 
-    is_filtered = requested_label is not None
 
-    return render(request, "web/index.html", {
-        "annotation_users": annotation_users,
-        "labels": labels,
-        "is_filtered": is_filtered,
-        "collections": collections,
-        "rois": rois,
-        "roi_count": len(rois),
+    roi_records = [{
+        'id': r.id,
+        'path': r.path,
+    } for r in rois]
+
+    return JsonResponse({
+        'rois': roi_records,
+        'roi_count': len(roi_records),
     })
-
+# class ROIView(ListView):
+#     model = ROI
+#     paginate_by = 5
+#     context_object_name = 'roi'
+#     template_name = 'blog/articles.html'
 
 @require_POST
 def roi_annotations(request):

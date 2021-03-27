@@ -71154,7 +71154,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-after-date').datetimepick
 });
 var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
   // All elements in this container can be selected
-  selectables: ['.bricks-container > img'],
+  selectables: ['#main-panel > img'],
   // The container is also the boundary in this case
   boundaries: ['#main-panel'],
   singleTap: {
@@ -71276,7 +71276,7 @@ function getCsrfToken() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('[name="csrfmiddlewaretoken"]').val();
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').on('contextmenu', 'img', function (ev) {
   ev.preventDefault();
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
     'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
@@ -71292,6 +71292,7 @@ function updateFilters() {
   filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
   filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
   updateQuery(filters);
+  loadROIs(filters);
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
@@ -71372,7 +71373,9 @@ function updateQuery(obj) {
   }
 
   url.search = search_params.toString();
-  document.location = url.toString();
+  window.history.pushState({
+    path: url.toString()
+  }, '', url.toString());
 }
 
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
@@ -71447,6 +71450,29 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ajaxSend(function (event
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
+
+function loadROIs() {
+  var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_list', filters, handleRoiAjax);
+}
+
+updateFilters();
+
+function handleRoiAjax(r) {
+  if (r.rois) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').empty();
+
+    for (var i = 0; i < r.rois.length; i++) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+    }
+  }
+
+  if (r.roi_count) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
+  }
+}
+
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),

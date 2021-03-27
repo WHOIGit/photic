@@ -7,6 +7,15 @@
 #main-panel{
     overflow: visible;
     overflow-y:auto;
+    height: 100%;
+
+    img{
+        border:5px solid white;
+        margin-right:3px;
+        &.selected{
+            border:5px solid seagreen;
+        }
+    }
 
 }
 .mobileNavHeader{
@@ -43,13 +52,4 @@
         border-right: 15px solid transparent;
         border-bottom: 15px solid white;
     }
-}
-.bricks-container{
-    img{
-        border:5px solid white;
-        &.selected{
-            border:5px solid seagreen;
-        }
-    }
-
 }

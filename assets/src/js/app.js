@@ -4,7 +4,7 @@ import  SelectionArea from '@simonwep/selection-js';
 import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
-import moment from 'moment';
+import moment, { localeData } from 'moment';
 
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
 // to the top of the file so if we used `import` to import Foundation,
@@ -41,7 +41,7 @@ $('#filter-after-date').datetimepicker({
 
 const selection = new SelectionArea({
     // All elements in this container can be selected
-    selectables: ['.bricks-container > img'],
+    selectables: ['#main-panel > img'],
 
     // The container is also the boundary in this case
     boundaries: ['#main-panel'],
@@ -99,7 +99,7 @@ function getCsrfToken() {
     return $('[name="csrfmiddlewaretoken"]').val();
 }
 
-$(".bricks-container img").on('contextmenu', function(ev) {
+$('#main-panel').on('contextmenu', 'img', function(ev) {
     ev.preventDefault();
     $.post('api/roi_annotations', {
         'roi_id': $(ev.target).data('roi-id'),
@@ -115,6 +115,8 @@ function updateFilters() {
     filters["label"] = $("#filter-label").val();
     filters['collection'] = $('#filter-collection').val();
     updateQuery(filters);
+    loadROIs(filters);
+
 }
 
 $("#filter-button").on('click', function(ev){
@@ -148,7 +150,6 @@ $("#apply_label").on('click', function(ev){
         }),
         success: apply_label_callback,
     });
-
 });
 
 function apply_label_callback(evt){
@@ -196,7 +197,7 @@ function updateQuery(obj){
 
     url.search = search_params.toString();
 
-    document.location = url.toString();
+    window.history.pushState({path:url.toString()},'',url.toString());
 }
 
 let $overlay = $("#tag-holder");
@@ -268,6 +269,33 @@ $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
+
+function loadROIs(filters={}){
+    $.post(
+        'api/roi_list', 
+        filters,
+        handleRoiAjax
+    )
+}
+
+updateFilters()
+
+
+function handleRoiAjax(r) {
+    if(r.rois){
+        $('#main-panel').empty()
+        for (let i=0;i< r.rois.length; i++) {
+            $('#main-panel').append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
+        }
+    }
+    if(r.roi_count){
+        $("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>")
+        $("#roi_count").show();
+    }
+}
+
+
+
 
 
 $(document).foundation();
