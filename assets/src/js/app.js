@@ -5,6 +5,7 @@ import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
 import moment from 'moment';
+import 'select2'; 
 
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
 // to the top of the file so if we used `import` to import Foundation,
@@ -268,6 +269,10 @@ $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
+
+
+    $('#apply_label_select').select2();
+  
 
 
 $(document).foundation();
