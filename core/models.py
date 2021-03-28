@@ -28,6 +28,7 @@ class ROIQuerySet(models.QuerySet):
                SELECT label_id
                FROM core_annotation c
                WHERE c.id = b.winner)
+           ORDER BY a.height DESC
         """, [*params, label_id])
 
     def winning_annotations(self):

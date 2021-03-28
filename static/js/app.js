@@ -71140,6 +71140,8 @@ __webpack_require__(/*! datatables.net-rowgroup-zf */ "./node_modules/datatables
 __webpack_require__(/*! datatables.net-searchpanes-zf */ "./node_modules/datatables.net-searchpanes-zf/js/searchPanes.foundation.js");
 
 window.moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var $panel = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#main-panel");
+var $container = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi-container");
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -71154,9 +71156,9 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-after-date').datetimepick
 });
 var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
   // All elements in this container can be selected
-  selectables: ['#main-panel > img'],
+  selectables: ['#roi-container > img'],
   // The container is also the boundary in this case
-  boundaries: ['#main-panel'],
+  boundaries: ['#roi-container'],
   singleTap: {
     // Enable single-click selection (Also disables range-selection via shift + ctrl).
     allow: true,
@@ -71276,7 +71278,7 @@ function getCsrfToken() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('[name="csrfmiddlewaretoken"]').val();
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').on('contextmenu', 'img', function (ev) {
+$container.on('contextmenu', 'img', function (ev) {
   ev.preventDefault();
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
     'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
@@ -71286,23 +71288,25 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').on('contextmenu', '
   return false;
 });
 
-function updateFilters() {
+function getFilters() {
   var filters = {};
   filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
   filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
   filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
-  updateQuery(filters);
-  loadROIs(filters);
+  return filters;
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
   ev.preventDefault();
-  updateFilters();
-});
-jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').select(function (ev) {
-  ev.preventDefault();
-  updateFilters();
-});
+  $container.empty();
+  scrollPageNum = 1;
+  var filters = getFilters();
+  updateQuery(filters);
+  loadPage(1);
+}); // $('#filter-collection').select(function(ev) {
+//     ev.preventDefault();
+//     updateFilters();
+// });
 
 function getSelectedWrapper() {
   return selection.getSelection();
@@ -71456,23 +71460,42 @@ function loadROIs() {
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_list', filters, handleRoiAjax);
 }
 
-updateFilters();
+var scrollPageNum = 1;
+var morePages = true;
 
 function handleRoiAjax(r) {
   if (r.rois) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').empty();
-
     for (var i = 0; i < r.rois.length; i++) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('#main-panel').append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+      $container.append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
     }
   }
 
-  if (r.roi_count) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
-  }
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
+  morePages = r.has_next_page;
 }
 
+$panel.on("scroll", function () {
+  if (morePages) {
+    var s = $panel.scrollTop(),
+        d = $container.height(),
+        c = $panel.height();
+    var scrollPercent = s / (d - c) * 100;
+
+    if (scrollPercent > 99) {
+      scrollPageNum++;
+      loadPage(scrollPageNum);
+    }
+  }
+});
+
+function loadPage(num) {
+  var filters = getFilters();
+  filters["page"] = num;
+  loadROIs(filters);
+}
+
+loadPage(scrollPageNum);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),

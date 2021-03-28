@@ -48,7 +48,7 @@ def roi_list(request):
     requested_collection = request.POST.get('collection')
     page = request.POST.get('page', 1)
 
-    qs = ROI.objects
+    qs = ROI.objects.order_by('-height')
 
     if requested_collection:
         qs = qs.filter(collections__name=requested_collection)
@@ -63,15 +63,15 @@ def roi_list(request):
     else:
         rois = qs.all()
 
-    # numbers_list = range(1, 1000)
-    # paginator = Paginator(numbers_list, 20)
-    
-    # try:
-    #     numbers = paginator.page(page)
-    # except PageNotAnInteger:
-    #     numbers = paginator.page(1)
-    # except EmptyPage:
-    #     numbers = paginator.page(paginator.num_pages)
+    roi_count = len(rois)
+    paginator = Paginator(rois, 100)
+
+    try:
+        rois = paginator.page(page)
+    except PageNotAnInteger:
+        rois = paginator.page(1)
+    except EmptyPage:
+        rois = paginator.page(paginator.num_pages)
 
 
     roi_records = [{
@@ -81,7 +81,8 @@ def roi_list(request):
 
     return JsonResponse({
         'rois': roi_records,
-        'roi_count': len(roi_records),
+        'roi_count': roi_count,
+        'has_next_page': rois.has_next(),
     })
 # class ROIView(ListView):
 #     model = ROI

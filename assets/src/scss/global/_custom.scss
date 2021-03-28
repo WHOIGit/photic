@@ -4,6 +4,9 @@
 .top-bar{
     border-bottom:2px solid $secondary-color;
 }
+#leftCol{
+    z-index:1;
+}
 #main-panel{
     overflow: visible;
     overflow-y:auto;
@@ -11,7 +14,7 @@
 
     img{
         border:5px solid white;
-        margin-right:3px;
+        margin:3px;
         &.selected{
             border:5px solid seagreen;
         }
