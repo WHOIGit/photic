@@ -93,6 +93,11 @@ class ROI(models.Model):
 
     objects = ROIManager()
 
+    @property
+    def image_type(self):
+        _, ext = os.path.splitext(self.path)
+        return ext[1:]
+
     def assign_label(self, label, user):  # does not save
         return Annotation.objects.create_or_verify(self, label, user)
 
