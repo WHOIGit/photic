@@ -23,11 +23,14 @@ class Command(BaseCommand):
 
         destination_directories = {}  # keyed by label
 
-        for a in winning_annotations:
+        for i, a in enumerate(winning_annotations):
             label_name = a.label.name
             destination_directory = destination_directories.get(label_name)
             if destination_directory is None:
+                print(f'found ROIs labeled "{label_name}"')
                 destination_directory = os.path.join(destination_root_directory, label_name)
                 os.makedirs(destination_directory, exist_ok=True)
                 destination_directories[label_name] = destination_directory
             shutil.copy(a.roi.path, destination_directory)
+
+        print(f'exported {i+1} ROIs')
