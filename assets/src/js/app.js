@@ -4,7 +4,7 @@ import  SelectionArea from '@simonwep/selection-js';
 import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
-import moment from 'moment';
+import moment, { localeData } from 'moment';
 
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
 // to the top of the file so if we used `import` to import Foundation,
@@ -25,6 +25,9 @@ require('datatables.net-rowgroup-zf');
 require('datatables.net-searchpanes-zf');
 window.moment = require('moment');
 
+const $panel= $("#main-panel");
+const $container= $("#roi-container");
+
 $('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
@@ -41,10 +44,10 @@ $('#filter-after-date').datetimepicker({
 
 const selection = new SelectionArea({
     // All elements in this container can be selected
-    selectables: ['.bricks-container > img'],
+    selectables: ['#roi-container > img'],
 
     // The container is also the boundary in this case
-    boundaries: ['#main-panel'],
+    boundaries: ['#roi-container'],
 
     singleTap: {
 
@@ -67,7 +70,6 @@ const selection = new SelectionArea({
         // Clear previous selection
         selection.clearSelection();
     }
-
 }).on('move', ({store: {changed: {added, removed}}}) => {
 
     // Add a custom class to the elements that where selected.
@@ -99,7 +101,7 @@ function getCsrfToken() {
     return $('[name="csrfmiddlewaretoken"]').val();
 }
 
-$(".bricks-container img").on('contextmenu', function(ev) {
+$container.on('contextmenu', 'img', function(ev) {
     ev.preventDefault();
     $.post('api/roi_annotations', {
         'roi_id': $(ev.target).data('roi-id'),
@@ -109,23 +111,28 @@ $(".bricks-container img").on('contextmenu', function(ev) {
     return false;
 });
 
-function updateFilters() {
+function getFilters() {
     let filters = {}
     filters["annotator"] = $("#filter-annotator").val();
     filters["label"] = $("#filter-label").val();
     filters['collection'] = $('#filter-collection').val();
-    updateQuery(filters);
+    return filters;
+
 }
 
 $("#filter-button").on('click', function(ev){
     ev.preventDefault();
-    updateFilters();
+    $container.empty()
+    scrollPageNum = 1;
+    let filters = getFilters();
+    updateQuery(filters);
+    loadPage(1)
 });
 
-$('#filter-collection').select(function(ev) {
-    ev.preventDefault();
-    updateFilters();
-});
+// $('#filter-collection').select(function(ev) {
+//     ev.preventDefault();
+//     updateFilters();
+// });
 function getSelectedWrapper(){
     return selection.getSelection();
 }
@@ -148,7 +155,6 @@ $("#apply_label").on('click', function(ev){
         }),
         success: apply_label_callback,
     });
-
 });
 
 function apply_label_callback(evt){
@@ -196,7 +202,7 @@ function updateQuery(obj){
 
     url.search = search_params.toString();
 
-    document.location = url.toString();
+    window.history.pushState({path:url.toString()},'',url.toString());
 }
 
 let $overlay = $("#tag-holder");
@@ -268,6 +274,54 @@ $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
+
+function loadROIs(filters={}){
+    $.post(
+        'api/roi_list', 
+        filters,
+        handleRoiAjax
+    )
+}
+let scrollPageNum = 1;
+let morePages = true;
+
+function handleRoiAjax(r) {
+    if(r.rois){
+        
+        for (let i=0;i< r.rois.length; i++) {
+            $container.append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
+        }
+    }
+    
+    $("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>")
+    $("#roi_count").show();
+    
+    morePages = r.has_next_page;
+}
+$panel.on("scroll", function(){
+    if(morePages){
+    let s = $panel.scrollTop(),
+     d = $container.height(),
+     c = $panel.height();
+
+    let scrollPercent = (s / (d - c)) * 100;
+    if(scrollPercent>99){
+        scrollPageNum++;
+        loadPage(scrollPageNum);
+    }
+     
+}
+});
+
+function loadPage(num){
+    let filters = getFilters();
+    filters["page"] = num;
+    loadROIs(filters);
+}
+
+loadPage(scrollPageNum);
+
+
 
 
 $(document).foundation();
