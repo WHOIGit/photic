@@ -11,13 +11,19 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('collection', type=str, help='image collection to export')
-        parser.add_argument('--all', dest='all', action='store_true')
+        parser.add_argument('output_file', type=str, help='output filename')
+        parser.add_argument('--all', dest='all', action='store_true',
+                            help='export all annotations (not just winning ones)')
         parser.set_defaults(all=False)
 
     def handle(self, *args, **options):
         # handle arguments
         collection_name = options['collection']
         export_all = options['all']
+        output_file = options['output_file']
+
+        if not output_file.endswith('.json'):
+            output_file = f'{output_file}.json'
 
         if export_all:
             annotations = Annotation.objects.filter(roi__collections__name=collection_name)
@@ -37,8 +43,9 @@ class Command(BaseCommand):
                 'verifications': a.verifications,
             })
 
-        print(json.dumps({
-            'collection': collection_name,
-            'export_time': timezone.now().isoformat('T', 'seconds'),
-            'annotations': annotation_records,
-        }))
+        with open(output_file, 'w') as outfile:
+            json.dump({
+                'collection': collection_name,
+                'export_time': timezone.now().isoformat('T', 'seconds'),
+                'annotations': annotation_records,
+            }, outfile)
