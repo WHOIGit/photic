@@ -4,6 +4,7 @@ import  SelectionArea from '@simonwep/selection-js';
 import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
+import Toastify from 'toastify-js'
 import moment, { localeData } from 'moment';
 
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
@@ -181,15 +182,40 @@ $("#add_label").on('click', function(ev){
     $.post('api/create_label', {
         'name': label_name,
     },
-        function(r) {
-            console.log(r)
-            //add to select element here
-        }
+        add_label_callback
     )
 
 })
+function showMessage(msg, error=false){
+    Toastify({
+        text: msg,
+        offset: {
+            x: 15, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 60 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        backgroundColor: error?"crimson":"seagreen",
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+      }).showToast();
 
-function add_label_callback(evt){
+}
+function  showError(msg){
+    showMessage(msg, true);
+}
+function add_label_callback(r){
+    if(r.created){
+        showMessage("Label created");
+        $('#apply_label_select').append($("<option value="+ r.label +">" + r.label + "</option>"));
+        
+        $('#apply_label_select').val(r.label);
+    }else{
+
+        showError("Label already exists");
+    }
 
 }
 
