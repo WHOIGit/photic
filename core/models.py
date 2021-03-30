@@ -28,6 +28,7 @@ class ROIQuerySet(models.QuerySet):
                SELECT label_id
                FROM core_annotation c
                WHERE c.id = b.winner)
+           ORDER BY a.height DESC
         """, [*params, label_id])
 
     def winning_annotations(self):
@@ -91,6 +92,11 @@ class ROI(models.Model):
     path = models.CharField(max_length=512)
 
     objects = ROIManager()
+
+    @property
+    def image_type(self):
+        _, ext = os.path.splitext(self.path)
+        return ext[1:]
 
     def assign_label(self, label, user):  # does not save
         return Annotation.objects.create_or_verify(self, label, user)

@@ -76398,6 +76398,8 @@ __webpack_require__(/*! datatables.net-rowgroup-zf */ "./node_modules/datatables
 __webpack_require__(/*! datatables.net-searchpanes-zf */ "./node_modules/datatables.net-searchpanes-zf/js/searchPanes.foundation.js");
 
 window.moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+var $panel = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#main-panel");
+var $container = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi-container");
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -76412,9 +76414,9 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-after-date').datetimepick
 });
 var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
   // All elements in this container can be selected
-  selectables: ['.bricks-container > img'],
+  selectables: ['#roi-container > img'],
   // The container is also the boundary in this case
-  boundaries: ['#main-panel'],
+  boundaries: ['#roi-container'],
   singleTap: {
     // Enable single-click selection (Also disables range-selection via shift + ctrl).
     allow: true,
@@ -76505,7 +76507,7 @@ function getCsrfToken() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('[name="csrfmiddlewaretoken"]').val();
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('contextmenu', function (ev) {
+$container.on('contextmenu', 'img', function (ev) {
   ev.preventDefault();
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
     'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
@@ -76515,22 +76517,25 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bricks-container img").on('conte
   return false;
 });
 
-function updateFilters() {
+function getFilters() {
   var filters = {};
   filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
   filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
   filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
-  updateQuery(filters);
+  return filters;
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
   ev.preventDefault();
-  updateFilters();
-});
-jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').select(function (ev) {
-  ev.preventDefault();
-  updateFilters();
-});
+  $container.empty();
+  scrollPageNum = 1;
+  var filters = getFilters();
+  updateQuery(filters);
+  loadPage(1);
+}); // $('#filter-collection').select(function(ev) {
+//     ev.preventDefault();
+//     updateFilters();
+// });
 
 function getSelectedWrapper() {
   return selection.getSelection();
@@ -76601,7 +76606,9 @@ function updateQuery(obj) {
   }
 
   url.search = search_params.toString();
-  document.location = url.toString();
+  window.history.pushState({
+    path: url.toString()
+  }, '', url.toString());
 }
 
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
@@ -76676,6 +76683,48 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ajaxSend(function (event
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
+
+function loadROIs() {
+  var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_list', filters, handleRoiAjax);
+}
+
+var scrollPageNum = 1;
+var morePages = true;
+
+function handleRoiAjax(r) {
+  if (r.rois) {
+    for (var i = 0; i < r.rois.length; i++) {
+      $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+    }
+  }
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
+  morePages = r.has_next_page;
+}
+
+$panel.on("scroll", function () {
+  if (morePages) {
+    var s = $panel.scrollTop(),
+        d = $container.height(),
+        c = $panel.height();
+    var scrollPercent = s / (d - c) * 100;
+
+    if (scrollPercent > 99) {
+      scrollPageNum++;
+      loadPage(scrollPageNum);
+    }
+  }
+});
+
+function loadPage(num) {
+  var filters = getFilters();
+  filters["page"] = num;
+  loadROIs(filters);
+}
+
+loadPage(scrollPageNum);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').select2();
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
@@ -76688,7 +76737,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/colin/development/kaimika/photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/dev/Photic/assets/src/js/app.js */"./src/js/app.js");
 
 
 /***/ })
