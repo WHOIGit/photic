@@ -71707,9 +71707,9 @@ function showError(msg) {
 
 function add_label_callback(r) {
   if (r.created) {
-    showMessage("Label created");
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option value=" + r.label + ">" + r.label + "</option>"));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').val(r.label);
+    showMessage("Label created");
   } else {
     showError("Label already exists");
   }

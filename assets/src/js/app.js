@@ -208,10 +208,9 @@ function  showError(msg){
 }
 function add_label_callback(r){
     if(r.created){
-        showMessage("Label created");
         $('#apply_label_select').append($("<option value="+ r.label +">" + r.label + "</option>"));
-        
         $('#apply_label_select').val(r.label);
+        showMessage("Label created");
     }else{
 
         showError("Label already exists");
