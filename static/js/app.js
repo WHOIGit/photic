@@ -71669,13 +71669,14 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label").on('click', function
   var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
   var re = /^[a-z0-9_ ]+$/i;
 
-  if (!re.test(label_name)) {
+  if (re.test(label_name)) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
+      'name': label_name
+    }, add_label_callback);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val('');
+  } else {
     alert("label characters can only be alphanumeric, [underscore], or [space]");
   }
-
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
-    'name': label_name
-  }, add_label_callback);
 });
 
 function showMessage(msg) {
