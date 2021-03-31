@@ -71626,7 +71626,7 @@ function getSelectedWrapper() {
   return selection.getSelection();
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label").on('click', function (ev) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply-label-form").on('submit', function (ev) {
   ev.preventDefault();
   var selected_rois = getSelectedWrapper();
   var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_select").val();
@@ -71656,7 +71656,7 @@ function apply_label_callback(evt) {
   var selected_rois = getSelectedWrapper();
 
   for (var i = 0; i < selected_rois.length; i++) {
-    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_hide").is(':checked')) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_hide").is(':checked')) {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeOut();
     } else {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
@@ -71664,7 +71664,7 @@ function apply_label_callback(evt) {
   }
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('formvalid.zf.abide', function (ev) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
   console.log("caught submit");
   ev.preventDefault();
   var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
@@ -71677,7 +71677,6 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('formvalid.zf.abide',
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
     'name': label_name
   }, add_label_callback);
-  return false;
 });
 
 function showMessage(msg) {

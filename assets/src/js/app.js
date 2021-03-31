@@ -137,7 +137,7 @@ $("#filter-button").on('click', function(ev){
 function getSelectedWrapper(){
     return selection.getSelection();
 }
-$("#apply_label").on('click', function(ev){
+$("#apply-label-form").on('submit', function(ev){
     ev.preventDefault();
     let selected_rois = getSelectedWrapper();
     let label_name = $("#apply_label_select").val();
@@ -161,7 +161,7 @@ $("#apply_label").on('click', function(ev){
 function apply_label_callback(evt){
     let selected_rois = getSelectedWrapper();
     for (let i=0; i<selected_rois.length; i++){
-        if($("#add_label_hide").is(':checked')){
+        if($("#apply_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
         }else{
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
@@ -170,7 +170,7 @@ function apply_label_callback(evt){
 
 }
 
-$(document).on('formvalid.zf.abide', function(ev){
+$("#add-label-form").on('submit', function(ev){
     console.log("caught submit")
     ev.preventDefault();
     let label_name = $("#add_label_text").val()
@@ -186,7 +186,6 @@ $(document).on('formvalid.zf.abide', function(ev){
         add_label_callback
     )
 
-    return false;
 
 })
 function showMessage(msg, error=false){
@@ -352,8 +351,5 @@ loadPage(scrollPageNum);
 var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
 
 Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = /^[a-zA-Z0-9_ ]+$/i;
-
-
-
 
 $(document).foundation();

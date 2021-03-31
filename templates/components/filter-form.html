@@ -58,7 +58,7 @@
             
             {% if user.is_authenticated %}    
             
-            <form id="assign-label-form" data-abide> 
+            <form id="apply-label-form" data-abide> 
             <fieldset class="fieldset">
               <legend>Assign Label</legend>
               <div class="">
@@ -68,7 +68,7 @@
                     <option value="{{label.name}}">{{label.name}}</option>
                     {% endfor %}
                 </select>
-                <input type="checkbox" id="add_label_hide"> <label for="add_label_hide">Hide</label>
+                <input type="checkbox" id="apply_label_hide"> <label for="apply_label_hide">Hide</label>
                 <input type="submit" class="button small primary expanded margin-0" id="apply_label" value="Apply">
                 
               </div>
@@ -79,7 +79,7 @@
               <fieldset class="fieldset">
                 <legend>Create New Label</legend>
                 <div class="">
-                  <input type="text" class="margin-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" data-validate-on="fieldChange" data-live-validate="true" >
+                  <input type="text" class="margin-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" data-live-validate="true" >
                   <span data-abide-error  data-form-error-on="pattern" class="form-error" style="margin-top:0">
                     Labels must be alphanumeric, [underscore], or [space]
                   </span>
