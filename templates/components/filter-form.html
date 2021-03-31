@@ -1,11 +1,11 @@
 
   <div class="grid-x grid-padding-x">
     <div class="cell">
-    <ul class="accordion" data-accordion data-allow-all-closed="true">
+      <ul class="accordion" data-accordion data-allow-all-closed="true">
         <li class="accordion-item {% if is_filtered %}is-active{% endif %}" data-accordion-item>
           <a href="#" class="accordion-title">Filter</a>
-          <form id="filter-form" data-abide>
-            <div class="accordion-content" data-tab-content>              
+          <div class="accordion-content" data-tab-content>        
+            <form id="filter-form" data-abide>      
               <div class="cell">
                 <label>Image Collection
                   <select id="filter-collection">
@@ -44,9 +44,9 @@
               </div>
               <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
                   <button class="button small primary expanded margin-0" id="filter-button" ><i class="fas fa-filter"></i> Filter</button>
-              </div>            
-            </div>
-          </form>
+              </div>  
+            </form>          
+          </div>
         </li>
       </ul>    
     </div> 
@@ -91,7 +91,7 @@
                 To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
               {% endif %}
             <form>
-            </div>
+          </div>
         </li>
       </ul>
     </div>
