@@ -6,24 +6,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
 <html>
     <body>
+        <div class="off-canvas-wrapper">
         <div class="off-canvas position-right" id="offCanvasMenu" data-off-canvas data-transition="overlap">
             {% include 'components/mobile-navigation.html' %}
-        </div>
-        <body>
-            <div class="off-canvas position-left" id="offCanvasFilterFom" data-off-canvas data-transition="overlap">
-                <div class="grid-y grid-frame grid-padding-x align-middle">
-                    <div class="cell shrink margin-vertical-1">
-                        <div class="grid-x align-center align-middle">
-                            <div class="callout width-100 text-center small primary margin-bottom-0" id="roi_count" style="display:none">
-                                <h5>{{ roi_count }} ROI(s) found</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cell auto" style="overflow-y:auto;">
-                        {% include 'components/filter-form.html' %}
-                    </div>
-                </div>
-            </div>        
+        </div>     
         <div class="off-canvas-content" data-off-canvas-content>
             <div class="grid-y grid-frame">
                 <div class="cell shrink">
@@ -38,6 +24,7 @@
                 </div>
             </div>
         </div>
+    </div>
         <script src="{% static 'vendorJS/context.min.js' %}"></script>
         <script src="{% static 'js/app.js' %}"></script>
 
