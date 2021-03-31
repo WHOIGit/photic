@@ -31,6 +31,9 @@ class ROIQuerySet(models.QuerySet):
            ORDER BY a.height DESC
         """, [*params, label_id])
 
+    def with_cached_label(self, label):
+        return self.filter(winning_annotation__label=label)
+
     def winning_annotations(self):
         """ returns the winning annotation for each ROI in the queryset """
         all_annotations = Annotation.objects.get_queryset()
@@ -48,7 +51,6 @@ class ROIQuerySet(models.QuerySet):
         """, roi_params + winner_params)
 
     def unlabeled(self):
-        # FIXME may be inefficient
         return self.exclude(id__in=Annotation.objects.values_list('roi__id', flat=True))
 
 
@@ -90,6 +92,8 @@ class ROI(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     path = models.CharField(max_length=512)
+    winning_annotation = models.ForeignKey('Annotation', on_delete=models.CASCADE, null=True,\
+                                           related_name='associated_roi')
 
     objects = ROIManager()
 
@@ -101,9 +105,6 @@ class ROI(models.Model):
     def assign_label(self, label, user):  # does not save
         return Annotation.objects.create_or_verify(self, label, user)
 
-    def winning_label(self):
-        return self.annotations.filter(roi=self).winner()[0].label
-
     @property
     def tags(self):
         tags = [[a.label.name, a.user.username, a.timestamp.strftime("%m/%d/%Y, %H:%M:%S")] for a in self.annotations.all()]
@@ -111,6 +112,12 @@ class ROI(models.Model):
         # The conversion to json is important. Without it, we get [['1','2','3']]. With it we get double quotes
         #   [["1","2","3"]]. This is necessary for the HTML on the front end to work properly
         return json.dumps(tags)
+
+    def cache_winning_annotation(self):
+        winning_annotation = list(self.annotations.winner())
+        if winning_annotation:
+            self.winning_annotation = winning_annotation[0]
+            self.save()
 
     def __str__(self):
         return self.roi_id
@@ -165,10 +172,14 @@ class AnnotationManager(models.Manager):
         with transaction.atomic():
             try:
                 annotation = self.get(roi=roi, label=label, user=user)
-                annotation.verify().save()
-                return annotation, False
+                annotation.verify()
+                annotation.save()
+                created = False
             except Annotation.DoesNotExist:
-                return self.create_annotation(roi=roi, label=label, user=user), True
+                annotation = self.create_annotation(roi=roi, label=label, user=user)
+                created = True
+            roi.cache_winning_annotation()
+            return annotation, created
 
     def winner(self):
         return self.get_queryset().winner()
