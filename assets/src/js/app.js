@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import 'what-input';
 import  SelectionArea from '@simonwep/selection-js';
-import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
 import moment, { localeData } from 'moment';
+import 'select2';
 
 // Foundation JS relies on a global variable. In ES6, all imports are hoisted
 // to the top of the file so if we used `import` to import Foundation,
@@ -277,7 +277,7 @@ $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
 
 function loadROIs(filters={}){
     $.post(
-        'api/roi_list', 
+        'api/roi_list',
         filters,
         handleRoiAjax
     )
@@ -287,15 +287,15 @@ let morePages = true;
 
 function handleRoiAjax(r) {
     if(r.rois){
-        
+
         for (let i=0;i< r.rois.length; i++) {
-            $container.append('<img class="image-tile infinite-item" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
+            $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
         }
     }
-    
+
     $("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>")
     $("#roi_count").show();
-    
+
     morePages = r.has_next_page;
 }
 $panel.on("scroll", function(){
@@ -309,7 +309,7 @@ $panel.on("scroll", function(){
         scrollPageNum++;
         loadPage(scrollPageNum);
     }
-     
+
 }
 });
 
@@ -321,7 +321,8 @@ function loadPage(num){
 
 loadPage(scrollPageNum);
 
-
-
+$('.largeOptionSetSelection').select2({
+    theme: "foundation"
+});
 
 $(document).foundation();
