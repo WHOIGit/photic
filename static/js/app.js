@@ -71664,18 +71664,20 @@ function apply_label_callback(evt) {
   }
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label").on('click', function (ev) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('formvalid.zf.abide', function (ev) {
+  console.log("caught submit");
   ev.preventDefault();
   var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
-  var re = /^[a-z0-9_ ]+$/i;
+  var re = /^[a-zA-Z0-9_ ]+$/i;
 
   if (!re.test(label_name)) {
-    alert("label characters can only be alphanumeric, [underscore], or [space]");
+    alert("Labels must be alphanumeric, [underscore], or [space]");
   }
 
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
     'name': label_name
   }, add_label_callback);
+  return false;
 });
 
 function showMessage(msg) {
@@ -71843,6 +71845,8 @@ function loadPage(num) {
 }
 
 loadPage(scrollPageNum);
+var $add_label_text = new Foundation.Abide(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text"), {});
+Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = /^[a-zA-Z0-9_ ]+$/i;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),

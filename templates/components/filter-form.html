@@ -1,52 +1,53 @@
-<form id="filter-form">
+
   <div class="grid-x grid-padding-x">
     <div class="cell">
     <ul class="accordion" data-accordion data-allow-all-closed="true">
         <li class="accordion-item {% if is_filtered %}is-active{% endif %}" data-accordion-item>
           <a href="#" class="accordion-title">Filter</a>
-          <div class="accordion-content" data-tab-content>              
-            <div class="cell">
-              <label>Image Collection
-                <select id="filter-collection">
-                    {% for collection in collections %}
-                    <option value="{{ collection.name }}" {% if collection.name == request.GET.collection  %} selected {% endif %}>{{ collection.name }}</option>
-                    {% endfor %}
-                </select>
-              </label>
-                <label>Label
-                  <select id="filter-label">
-                    <option value="">All</option>
-                      <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
-                    {% for label in labels %}
-                    <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
-                    {% endfor %}
+          <form id="filter-form" data-abide>
+            <div class="accordion-content" data-tab-content>              
+              <div class="cell">
+                <label>Image Collection
+                  <select id="filter-collection">
+                      {% for collection in collections %}
+                      <option value="{{ collection.name }}" {% if collection.name == request.GET.collection  %} selected {% endif %}>{{ collection.name }}</option>
+                      {% endfor %}
                   </select>
                 </label>
-                <label class="hide">Annotator
-                  <select id="filter-annotator">
-                    <option value="">All</option>
-                    {% for annotator in annotation_users %}
-                    <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
-                    {% endfor %}
-                  </select>
-                </label>        
+                  <label>Label
+                    <select id="filter-label">
+                      <option value="">All</option>
+                        <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
+                      {% for label in labels %}
+                      <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                  <label class="hide">Annotator
+                    <select id="filter-annotator">
+                      <option value="">All</option>
+                      {% for annotator in annotation_users %}
+                      <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
+                      {% endfor %}
+                    </select>
+                  </label>        
+                </div>            
+              <div class="cell hide">
+                <label>Before
+                  <input type="text" id="filter-before-date" placeholder="Start Date" disabled>
+                </label>
+              </div>
+              <div class="cell hide">
+                <label>After
+                  <input type="text" id="filter-after-date" placeholder="End Date" disabled>
+                </label>
+              </div>
+              <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
+                  <button class="button small primary expanded margin-0" id="filter-button" ><i class="fas fa-filter"></i> Filter</button>
               </div>            
-            <div class="cell hide">
-              <label>Before
-                <input type="text" id="filter-before-date" placeholder="Start Date" disabled>
-              </label>
             </div>
-            <div class="cell hide">
-              <label>After
-                <input type="text" id="filter-after-date" placeholder="End Date" disabled>
-              </label>
-            </div>
-            <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
-                <button class="button small primary expanded margin-0" id="filter-button" ><i class="fas fa-filter"></i> Filter</button>
-            </div>            
-          </div>
+          </form>
         </li>
-
       </ul>    
     </div> 
     <div class="cell">
@@ -55,7 +56,9 @@
           <a href="#" class="accordion-title">Actions</a>
           <div class="accordion-content" data-tab-content>      
             
-            {% if user.is_authenticated %}     
+            {% if user.is_authenticated %}    
+            
+            <form id="assign-label-form" data-abide> 
             <fieldset class="fieldset">
               <legend>Assign Label</legend>
               <div class="">
@@ -69,21 +72,27 @@
                 <input type="submit" class="button small primary expanded margin-0" id="apply_label" value="Apply">
                 
               </div>
-            </fieldset>   
-            <fieldset class="fieldset">
-              <legend>Create New Label</legend>
-              <div class="">
-                <input type="text" class="margin-0" id="add_label_text" value="test_label" >
-                <input type="submit" class="button small primary expanded margin-0" id="add_label" value="Add Label">
-                
-              </div>
-            </fieldset>
-            {% else %}
-              To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
-            {% endif %}
-          </div>
+            </fieldset>  
+            </form>
+
+            <form id="add-label-form" data-abide>
+              <fieldset class="fieldset">
+                <legend>Create New Label</legend>
+                <div class="">
+                  <input type="text" class="margin-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" data-validate-on="fieldChange" data-live-validate="true" >
+                  <span data-abide-error  data-form-error-on="pattern" class="form-error" style="margin-top:0">
+                    Labels must be alphanumeric, [underscore], or [space]
+                  </span>
+                  <input type="submit" class="button small primary expanded margin-0" id="add_label" value="Add Label">
+                  
+                </div>
+              </fieldset>
+              {% else %}
+                To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
+              {% endif %}
+            <form>
+            </div>
         </li>
       </ul>
     </div>
   </div>
-</form>

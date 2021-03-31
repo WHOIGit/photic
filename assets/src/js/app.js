@@ -170,13 +170,14 @@ function apply_label_callback(evt){
 
 }
 
-$("#add_label").on('click', function(ev){
+$(document).on('formvalid.zf.abide', function(ev){
+    console.log("caught submit")
     ev.preventDefault();
     let label_name = $("#add_label_text").val()
-    let re = /^[a-z0-9_ ]+$/i;
+    let re = /^[a-zA-Z0-9_ ]+$/i;
     
     if(!re.test(label_name)){
-        alert("label characters can only be alphanumeric, [underscore], or [space]");   
+        alert("Labels must be alphanumeric, [underscore], or [space]");   
     }
     
     $.post('api/create_label', {
@@ -184,6 +185,8 @@ $("#add_label").on('click', function(ev){
     },
         add_label_callback
     )
+
+    return false;
 
 })
 function showMessage(msg, error=false){
@@ -345,6 +348,10 @@ function loadPage(num){
 }
 
 loadPage(scrollPageNum);
+
+var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
+
+Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = /^[a-zA-Z0-9_ ]+$/i;
 
 
 
