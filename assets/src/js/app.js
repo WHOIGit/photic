@@ -176,17 +176,17 @@ $("#add-label-form").on('submit', function(ev){
     let label_name = $("#add_label_text").val()
     let re = /^[a-zA-Z0-9_ ]+$/i;
     
-    if(!re.test(label_name)){
-        alert("Labels must be alphanumeric, [underscore], or [space]");   
+    if(re.test(label_name)){
+        $.post('api/create_label', {
+            'name': label_name,
+        },
+            add_label_callback
+        )
+        $("#add_label_text").val('');
+    }else{    
+        alert("label characters can only be alphanumeric, [underscore], or [space]");   
     }
     
-    $.post('api/create_label', {
-        'name': label_name,
-    },
-        add_label_callback
-    )
-
-
 })
 function showMessage(msg, error=false){
     Toastify({
