@@ -73,11 +73,11 @@ span.select2-container--foundation {
         .select2-container--foundation .select2-results__option[role=group] strong {
           padding-left: 0.125rem; }
       .select2-container--foundation .select2-results__option[aria-disabled=true] {
-        color: #8a8a8a;
+        color: #fff;
         cursor: default; }
       .select2-container--foundation .select2-results__option--highlighted[aria-selected] {
         background-color: #1e6884;
-        color: foreground(#1e6884); }
+        color: #fff; }
     .select2-container--foundation.select2-container--focus .select2-selection {
       border: 1px solid #8a8a8a; }
     .select2-container--foundation.select2-container--open .select2-selection {
