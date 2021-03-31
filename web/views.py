@@ -59,7 +59,7 @@ def roi_list(request):
             rois = qs.unlabeled()
         else:
             label = get_object_or_404(Label, name=requested_label)
-            rois = qs.with_label(label)
+            rois = qs.with_cached_label(label)
     else:
         rois = qs.all()
 

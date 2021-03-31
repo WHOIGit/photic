@@ -28,8 +28,11 @@ class Command(BaseCommand):
         if export_all:
             annotations = Annotation.objects.filter(roi__collections__name=collection_name)
         else:
-            annotations = ROI.objects.filter(collections__name=collection_name).\
-                winning_annotations()
+            annotations = []
+            rois = ROI.objects.filter(collections__name=collection_name)
+            for roi in rois:
+                if roi.winning_annotation:
+                    annotations.append(roi.winning_annotation)
 
         annotation_records = []
 

@@ -51,14 +51,17 @@ class Command(BaseCommand):
             raise CommandError('labeled ROIs found but no username specified')
         print(f'found {len(unlabeled)} unlabeled images and {len(labeled)} label directories')
         # now create ROI records in the database
+        print(f'importing {len(unlabeled)} unlabeled ROIs...')
         for roi_filename in unlabeled:
             path = os.path.join(directory, roi_filename)
             roi = ROI.objects.create_or_update_roi(path, collection=collection)
         for label_name, rois in labeled.items():
+            print(f'importing {len(rois)} ROIs labeled "{label_name}"...')
             label, created = Label.objects.get_or_create(name=label_name)
             for roi_filename in rois:
                 roi_path = os.path.join(directory, label_name, roi_filename)
                 roi = ROI.objects.create_or_update_roi(roi_path, collection=collection)
                 Annotation.objects.create_or_verify(roi, label, user)
+
 
 
