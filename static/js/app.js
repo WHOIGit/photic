@@ -1562,255 +1562,6 @@ const t=(t,e="px")=>"number"==typeof t?t+e:t;function e({style:e},s,i){if("objec
 
 /***/ }),
 
-/***/ "./node_modules/bricks.js/dist/bricks.module.js":
-/*!******************************************************!*\
-  !*** ./node_modules/bricks.js/dist/bricks.module.js ***!
-  \******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var knot = function knot() {
-  var extended = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var events = Object.create(null);
-
-  function on(name, handler) {
-    events[name] = events[name] || [];
-    events[name].push(handler);
-    return this;
-  }
-
-  function once(name, handler) {
-    handler._once = true;
-    on(name, handler);
-    return this;
-  }
-
-  function off(name) {
-    var handler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    handler ? events[name].splice(events[name].indexOf(handler), 1) : delete events[name];
-    return this;
-  }
-
-  function emit(name) {
-    var _this = this;
-
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    } // cache the events, to avoid consequences of mutation
-
-
-    var cache = events[name] && events[name].slice(); // only fire handlers if they exist
-
-    cache && cache.forEach(function (handler) {
-      // remove handlers added with 'once'
-      handler._once && off(name, handler); // set 'this' context, pass args to handlers
-
-      handler.apply(_this, args);
-    });
-    return this;
-  }
-
-  return _extends({}, extended, {
-    on: on,
-    once: once,
-    off: off,
-    emit: emit
-  });
-};
-
-var bricks = function bricks() {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}; // privates
-
-  var persist = void 0; // packing new elements, or all elements?
-
-  var ticking = void 0; // for debounced resize
-
-  var sizeIndex = void 0;
-  var sizeDetail = void 0;
-  var columnTarget = void 0;
-  var columnHeights = void 0;
-  var nodeTop = void 0;
-  var nodeLeft = void 0;
-  var nodeWidth = void 0;
-  var nodeHeight = void 0;
-  var nodes = void 0;
-  var nodesWidths = void 0;
-  var nodesHeights = void 0; // resolve options
-
-  var packed = options.packed.indexOf('data-') === 0 ? options.packed : 'data-' + options.packed;
-  var sizes = options.sizes.slice().reverse();
-  var position = options.position !== false;
-  var container = options.container.nodeType ? options.container : document.querySelector(options.container);
-  var selectors = {
-    all: function all() {
-      return toArray(container.children);
-    },
-    new: function _new() {
-      return toArray(container.children).filter(function (node) {
-        return !node.hasAttribute('' + packed);
-      });
-    }
-  }; // series
-
-  var setup = [setSizeIndex, setSizeDetail, setColumns];
-  var run = [setNodes, setNodesDimensions, setNodesStyles, setContainerStyles]; // instance
-
-  var instance = knot({
-    pack: pack,
-    update: update,
-    resize: resize
-  });
-  return instance; // general helpers
-
-  function runSeries(functions) {
-    functions.forEach(function (func) {
-      return func();
-    });
-  } // array helpers
-
-
-  function toArray(input) {
-    var scope = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-    return Array.prototype.slice.call(input);
-  }
-
-  function fillArray(length) {
-    return Array.apply(null, Array(length)).map(function () {
-      return 0;
-    });
-  } // size helpers
-
-
-  function getSizeIndex() {
-    // find index of widest matching media query
-    return sizes.map(function (size) {
-      return size.mq && window.matchMedia('(min-width: ' + size.mq + ')').matches;
-    }).indexOf(true);
-  }
-
-  function setSizeIndex() {
-    sizeIndex = getSizeIndex();
-  }
-
-  function setSizeDetail() {
-    // if no media queries matched, use the base case
-    sizeDetail = sizeIndex === -1 ? sizes[sizes.length - 1] : sizes[sizeIndex];
-  } // column helpers
-
-
-  function setColumns() {
-    columnHeights = fillArray(sizeDetail.columns);
-  } // node helpers
-
-
-  function setNodes() {
-    nodes = selectors[persist ? 'new' : 'all']();
-  }
-
-  function setNodesDimensions() {
-    // exit if empty container
-    if (nodes.length === 0) {
-      return;
-    }
-
-    nodesWidths = nodes.map(function (element) {
-      return element.clientWidth;
-    });
-    nodesHeights = nodes.map(function (element) {
-      return element.clientHeight;
-    });
-  }
-
-  function setNodesStyles() {
-    nodes.forEach(function (element, index) {
-      columnTarget = columnHeights.indexOf(Math.min.apply(Math, columnHeights));
-      element.style.position = 'absolute';
-      nodeTop = columnHeights[columnTarget] + 'px';
-      nodeLeft = columnTarget * nodesWidths[index] + columnTarget * sizeDetail.gutter + 'px'; // support positioned elements (default) or transformed elements
-
-      if (position) {
-        element.style.top = nodeTop;
-        element.style.left = nodeLeft;
-      } else {
-        element.style.transform = 'translate3d(' + nodeLeft + ', ' + nodeTop + ', 0)';
-      }
-
-      element.setAttribute(packed, ''); // ignore nodes with no width and/or height
-
-      nodeWidth = nodesWidths[index];
-      nodeHeight = nodesHeights[index];
-
-      if (nodeWidth && nodeHeight) {
-        columnHeights[columnTarget] += nodeHeight + sizeDetail.gutter;
-      }
-    });
-  } // container helpers
-
-
-  function setContainerStyles() {
-    container.style.position = 'relative';
-    container.style.width = sizeDetail.columns * nodeWidth + (sizeDetail.columns - 1) * sizeDetail.gutter + 'px';
-    container.style.height = Math.max.apply(Math, columnHeights) - sizeDetail.gutter + 'px';
-  } // resize helpers
-
-
-  function resizeFrame() {
-    if (!ticking) {
-      window.requestAnimationFrame(resizeHandler);
-      ticking = true;
-    }
-  }
-
-  function resizeHandler() {
-    if (sizeIndex !== getSizeIndex()) {
-      pack();
-      instance.emit('resize', sizeDetail);
-    }
-
-    ticking = false;
-  } // API
-
-
-  function pack() {
-    persist = false;
-    runSeries(setup.concat(run));
-    return instance.emit('pack');
-  }
-
-  function update() {
-    persist = true;
-    runSeries(run);
-    return instance.emit('update');
-  }
-
-  function resize() {
-    var flag = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    var action = flag ? 'addEventListener' : 'removeEventListener';
-    window[action]('resize', resizeFrame);
-    return instance;
-  }
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (bricks);
-
-/***/ }),
-
 /***/ "./node_modules/datatables.net-buttons-zf/js/buttons.foundation.js":
 /*!*************************************************************************!*\
   !*** ./node_modules/datatables.net-buttons-zf/js/buttons.foundation.js ***!
@@ -76348,21 +76099,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var what_input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! what-input */ "./node_modules/what-input/dist/what-input.js");
 /* harmony import */ var what_input__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(what_input__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @simonwep/selection-js */ "./node_modules/@simonwep/selection-js/lib/selection.min.mjs");
-/* harmony import */ var bricks_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bricks.js */ "./node_modules/bricks.js/dist/bricks.module.js");
-/* harmony import */ var jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jquery-datetimepicker */ "./node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js");
-/* harmony import */ var jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _yaireo_tagify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @yaireo/tagify */ "./node_modules/@yaireo/tagify/dist/tagify.min.js");
-/* harmony import */ var _yaireo_tagify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_yaireo_tagify__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! select2 */ "./node_modules/select2/dist/js/select2.js");
-/* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(select2__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jquery-datetimepicker */ "./node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js");
+/* harmony import */ var jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(jquery_datetimepicker__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _yaireo_tagify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @yaireo/tagify */ "./node_modules/@yaireo/tagify/dist/tagify.min.js");
+/* harmony import */ var _yaireo_tagify__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_yaireo_tagify__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! select2 */ "./node_modules/select2/dist/js/select2.js");
+/* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(select2__WEBPACK_IMPORTED_MODULE_6__);
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 
 
 
@@ -76643,7 +76392,7 @@ function showAnnotations(event, rows) {
 
   if (rows && rows.length > 0) {
     jquery__WEBPACK_IMPORTED_MODULE_0___default.a.each(rows, function (i, row) {
-      row[2] = moment__WEBPACK_IMPORTED_MODULE_6___default()(row[2]).format('YYYY-MM-DD h:mma Z');
+      row[2] = moment__WEBPACK_IMPORTED_MODULE_5___default()(row[2]).format('YYYY-MM-DD h:mma Z');
       $dt.rows.add([row]);
     });
     $dt.draw();
@@ -76725,7 +76474,9 @@ function loadPage(num) {
 }
 
 loadPage(scrollPageNum);
-jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').select2();
+jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelection').select2({
+  theme: "foundation"
+});
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),
@@ -76737,7 +76488,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/vagrant/dev/Photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! /Users/MCharron/Documents/Kaimika/Dev/WHOI/Photic/photic/assets/src/js/app.js */"./src/js/app.js");
 
 
 /***/ })

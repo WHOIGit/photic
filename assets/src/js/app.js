@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import 'what-input';
 import  SelectionArea from '@simonwep/selection-js';
-import Bricks from 'bricks.js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
 import moment, { localeData } from 'moment';
@@ -322,6 +321,8 @@ function loadPage(num){
 
 loadPage(scrollPageNum);
 
-$('#apply_label_select').select2();
+$('.largeOptionSetSelection').select2({
+    theme: "foundation"
+});
 
 $(document).foundation();
