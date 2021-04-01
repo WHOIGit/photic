@@ -71664,19 +71664,32 @@ function apply_label_callback(evt) {
   }
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
-  console.log("caught submit");
-  ev.preventDefault();
-  var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
-  var re = /^[a-zA-Z0-9_ ]+$/i;
+var REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on("keyup", function (ev) {
+  console.log("keyup");
+  testField(REGEX_ALPHANUMERIC, jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form"), jquery__WEBPACK_IMPORTED_MODULE_0___default()('#add_label_text'));
+});
 
-  if (!re.test(label_name)) {
-    alert("Labels must be alphanumeric, [underscore], or [space]");
+function testField(regex, form, field) {
+  if (regex.test(jquery__WEBPACK_IMPORTED_MODULE_0___default()(field).val())) {
+    form.foundation('removeErrorClasses', field);
+    return true;
+  } else {
+    form.foundation('addErrorClasses', field);
+    return false;
   }
+}
 
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
-    'name': label_name
-  }, add_label_callback);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
+  ev.preventDefault();
+
+  if (testField(REGEX_ALPHANUMERIC, jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form"), jquery__WEBPACK_IMPORTED_MODULE_0___default()('#add_label_text'))) {
+    var label_name = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val();
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/create_label', {
+      'name': label_name
+    }, add_label_callback);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val('');
+  }
 });
 
 function showMessage(msg) {
@@ -71845,7 +71858,7 @@ function loadPage(num) {
 
 loadPage(scrollPageNum);
 var $add_label_text = new Foundation.Abide(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text"), {});
-Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = /^[a-zA-Z0-9_ ]+$/i;
+Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 
 /***/ }),

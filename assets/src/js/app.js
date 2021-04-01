@@ -170,23 +170,34 @@ function apply_label_callback(evt){
 
 }
 
-$("#add-label-form").on('submit', function(ev){
-    console.log("caught submit")
-    ev.preventDefault();
-    let label_name = $("#add_label_text").val()
-    let re = /^[a-zA-Z0-9_ ]+$/i;
+let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
+
+$("#add-label-form").on("keyup", function(ev){
+    console.log("keyup");
+    testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'));
+});
+
+function testField(regex, form, field){
+    if(regex.test($(field).val())){
+        form.foundation('removeErrorClasses', field);
+        return true;
+    }else{
+        form.foundation('addErrorClasses', field);
+        return false;
+    }
     
-    if(re.test(label_name)){
+}
+$("#add-label-form").on('submit', function(ev){
+    ev.preventDefault();
+    if(testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'))){
+        let label_name = $("#add_label_text").val()
         $.post('api/create_label', {
             'name': label_name,
         },
             add_label_callback
         )
         $("#add_label_text").val('');
-    }else{    
-        alert("label characters can only be alphanumeric, [underscore], or [space]");   
     }
-    
 })
 function showMessage(msg, error=false){
     Toastify({
@@ -350,6 +361,6 @@ loadPage(scrollPageNum);
 
 var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
 
-Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = /^[a-zA-Z0-9_ ]+$/i;
-
+Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC
 $(document).foundation();
+
