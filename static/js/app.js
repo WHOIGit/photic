@@ -71666,7 +71666,6 @@ function apply_label_callback(evt) {
 
 var REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on("keyup", function (ev) {
-  console.log("keyup");
   testField(REGEX_ALPHANUMERIC, jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form"), jquery__WEBPACK_IMPORTED_MODULE_0___default()('#add_label_text'));
 });
 

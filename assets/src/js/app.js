@@ -138,6 +138,7 @@ function getSelectedWrapper(){
     return selection.getSelection();
 }
 $("#apply-label-form").on('submit', function(ev){
+    
     ev.preventDefault();
     let selected_rois = getSelectedWrapper();
     let label_name = $("#apply_label_select").val();
@@ -173,7 +174,6 @@ function apply_label_callback(evt){
 let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
 
 $("#add-label-form").on("keyup", function(ev){
-    console.log("keyup");
     testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'));
 });
 
