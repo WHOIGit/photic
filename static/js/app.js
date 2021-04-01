@@ -76261,7 +76261,7 @@ $container.on('contextmenu', 'img', function (ev) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
     'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
   }, function (r) {
-    showAnnotations(ev, r.rows);
+    showAnnotations(ev, r.rows, r.roi_id);
   });
   return false;
 });
@@ -76384,17 +76384,18 @@ var $dt = $overlay.find("table").DataTable({
   }]
 });
 
-function showAnnotations(event, rows) {
+function showAnnotations(event, rows, roi_id) {
   var posX = event.pageX;
   var posY = event.pageY;
   var overlayWidth = $overlay.outerWidth(); //show the menu directly over the placeholder
 
   $overlay.css({
     position: "absolute",
-    top: posY + "px",
+    top: 15 + posY + "px",
     left: posX - overlayWidth / 2 + "px"
   });
   $overlay.show();
+  $overlay.find(".roi_id span").html(roi_id);
   $dt.clear();
 
   if (rows && rows.length > 0) {

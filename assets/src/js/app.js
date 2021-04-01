@@ -106,7 +106,7 @@ $container.on('contextmenu', 'img', function(ev) {
     $.post('api/roi_annotations', {
         'roi_id': $(ev.target).data('roi-id'),
     }, function(r) {
-        showAnnotations(ev, r.rows);
+        showAnnotations(ev, r.rows, r.roi_id);
     });
     return false;
 });
@@ -224,7 +224,7 @@ let $dt = $overlay.find("table").DataTable( {
     ]
 } );
 
-function showAnnotations(event, rows) {
+function showAnnotations(event, rows, roi_id) {
     let posX = event.pageX;
     let posY = event.pageY;
 
@@ -232,10 +232,11 @@ function showAnnotations(event, rows) {
     //show the menu directly over the placeholder
     $overlay.css({
         position: "absolute",
-        top: posY + "px",
+        top: 15+posY + "px",
         left: (posX -(overlayWidth/2)) + "px"
     })
     $overlay.show();
+    $overlay.find(".roi_id span").html(roi_id);
     $dt.clear();
     if(rows && rows.length>0) {
         $.each(rows, function(i, row) {
