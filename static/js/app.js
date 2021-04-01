@@ -76274,14 +76274,21 @@ function getFilters() {
   return filters;
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', function (ev) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").on('change', filterChange);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").on('change', filterChange);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change', filterChange);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', filterChange);
+
+function filterChange(ev) {
   ev.preventDefault();
   $container.empty();
   scrollPageNum = 1;
   var filters = getFilters();
   updateQuery(filters);
   loadPage(1);
-}); // $('#filter-collection').select(function(ev) {
+}
+
+; // $('#filter-collection').select(function(ev) {
 //     ev.preventDefault();
 //     updateFilters();
 // });

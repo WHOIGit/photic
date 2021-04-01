@@ -120,14 +120,19 @@ function getFilters() {
 
 }
 
-$("#filter-button").on('click', function(ev){
+$("#filter-annotator").on('change', filterChange);
+$("#filter-label").on('change', filterChange);
+$("#filter-collection").on('change', filterChange);
+$("#filter-button").on('click', filterChange);
+
+function filterChange(ev){
     ev.preventDefault();
     $container.empty()
     scrollPageNum = 1;
     let filters = getFilters();
     updateQuery(filters);
     loadPage(1)
-});
+};
 
 // $('#filter-collection').select(function(ev) {
 //     ev.preventDefault();
