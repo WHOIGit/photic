@@ -28,7 +28,7 @@ def home(request):
 def index(request):
     annotation_users = User.objects.all()
     collections = ImageCollection.objects.all()
-    labels = Label.objects.all()
+    labels = Label.objects.order_by('name')
 
     requested_label = request.GET.get('label')
     requested_collection = request.GET.get('collection')

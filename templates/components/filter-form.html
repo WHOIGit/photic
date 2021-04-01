@@ -1,21 +1,21 @@
 
   <div class="grid-x grid-padding-x">
     <div class="cell">
-      <ul class="accordion" data-accordion data-allow-all-closed="true">
-        <li class="accordion-item {% if is_filtered %}is-active{% endif %}" data-accordion-item>
+      <ul class="accordion" data-accordion>
+        <li class="accordion-item is-active" data-accordion-item>
           <a href="#" class="accordion-title">Filter</a>
-          <div class="accordion-content" data-tab-content>        
-            <form id="filter-form" data-abide>      
-              <div class="cell">
-                <label>Image Collection
-                  <select id="filter-collection">
+          <div class="accordion-content" data-tab-content>              
+            <div class="cell">
+              <form id="filter-form">
+                <label class="margin-bottom-1">Image Collection
+                  <select id="filter-collection" class="largeOptionSetSelection" style="width:100%">
                       {% for collection in collections %}
                       <option value="{{ collection.name }}" {% if collection.name == request.GET.collection  %} selected {% endif %}>{{ collection.name }}</option>
                       {% endfor %}
                   </select>
                 </label>
                   <label>Label
-                    <select id="filter-label">
+                    <select id="filter-label" class="largeOptionSetSelection" style="width:100%">
                       <option value="">All</option>
                         <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
                       {% for label in labels %}
@@ -24,7 +24,7 @@
                     </select>
                   </label>
                   <label class="hide">Annotator
-                    <select id="filter-annotator">
+                    <select id="filter-annotator" class="largeOptionSetSelection" style="width:100%">
                       <option value="">All</option>
                       {% for annotator in annotation_users %}
                       <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
@@ -44,47 +44,44 @@
               </div>
               <div class="cell shrink margin-vertical-1 padding-top-1" style="border-top:2px solid #efefef;">
                   <button class="button small primary expanded margin-0" id="filter-button" ><i class="fas fa-filter"></i> Filter</button>
-              </div>  
-            </form>          
+              </div>            
+            </form>
           </div>
         </li>
-      </ul>    
-    </div> 
-    <div class="cell">
-      <ul class="accordion" data-accordion data-allow-all-closed="true">
-        <li class="accordion-item is-active" data-accordion-item>
+        <li class="accordion-item" data-accordion-item>
           <a href="#" class="accordion-title">Actions</a>
           <div class="accordion-content" data-tab-content>      
             
             {% if user.is_authenticated %}    
             
             <form id="apply-label-form" data-abide> 
-            <fieldset class="fieldset">
-              <legend>Assign Label</legend>
-              <div class="">
-                <select class="input-group-field" id="apply_label_select">
-                    <option value=""></option>
-                    {% for label in labels %}
-                    <option value="{{label.name}}">{{label.name}}</option>
-                    {% endfor %}
-                </select>
-                <input type="checkbox" id="apply_label_hide"> <label for="apply_label_hide">Hide</label>
-                <input type="submit" class="button small primary expanded margin-0" id="apply_label" value="Apply">
-                
-              </div>
-            </fieldset>  
+              <fieldset class="fieldset">
+                <legend>Assign Label</legend>
+                <div class="">
+                  <select class="largeOptionSetSelection" id="apply_label_select" style="width:100%">
+                      <option value="">- Select a Label -</option>
+                      {% for label in labels %}
+                      <option value="{{label.name}}">{{label.name}}</option>
+                      {% endfor %}
+                  </select>
+                              
+                  <label for="add_label_hide" class="text-right">Hide            
+                      <input type="checkbox" id="add_label_hide" checked>
+                  </label>
+                  <input type="submit" class="button small primary expanded" id="apply_label" value="Apply">
+                </div>   
+              </fieldset>  
             </form>
 
             <form id="add-label-form" data-abide>
               <fieldset class="fieldset">
                 <legend>Create New Label</legend>
                 <div class="">
-                  <input type="text" class="margin-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" >
+                  <input type="text" class="margin-top-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" >
                   <span data-abide-error  data-form-error-on="pattern" class="form-error" style="margin-top:0">
                     Labels must be alphanumeric, [underscore], or [space]
                   </span>
-                  <input type="submit" class="button small primary expanded margin-0" id="add_label" value="Add Label">
-                  
+                  <input type="submit" class="button small primary expanded" id="add_label" value="Add Label">
                 </div>
               </fieldset>
               {% else %}

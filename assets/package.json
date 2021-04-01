@@ -25,6 +25,7 @@
     "jquery": "^3.6.0",
     "jquery-contextmenu": "^2.9.2",
     "jquery-datetimepicker": "^2.5.21",
+    "select2": "~4.0",
     "moment": "^2.24.0",
     "motion-ui": "^2.0.3",
     "toastify-js": "^1.10.0",
