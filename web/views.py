@@ -111,6 +111,7 @@ def roi_annotations(request):
     return JsonResponse({
         'annotations': annotation_records,
         'rows': table_rows,
+        'roi_id': roi.roi_id,
     })
 
 
