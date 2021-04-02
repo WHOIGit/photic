@@ -1,12 +1,12 @@
 
   <div class="grid-x grid-padding-x">
     <div class="cell">
-    <ul class="accordion" data-accordion data-allow-all-closed="true">
+      <ul class="accordion" data-accordion data-allow-all-closed="true">
         <li class="accordion-item is-active" data-accordion-item>
           <a href="#" class="accordion-title">Filter</a>
-          <div class="accordion-content" data-tab-content>              
-            <div class="cell">
-              <form id="filter-form">
+          <div class="accordion-content" data-tab-content>  
+            <form id="filter-form">            
+              <div class="cell">
                 <label class="margin-bottom-1">Image Collection
                   <select id="filter-collection" class="largeOptionSetSelection" style="width:100%">
                       {% for collection in collections %}
@@ -14,24 +14,24 @@
                       {% endfor %}
                   </select>
                 </label>
-                  <label>Label
-                    <select id="filter-label" class="largeOptionSetSelection" style="width:100%">
-                      <option value="">All</option>
-                        <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
-                      {% for label in labels %}
-                      <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
-                      {% endfor %}
-                    </select>
-                  </label>
-                  <label class="hide">Annotator
-                    <select id="filter-annotator" class="largeOptionSetSelection" style="width:100%">
-                      <option value="">All</option>
-                      {% for annotator in annotation_users %}
-                      <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
-                      {% endfor %}
-                    </select>
-                  </label>        
-                </div>            
+                <label>Label
+                  <select id="filter-label" class="largeOptionSetSelection" style="width:100%">
+                    <option value="">All</option>
+                      <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
+                    {% for label in labels %}
+                    <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label class="hide">Annotator
+                  <select id="filter-annotator" class="largeOptionSetSelection" style="width:100%">
+                    <option value="">All</option>
+                    {% for annotator in annotation_users %}
+                    <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
+                    {% endfor %}
+                  </select>
+                </label>        
+              </div>            
               <div class="cell hide">
                 <label>Before
                   <input type="text" id="filter-before-date" placeholder="Start Date" disabled>
