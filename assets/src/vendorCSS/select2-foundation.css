@@ -28,7 +28,7 @@ span.select2-container--foundation {
       border-radius: 0;
       color: #0a0a0a;
       font-family: inherit;
-      font-size: 1rem;
+      font-size: .75rem;
       background: #fefefe;
       outline: 0; }
     .select2-container--foundation .select2-search--dropdown .select2-search__field {
@@ -37,7 +37,7 @@ span.select2-container--foundation {
       border-radius: 0;
       color: #0a0a0a;
       font-family: inherit;
-      font-size: 1rem;
+      font-size: .75rem;
       border-radius: 0; }
     .select2-container--foundation .select2-search__field {
       outline: 0;
@@ -164,15 +164,15 @@ span.select2-container--foundation {
   /****** Single SCSS *******/
   .select2-container--foundation .select2-selection--single,
   .select2-container--foundation .selection .select2-selection--single {
-    height: 2.4375rem;
+    height: 2rem;
     line-height: 1.5;
-    padding: 0.5rem; }
+    padding: 0.3rem; }
     .select2-container--foundation .select2-selection--single .select2-selection__rendered,
     .select2-container--foundation .selection .select2-selection--single .select2-selection__rendered {
       color: #0a0a0a; }
     .select2-container--foundation .select2-selection--single .select2-selection__arrow,
     .select2-container--foundation .selection .select2-selection--single .select2-selection__arrow {
-      height: 2.4375rem;
+      height: 2rem;
       position: absolute;
       top: 0;
       right: 1px;

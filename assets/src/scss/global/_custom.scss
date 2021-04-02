@@ -39,21 +39,29 @@
     border-radius: 0.1em;
 }
 #tag-holder{
+    .roi_id{
+        padding: 10px 10px;
+        background:$primary-color;
+        color:white;
+        font-size: 14px;
+    }
+    table.dataTable{
+        margin:0 !important;
+    }
+    background:white;
     pointer-events: none;
     display: none;
     filter: drop-shadow(10px 10px 10px #333333);
     position:absolute;
-    width:300px;
     z-index:100;
     .triangle{
-        position: relative;
-        transform: translateX(-50%);
+        position: absolute;
+        transform: translate(-50%, -100%);
         left:50%;
-        top:0.5em;
         width: 0; 
         height: 0; 
         border-left: 15px solid transparent;
         border-right: 15px solid transparent;
-        border-bottom: 15px solid white;
+        border-bottom: 15px solid $primary-color;
     }
 }
