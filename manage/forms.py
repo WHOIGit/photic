@@ -52,8 +52,8 @@ class UserForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'required': ''}),
         }
         labels = {
-                    "first_name": "First Name*",
-                    "last_name": "Last Name*",
-                    "email": "Email Address*",
-                    "username": "User Name*"
-                }
+            "first_name": "First Name*",
+            "last_name": "Last Name*",
+            "email": "Email Address*",
+            "username": "User Name*"
+        }

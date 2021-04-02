@@ -14,7 +14,7 @@
                       {% endfor %}
                   </select>
                 </label>
-                <label>Label
+                <label class="margin-bottom-1">Label
                   <select id="filter-label" class="largeOptionSetSelection" style="width:100%">
                     <option value="">All</option>
                       <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
@@ -29,6 +29,14 @@
                     {% for annotator in annotation_users %}
                     <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
                     {% endfor %}
+                  </select>
+                </label>               
+                <label>Sort By
+                  <select id="filter-sortby" style="width:100%">
+                    <option value="HEIGHT_ASC">Height ASC</option>
+                    <option value="HEIGHT_DESC" selected>Height DESC</option>
+                    <option value="ROI_ID_ASC">ROI_ID ASC</option>
+                    <option value="ROI_ID_DESC">ROI_ID DESC</option>                      
                   </select>
                 </label>        
               </div>            
