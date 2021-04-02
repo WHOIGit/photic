@@ -59,8 +59,7 @@
             {% if user.is_authenticated %}    
             
             <form id="apply-label-form" data-abide> 
-              <fieldset class="fieldset">
-                <legend>Assign Label</legend>
+                <label>Assign Label</label>
                 <div class="">
                   <select class="largeOptionSetSelection" id="apply_label_select" style="width:100%">
                       <option value="">- Select a Label -</option>
@@ -74,12 +73,10 @@
                   </label>
                   <input type="submit" class="button small primary expanded" id="apply_label" value="Apply">
                 </div>   
-              </fieldset>  
             </form>
 
             <form id="add-label-form" data-abide>
-              <fieldset class="fieldset">
-                <legend>Create New Label</legend>
+                <label>Create New Label</label>
                 <div class="">
                   <input type="text" class="margin-top-0" id="add_label_text" pattern="alpha_numeric_score_space" value="" >
                   <span data-abide-error  data-form-error-on="pattern" class="form-error" style="margin-top:0">
@@ -87,11 +84,10 @@
                   </span>
                   <input type="submit" class="button small primary expanded" id="add_label" value="Add Label">
                 </div>
-              </fieldset>
               {% else %}
                 To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
               {% endif %}
-            <form>
+            </form>
           </div>
         </li>
       </ul>
