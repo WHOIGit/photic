@@ -3,6 +3,7 @@ import 'what-input';
 import  SelectionArea from '@simonwep/selection-js';
 import 'jquery-datetimepicker';
 import Tagify from '@yaireo/tagify';
+import Toastify from 'toastify-js'
 import moment, { localeData } from 'moment';
 import 'select2';
 
@@ -141,7 +142,8 @@ function filterChange(ev){
 function getSelectedWrapper(){
     return selection.getSelection();
 }
-$("#apply_label").on('click', function(ev){
+$("#apply-label-form").on('submit', function(ev){
+    
     ev.preventDefault();
     let selected_rois = getSelectedWrapper();
     let label_name = $("#apply_label_select").val();
@@ -165,7 +167,7 @@ $("#apply_label").on('click', function(ev){
 function apply_label_callback(evt){
     let selected_rois = getSelectedWrapper();
     for (let i=0; i<selected_rois.length; i++){
-        if($("#add_label_hide").is(':checked')){
+        if($("#apply_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
         }else{
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
@@ -174,27 +176,63 @@ function apply_label_callback(evt){
 
 }
 
-$("#add_label").on('click', function(ev){
-    ev.preventDefault();
-    let label_name = $("#add_label_text").val()
-    let re = /^[a-z0-9_ ]+$/i;
-    
-    if(!re.test(label_name)){
-        alert("label characters can only be alphanumeric, [underscore], or [space]");   
+let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
+
+$("#add-label-form").on("keyup", function(ev){
+    testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'));
+});
+
+function testField(regex, form, field){
+    if(regex.test($(field).val())){
+        form.foundation('removeErrorClasses', field);
+        return true;
+    }else{
+        form.foundation('addErrorClasses', field);
+        return false;
     }
     
-    $.post('api/create_label', {
-        'name': label_name,
-    },
-        function(r) {
-            console.log(r)
-            //add to select element here
-        }
-    )
-
+}
+$("#add-label-form").on('submit', function(ev){
+    ev.preventDefault();
+    if(testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'))){
+        let label_name = $("#add_label_text").val()
+        $.post('api/create_label', {
+            'name': label_name,
+        },
+            add_label_callback
+        )
+        $("#add_label_text").val('');
+    }
 })
+function showMessage(msg, error=false){
+    Toastify({
+        text: msg,
+        offset: {
+            x: 15, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 60 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        backgroundColor: error?"crimson":"seagreen",
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+      }).showToast();
 
-function add_label_callback(evt){
+}
+function  showError(msg){
+    showMessage(msg, true);
+}
+function add_label_callback(r){
+    if(r.created){
+        $('#apply_label_select').append($("<option value="+ r.label +">" + r.label + "</option>"));
+        $('#apply_label_select').val(r.label);
+        showMessage("Label created");
+    }else{
+
+        showError("Label already exists");
+    }
 
 }
 
@@ -327,8 +365,12 @@ function loadPage(num){
 
 loadPage(scrollPageNum);
 
+var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
+
+Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC
 $('.largeOptionSetSelection').select2({
     theme: "foundation"
 });
 
 $(document).foundation();
+
