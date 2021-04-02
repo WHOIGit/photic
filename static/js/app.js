@@ -76488,7 +76488,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/colin/development/kaimika/photic/assets/src/js/app.js */"./src/js/app.js");
+module.exports = __webpack_require__(/*! /Users/MCharron/Documents/Kaimika/Dev/WHOI/Photic/photic/assets/src/js/app.js */"./src/js/app.js");
 
 
 /***/ })
