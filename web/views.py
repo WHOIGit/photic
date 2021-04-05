@@ -138,7 +138,6 @@ def create_label(request):
 
     label, created = Label.objects.get_or_create(name=label_name)
     
-
     return JsonResponse({
         'label': label_name,
         'created': created,

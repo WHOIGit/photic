@@ -18,10 +18,13 @@
                   <select id="filter-label" class="largeOptionSetSelection" style="width:100%">
                     <option value="">All</option>
                       <option value="unlabeled" {% if "label.name" == request.GET.label  %} selected {% endif %}>unlabeled</option>
-                    {% for label in labels %}
+                    {% for label in all_labels %}
                     <option value="{{label.name}}" {% if label.name == request.GET.label  %} selected {% endif %}>{{label.name}}</option>
                     {% endfor %}
                   </select>
+                </label>
+                <label for="labels_only_collection" class="text-right">Show only labels in collection            
+                    <input type="checkbox" id="labels_only_collection" checked>
                 </label>
                 <label class="hide">Annotator
                   <select id="filter-annotator" class="largeOptionSetSelection" style="width:100%">
@@ -30,7 +33,7 @@
                     <option value="{{annotator.username}}" {% if annotator.username == request.GET.annotator  %} selected {% endif %}>{{annotator.username}}</option>
                     {% endfor %}
                   </select>
-                </label>               
+                </label>
                 <label>Sort By
                   <select id="filter-sortby" style="width:100%">
                     <option value="HEIGHT_ASC">&#9650; Height</option>

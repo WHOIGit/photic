@@ -76656,8 +76656,12 @@ function getFilters() {
   return filters;
 }
 
-var urlParams = new URLSearchParams(window.location.search);
-var sortbyValue = urlParams.get('sortby');
+function getQueryParam(name) {
+  var urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+var sortbyValue = getQueryParam('sortby');
 
 if (sortbyValue) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-sortby").val(sortbyValue);
@@ -76668,6 +76672,8 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").on('change', 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").on('change', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', filterChange);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change', getLabels);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").on('change', getLabels);
 
 function filterChange(ev) {
   ev.preventDefault();
@@ -76740,6 +76746,36 @@ function testField(regex, form, field) {
   }
 }
 
+function getLabels(evt) {
+  var data = {};
+
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").is(':checked')) {
+    data['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
+  }
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/get_labels', data, get_labels_callback);
+}
+
+function get_labels_callback(r) {
+  if (r.labels) {
+    var $apply_label_select = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select');
+    var $filter_label = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-label');
+    $apply_label_select.empty();
+    $filter_label.empty();
+    var filterBy = getQueryParam('label');
+    var initial = '<option value="">All</option><option value="unlabeled">unlabeled</option>';
+    $apply_label_select.append(initial);
+    $filter_label.append(initial);
+
+    for (var i = 0; i < r.labels.length; i++) {
+      var label_name = r.labels[i];
+      var selected = filterBy == label_name ? 'selected' : '';
+      $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+      $filter_label.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+    }
+  }
+}
+
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
   ev.preventDefault();
 
@@ -76751,6 +76787,16 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', fu
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text").val('');
   }
 });
+
+function add_label_callback(r) {
+  if (r.created) {
+    showMessage("Label created");
+  } else {
+    showError("Label already exists");
+  }
+
+  getLabels();
+}
 
 function showMessage(msg) {
   var error = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -76777,16 +76823,6 @@ function showMessage(msg) {
 
 function showError(msg) {
   showMessage(msg, true);
-}
-
-function add_label_callback(r) {
-  if (r.created) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option value=" + r.label + ">" + r.label + "</option>"));
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select').val(r.label);
-    showMessage("Label created");
-  } else {
-    showError("Label already exists");
-  }
 }
 
 function updateQuery(obj) {
@@ -76924,6 +76960,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelection').select
   theme: "foundation"
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
+getLabels();
 
 /***/ }),
 
