@@ -209,6 +209,10 @@ class ImageCollection(models.Model):
     name = models.CharField(max_length=255, unique=True)
     rois = models.ManyToManyField(ROI, related_name="collections")
 
+    def labels(self):
+        label_ids = [i['annotations__label'] for i in self.rois.values('annotations__label').distinct()]
+        return sorted(Label.objects.in_bulk(label_ids).values(), key=lambda label: label.name.lower())
+
     def __str__(self):
         return self.name
 
