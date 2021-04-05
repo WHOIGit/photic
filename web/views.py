@@ -42,13 +42,22 @@ def index(request):
         "collections": collections
     })
 
+SORTBY_OPTIONS = {
+    'HEIGHT_ASC':'height',
+    'HEIGHT_DESC':'-height',
+    'ROI_ID_ASC':'roi_id',
+    'ROI_ID_DESC':'-roi_id',
+}
 
 def roi_list(request):
     requested_label = request.POST.get('label')
     requested_collection = request.POST.get('collection')
+    sortby = request.POST.get('sortby')
+    
     page = request.POST.get('page', 1)
-
-    qs = ROI.objects.order_by('-height')
+    
+    sortby_query = SORTBY_OPTIONS[sortby]
+    qs = ROI.objects.order_by(sortby_query)
 
     if requested_collection:
         qs = qs.filter(collections__name=requested_collection)
