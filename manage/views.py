@@ -1,12 +1,15 @@
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 
 from .forms import UserForm
+from .forms import ShortUserForm
 from .utils import staff_required
+from django.contrib.auth.decorators import login_required
 
 
 @staff_required
@@ -25,6 +28,30 @@ def get_users(request):
 
     return JsonResponse({
         "data": list(users)
+    })
+
+@login_required
+def profile(request, id=None):
+
+    user = request.user
+    form = ShortUserForm(instance=user)
+    if request.method == "POST":
+        form = ShortUserForm(request.POST, instance=user)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            new_password = form.cleaned_data["new_password"]
+            if new_password:
+                user.password = make_password(new_password)
+
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect(reverse('profile') + '?password_updated=True')
+
+    return render(request, "profile/index.html", {
+        'user': user,
+        'form': form,
     })
 
 @staff_required

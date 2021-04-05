@@ -52,8 +52,30 @@ class UserForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'required': ''}),
         }
         labels = {
-            "first_name": "First Name*",
-            "last_name": "Last Name*",
-            "email": "Email Address*",
-            "username": "User Name*"
-        }
+                    "first_name": "First Name*",
+                    "last_name": "Last Name*",
+                    "email": "Email Address*",
+                    "username": "User Name*"
+                }
+
+class ShortUserForm(forms.ModelForm):
+    new_password = forms.CharField(required=False, widget=forms.PasswordInput(
+
+    ))
+    confirm_password = forms.CharField(required=False, widget=forms.PasswordInput(
+
+    ))
+
+
+    def clean_confirm_password(self):
+        if "new_password" not in self.cleaned_data or self.cleaned_data["new_password"] == "":
+            return ""
+
+        if self.cleaned_data["new_password"] != self.cleaned_data["confirm_password"]:
+            raise forms.ValidationError("Passwords do not match")
+
+        return self.cleaned_data["confirm_password"]
+
+    class Meta:
+        model = User
+        fields = ()

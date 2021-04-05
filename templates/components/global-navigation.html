@@ -27,6 +27,7 @@
           </li>
           {% endif %}
           {% if user.is_authenticated %}
+              <li><a href="{% url 'profile' %}">Profile</a></li>
               <li><a href="{% url 'manage:logout' %}">Logout</a></li>
           {% else %}
               <li><a href="{% url 'manage:login' %}">Login</a></li>
