@@ -76652,9 +76652,18 @@ function getFilters() {
   filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
   filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
   filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
+  filters['sortby'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-sortby').val();
   return filters;
 }
 
+var urlParams = new URLSearchParams(window.location.search);
+var sortbyValue = urlParams.get('sortby');
+
+if (sortbyValue) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-sortby").val(sortbyValue);
+}
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-sortby").on('change', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").on('change', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").on('change', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change', filterChange);
