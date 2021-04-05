@@ -117,10 +117,20 @@ function getFilters() {
     filters["annotator"] = $("#filter-annotator").val();
     filters["label"] = $("#filter-label").val();
     filters['collection'] = $('#filter-collection').val();
+    filters['sortby'] = $('#filter-sortby').val();
     return filters;
 
 }
 
+
+const urlParams = new URLSearchParams(window.location.search);
+const sortbyValue = urlParams.get('sortby');
+if(sortbyValue){
+    $("#filter-sortby").val(sortbyValue);
+}
+
+
+$("#filter-sortby").on('change', filterChange);
 $("#filter-annotator").on('change', filterChange);
 $("#filter-label").on('change', filterChange);
 $("#filter-collection").on('change', filterChange);
