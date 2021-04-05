@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid-y grid-frame">
+
+    <div class="grid-x grid-padding-x padding-top-1 align-center">
+        <div class="cell medium-10 large-8">
+            <h1>Profile</h1>
+        </div>
+    </div>
+    <div class="grid-x align-center">
+        <div class="cell medium-10 large-8">
+            <hr>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell medium-10 large-8">
+            {% if request.GET.password_updated %}
+            <div class="callout primary" >
+                <p>Password Updated</p>
+            </div>
+            {% endif %}
+            <h4>Update Password</h4>
+            <form method="post" id="createUserForm" data-abide novalidate>
+                {% csrf_token %}
+                <div data-abide-error class="alert callout" style="display: none;">
+                    <p><i class="alert-icon"></i> There are errors with the form below.  Please confirm your entries.</p>
+                </div>
+                <div class="grid-x grid-padding-x small-up-2 padding-vertical-2">
+                    
+                    <div class="cell">
+                        <label>{{ form.new_password.label_tag }}
+                            {{ form.new_password }}
+                        </label>
+                        {% if form.new_password.errors %}
+                        <div class="form-error is-visible">{{ form.new_password.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="cell">
+                        <label>{{ form.confirm_password.label_tag }}
+                            {{ form.confirm_password }}
+                        </label>
+                        {% if form.confirm_password.errors %}
+                        <div class="form-error is-visible">{{ form.confirm_password.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12">
+                        <div class="callout">
+                            <div class="grid-x">
+                                <div class="cell text-right">
+                                    <a href="{% url 'manage:users' %}"
+                                        class="button secondary hollow margin-0">Cancel</a>
+                                    <button type="submit" class="button primary margin-0">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
