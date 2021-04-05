@@ -215,23 +215,21 @@ function getLabels(evt){
 
 function get_labels_callback(r){
     if(r.labels){
-        let $apply_label_select = $('#apply_label_select');
         let $filter_label = $('#filter-label');
-        $apply_label_select.empty();
+        let $apply_label_select = $('#apply_label_select');
         $filter_label.empty();
+        $apply_label_select.empty();
 
         let filterBy = getQueryParam('label');
         
-        let initial = '<option value="">All</option><option value="unlabeled">unlabeled</option>';
-        
-        $apply_label_select.append(initial);
-        $filter_label.append(initial);
+        $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
+        $apply_label_select.append('<option value="">- Select a Label -</option>');
 
         for (let i=0; i<r.labels.length; i++){
             let label_name = r.labels[i];
             let selected = filterBy==label_name?'selected':'';
-            $apply_label_select.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
             $filter_label.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+            $apply_label_select.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
         }
     }
 }

@@ -76758,20 +76758,19 @@ function getLabels(evt) {
 
 function get_labels_callback(r) {
   if (r.labels) {
-    var $apply_label_select = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select');
     var $filter_label = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-label');
-    $apply_label_select.empty();
+    var $apply_label_select = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select');
     $filter_label.empty();
+    $apply_label_select.empty();
     var filterBy = getQueryParam('label');
-    var initial = '<option value="">All</option><option value="unlabeled">unlabeled</option>';
-    $apply_label_select.append(initial);
-    $filter_label.append(initial);
+    $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
+    $apply_label_select.append('<option value="">- Select a Label -</option>');
 
     for (var i = 0; i < r.labels.length; i++) {
       var label_name = r.labels[i];
       var selected = filterBy == label_name ? 'selected' : '';
-      $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
       $filter_label.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+      $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
     }
   }
 }

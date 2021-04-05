@@ -28,24 +28,14 @@ def home(request):
 def index(request):
     annotation_users = User.objects.all()
     collections = ImageCollection.objects.all()
-    all_labels = Label.objects.order_by('name')
 
     requested_label = request.GET.get('label')
     requested_collection = request.GET.get('collection')
-
-    # FIXME these clauses will be unnecessary once label list is converted to AJAX
-    if requested_collection is not None:
-        rc = get_object_or_404(ImageCollection, name=requested_collection)
-        labels = rc.labels()
-    else:
-        labels = all_labels
 
     is_filtered = requested_label is not None
 
     return render(request, "web/index.html", {
         "annotation_users": annotation_users,
-        "labels": labels,
-        "all_labels": all_labels,
         "is_filtered": is_filtered,
         "collections": collections
     })
