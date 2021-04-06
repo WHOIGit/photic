@@ -207,7 +207,7 @@ function testField(regex, form, field){
 
 function getLabels(evt){
     let data = {};
-    if($("#labels_only_collection").is(':checked')){
+    if($("#labels_only_collection").is(':not(:checked)')){
         data['collection'] = $('#filter-collection').val();
     }
     $.post('api/get_labels', data, get_labels_callback);
