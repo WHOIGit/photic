@@ -121,20 +121,24 @@ function getFilters() {
     return filters;
 
 }
-
-
-const urlParams = new URLSearchParams(window.location.search);
-const sortbyValue = urlParams.get('sortby');
+function getQueryParam(name){
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+    
+}
+let sortbyValue = getQueryParam('sortby');
 if(sortbyValue){
     $("#filter-sortby").val(sortbyValue);
 }
-
 
 $("#filter-sortby").on('change', filterChange);
 $("#filter-annotator").on('change', filterChange);
 $("#filter-label").on('change', filterChange);
 $("#filter-collection").on('change', filterChange);
 $("#filter-button").on('click', filterChange);
+
+$("#filter-collection").on('change', getLabels);
+$("#labels_only_collection").on('change', getLabels);
 
 function filterChange(ev){
     ev.preventDefault();
@@ -183,11 +187,9 @@ function apply_label_callback(evt){
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
     }
-
 }
 
 let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
-
 $("#add-label-form").on("keyup", function(ev){
     testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'));
 });
@@ -202,6 +204,37 @@ function testField(regex, form, field){
     }
     
 }
+
+function getLabels(evt){
+    let data = {};
+    if($("#labels_only_collection").is(':not(:checked)')){
+        data['collection'] = $('#filter-collection').val();
+    }
+    $.post('api/get_labels', data, get_labels_callback);
+}
+
+function get_labels_callback(r){
+    if(r.labels){
+        let $filter_label = $('#filter-label');
+        let $apply_label_select = $('#apply_label_select');
+        $filter_label.empty();
+        $apply_label_select.empty();
+
+        let filterBy = getQueryParam('label');
+        
+        $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
+        $apply_label_select.append('<option value="">- Select a Label -</option>');
+
+        for (let i=0; i<r.labels.length; i++){
+            let label_name = r.labels[i];
+            let selected = filterBy==label_name?'selected':'';
+            $filter_label.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+            $apply_label_select.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+        }
+    }
+}
+
+
 $("#add-label-form").on('submit', function(ev){
     ev.preventDefault();
     if(testField(REGEX_ALPHANUMERIC, $("#add-label-form"), $('#add_label_text'))){
@@ -214,6 +247,17 @@ $("#add-label-form").on('submit', function(ev){
         $("#add_label_text").val('');
     }
 })
+function add_label_callback(r){
+    if(r.created){
+        showMessage("Label created");
+    }else{
+
+        showError("Label already exists");
+    }
+    getLabels();
+
+}
+
 function showMessage(msg, error=false){
     Toastify({
         text: msg,
@@ -233,17 +277,6 @@ function showMessage(msg, error=false){
 }
 function  showError(msg){
     showMessage(msg, true);
-}
-function add_label_callback(r){
-    if(r.created){
-        $('#apply_label_select').append($("<option value="+ r.label +">" + r.label + "</option>"));
-        $('#apply_label_select').val(r.label);
-        showMessage("Label created");
-    }else{
-
-        showError("Label already exists");
-    }
-
 }
 
 function updateQuery(obj){
@@ -383,4 +416,6 @@ $('.largeOptionSetSelection').select2({
 });
 
 $(document).foundation();
+
+getLabels();
 
