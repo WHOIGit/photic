@@ -76749,7 +76749,7 @@ function testField(regex, form, field) {
 function getLabels(evt) {
   var data = {};
 
-  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").is(':checked')) {
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").is(':not(:checked)')) {
     data['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
   }
 
@@ -76919,11 +76919,31 @@ function loadROIs() {
 
 var scrollPageNum = 1;
 var morePages = true;
+var imagesOutstanding = 0;
+
+function imageLoaded(evt) {
+  imagesOutstanding--;
+
+  if (imagesOutstanding == 0) {
+    checkWindowFull();
+  }
+}
+
+function checkWindowFull() {
+  //keep loading pages of ROIs until the screen is filled and a scroll bar is present
+  if ($container.height() < $panel.height() && morePages) {
+    scrollPageNum++;
+    loadPage(scrollPageNum);
+  }
+}
 
 function handleRoiAjax(r) {
   if (r.rois) {
     for (var i = 0; i < r.rois.length; i++) {
-      $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+      imagesOutstanding++;
+      var $img = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+      $img.on("load", imageLoaded);
+      $container.append($img);
     }
   }
 
@@ -76932,6 +76952,9 @@ function handleRoiAjax(r) {
   morePages = r.has_next_page;
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on("load", function () {
+  console.log("on page load");
+});
 $panel.on("scroll", function () {
   if (morePages) {
     var s = $panel.scrollTop(),
