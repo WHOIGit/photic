@@ -35,6 +35,7 @@ SORTBY_OPTIONS = {
     'ROI_ID_DESC':'-roi_id',
 }
 
+@require_POST
 def roi_list(request):
     requested_label = request.POST.get('label')
     requested_collection = request.POST.get('collection')
@@ -59,7 +60,7 @@ def roi_list(request):
         rois = qs.all()
 
     roi_count = len(rois)
-    paginator = Paginator(rois, 100)
+    paginator = Paginator(rois, 50)
 
     try:
         rois = paginator.page(page)
