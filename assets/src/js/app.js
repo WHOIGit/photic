@@ -371,11 +371,28 @@ function loadROIs(filters={}){
 }
 let scrollPageNum = 1;
 let morePages = true;
+let imagesOutstanding = 0;
 
+function imageLoaded(evt) {
+    imagesOutstanding--;
+    if(imagesOutstanding==0){
+        checkWindowFull();
+    }
+
+}
+function checkWindowFull(){//keep loading pages of ROIs until the screen is filled and a scroll bar is present
+    if($container.height() < $panel.height() && morePages){
+        scrollPageNum++;
+        loadPage(scrollPageNum);
+    }
+}
 function handleRoiAjax(r) {
     if(r.rois){
         for (let i=0;i< r.rois.length; i++) {
-            $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
+            imagesOutstanding++;
+            let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+            $img.on("load", imageLoaded);
+            $container.append($img);
         }
     }
 
@@ -383,12 +400,10 @@ function handleRoiAjax(r) {
     $("#roi_count").show();
 
     morePages = r.has_next_page;
-
-    if($container.height() < $panel.height() && morePages){
-        scrollPageNum++;
-        loadPage(scrollPageNum);
-    }
 }
+$(window).on("load", function() {
+    console.log("on page load");
+});
 $panel.on("scroll", function(){
     if(morePages){
     let s = $panel.scrollTop(),

@@ -76919,24 +76919,42 @@ function loadROIs() {
 
 var scrollPageNum = 1;
 var morePages = true;
+var imagesOutstanding = 0;
 
-function handleRoiAjax(r) {
-  if (r.rois) {
-    for (var i = 0; i < r.rois.length; i++) {
-      $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
-    }
+function imageLoaded(evt) {
+  imagesOutstanding--;
+
+  if (imagesOutstanding == 0) {
+    checkWindowFull();
   }
+}
 
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
-  morePages = r.has_next_page;
-
+function checkWindowFull() {
+  //keep loading pages of ROIs until the screen is filled and a scroll bar is present
   if ($container.height() < $panel.height() && morePages) {
     scrollPageNum++;
     loadPage(scrollPageNum);
   }
 }
 
+function handleRoiAjax(r) {
+  if (r.rois) {
+    for (var i = 0; i < r.rois.length; i++) {
+      imagesOutstanding++;
+      var $img = jquery__WEBPACK_IMPORTED_MODULE_0___default()('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+      $img.on("load", imageLoaded);
+      $container.append($img);
+    }
+  }
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
+  morePages = r.has_next_page;
+}
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on("load", function () {
+  console.log("on page load");
+});
 $panel.on("scroll", function () {
   if (morePages) {
     var s = $panel.scrollTop(),
