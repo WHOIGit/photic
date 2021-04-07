@@ -374,7 +374,6 @@ let morePages = true;
 
 function handleRoiAjax(r) {
     if(r.rois){
-
         for (let i=0;i< r.rois.length; i++) {
             $container.append('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />')
         }
@@ -384,6 +383,11 @@ function handleRoiAjax(r) {
     $("#roi_count").show();
 
     morePages = r.has_next_page;
+
+    if($container.height() < $panel.height() && morePages){
+        scrollPageNum++;
+        loadPage(scrollPageNum);
+    }
 }
 $panel.on("scroll", function(){
     if(morePages){

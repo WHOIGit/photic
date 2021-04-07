@@ -76749,7 +76749,7 @@ function testField(regex, form, field) {
 function getLabels(evt) {
   var data = {};
 
-  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").is(':checked')) {
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").is(':not(:checked)')) {
     data['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
   }
 
@@ -76930,6 +76930,11 @@ function handleRoiAjax(r) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>");
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi_count").show();
   morePages = r.has_next_page;
+
+  if ($container.height() < $panel.height() && morePages) {
+    scrollPageNum++;
+    loadPage(scrollPageNum);
+  }
 }
 
 $panel.on("scroll", function () {
