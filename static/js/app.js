@@ -76775,6 +76775,29 @@ function get_labels_callback(r) {
   }
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#next_label").on('click', nextLabel);
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#prev_label").on('click', prevLabel);
+
+function nextLabel() {
+  var $next = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select option:selected').next();
+
+  if ($next.length == 0) {
+    $next = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select option').first();
+  }
+
+  $next.prop('selected', true).change();
+}
+
+function prevLabel() {
+  var $prev = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select option:selected').prev();
+
+  if ($prev.length == 0) {
+    $prev = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#apply_label_select option').last();
+  }
+
+  $prev.prop('selected', true).change();
+}
+
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
   ev.preventDefault();
 
