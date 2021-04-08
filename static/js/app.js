@@ -76833,11 +76833,24 @@ function updateQuery(obj) {
   }
 
   url.search = search_params.toString();
+  window.localStorage.setItem('search_params', url.search);
   window.history.pushState({
     path: url.toString()
   }, '', url.toString());
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(".homeLink").on("click", function (evt) {
+  evt.preventDefault();
+  var url = new URL(document.location);
+  url.pathname = '';
+  var query = window.localStorage.getItem('search_params');
+
+  if (query) {
+    url.search = query;
+  }
+
+  document.location = url.toString();
+});
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
 var $dt = $overlay.find("table").DataTable({
   data: [],

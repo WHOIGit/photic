@@ -202,7 +202,6 @@ function testField(regex, form, field){
         form.foundation('addErrorClasses', field);
         return false;
     }
-    
 }
 
 function getLabels(evt){
@@ -275,21 +274,34 @@ function showMessage(msg, error=false){
       }).showToast();
 
 }
-function  showError(msg){
+function showError(msg){
     showMessage(msg, true);
 }
 
 function updateQuery(obj){
-    var url = new URL(document.location);
-    var search_params = url.searchParams;
+    let url = new URL(document.location);
+    let search_params = url.searchParams;
     for (const key in obj){
         search_params.set(key, obj[key]);
     }
 
     url.search = search_params.toString();
-
+    window.localStorage.setItem('search_params', url.search);
     window.history.pushState({path:url.toString()},'',url.toString());
 }
+
+$(".homeLink").on("click", function(evt){
+    evt.preventDefault();
+   
+    let url = new URL(document.location);
+    url.pathname = '';
+    let query = window.localStorage.getItem('search_params');
+    if(query){
+        url.search = query;
+    }
+    document.location = url.toString();
+
+});
 
 let $overlay = $("#tag-holder");
 let $dt = $overlay.find("table").DataTable( {
