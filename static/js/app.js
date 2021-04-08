@@ -76718,6 +76718,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply-label-form").on('submit', 
     success: apply_label_callback
   });
 });
+var lastHiddenROIs = [];
 
 function apply_label_callback(evt) {
   var selected_rois = getSelectedWrapper();
@@ -76728,6 +76729,11 @@ function apply_label_callback(evt) {
     } else {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
     }
+  }
+
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_hide").is(':checked')) {
+    lastHiddenROIs.push(selected_rois);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide_last").removeClass("disabled");
   }
 }
 
@@ -76775,6 +76781,18 @@ function get_labels_callback(r) {
   }
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide-last-form").on('submit', function (ev) {
+  ev.preventDefault();
+  var last = lastHiddenROIs.pop();
+
+  if (last) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(last).fadeIn();
+  }
+
+  if (lastHiddenROIs) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide_last").addClass("disabled");
+  }
+});
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
   ev.preventDefault();
 
@@ -76880,23 +76898,6 @@ function showAnnotations(event, rows, roi_id) {
 
 function hideTags(event) {
   $overlay.hide();
-}
-
-function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    url: '/api/create_or_verify_annotations',
-    type: 'POST',
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json',
-    data: JSON.stringify({
-      'annotator': annotator_name,
-      'annotations': [{
-        'roi_id': roi_id,
-        'label': label_name
-      }]
-    }),
-    success: callback
-  });
 }
 
 __webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js"); // If you want to pick and choose which modules to include, comment out the above and uncomment
