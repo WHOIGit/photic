@@ -167,7 +167,7 @@ $("#apply-label-form").on('submit', function(ev){
         success: apply_label_callback,
     });
 });
-
+let lastHiddenROIs = [];
 function apply_label_callback(evt){
     let selected_rois = getSelectedWrapper();
     for (let i=0; i<selected_rois.length; i++){
@@ -176,6 +176,12 @@ function apply_label_callback(evt){
         }else{
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
+    }
+
+    if($("#apply_label_hide").is(':checked')){
+        lastHiddenROIs.push(selected_rois);
+
+        $("#unhide_last").removeClass("disabled");
     }
 }
 
@@ -223,6 +229,16 @@ function get_labels_callback(r){
     }
 }
 
+$("#unhide-last-form").on('submit', function(ev){
+    ev.preventDefault();
+    let last = lastHiddenROIs.pop();
+    if(last){
+        $(last).fadeIn();
+    }
+    if(lastHiddenROIs){
+        $("#unhide_last").addClass("disabled");
+    }
+});
 
 $("#add-label-form").on('submit', function(ev){
     ev.preventDefault();
@@ -352,22 +368,6 @@ $container.on('contextmenu', 'img', function(ev) {
     return false;
 });
 
-function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
-    $.ajax({
-        url: '/api/create_or_verify_annotations',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        data: JSON.stringify({
-            'annotator': annotator_name,
-            'annotations': [{
-                'roi_id': roi_id,
-                'label': label_name,
-            }],
-        }),
-        success: callback,
-    });
-}
 
 
 $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
