@@ -76637,20 +76637,10 @@ function getCsrfToken() {
   return jquery__WEBPACK_IMPORTED_MODULE_0___default()('[name="csrfmiddlewaretoken"]').val();
 }
 
-$container.on('contextmenu', 'img', function (ev) {
-  ev.preventDefault();
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
-    'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
-  }, function (r) {
-    showAnnotations(ev, r.rows, r.roi_id);
-  });
-  return false;
-});
-
 function getFilters() {
   var filters = {};
   filters["annotator"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-annotator").val();
-  filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val();
+  filters["label"] = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val() || getQueryParam("label");
   filters['collection'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-collection').val();
   filters['sortby'] = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-sortby').val();
   return filters;
@@ -76681,13 +76671,31 @@ function filterChange(ev) {
   scrollPageNum = 1;
   var filters = getFilters();
   updateQuery(filters);
-  loadPage(1);
+  loadPage(scrollPageNum);
 }
 
-; // $('#filter-collection').select(function(ev) {
-//     ev.preventDefault();
-//     updateFilters();
-// });
+;
+
+function filterByLabel(label_name) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val(label_name);
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").trigger("change");
+}
+
+;
+
+function updateQuery(obj) {
+  var url = new URL(document.location);
+  var search_params = url.searchParams;
+
+  for (var key in obj) {
+    search_params.set(key, obj[key]);
+  }
+
+  url.search = search_params.toString();
+  window.history.pushState({
+    path: url.toString()
+  }, '', url.toString());
+}
 
 function getSelectedWrapper() {
   return selection.getSelection();
@@ -76769,8 +76777,8 @@ function get_labels_callback(r) {
     for (var i = 0; i < r.labels.length; i++) {
       var label_name = r.labels[i];
       var selected = filterBy == label_name ? 'selected' : '';
-      $filter_label.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
-      $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+      $filter_label.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option ".concat(selected, " value=\"").concat(label_name, "\" > ").concat(label_name, " </option>")));
+      $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option ".concat(selected, " value=\"").concat(label_name, "\" > ").concat(label_name, " </option>")));
     }
   }
 }
@@ -76824,20 +76832,6 @@ function showError(msg) {
   showMessage(msg, true);
 }
 
-function updateQuery(obj) {
-  var url = new URL(document.location);
-  var search_params = url.searchParams;
-
-  for (var key in obj) {
-    search_params.set(key, obj[key]);
-  }
-
-  url.search = search_params.toString();
-  window.history.pushState({
-    path: url.toString()
-  }, '', url.toString());
-}
-
 var $overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#tag-holder");
 var $dt = $overlay.find("table").DataTable({
   data: [],
@@ -76845,7 +76839,10 @@ var $dt = $overlay.find("table").DataTable({
   searching: false,
   info: false,
   columns: [{
-    title: "Label"
+    title: "Label",
+    render: function render(data, type, row) {
+      return "<a class=\"filterByLabel\" data-label-id=\"".concat(data, "\"> ").concat(data, " </a>");
+    }
   }, {
     title: "Annotator"
   }, {
@@ -76878,9 +76875,24 @@ function showAnnotations(event, rows, roi_id) {
   }
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').on('click', '.filterByLabel', function (ev) {
+  ev.preventDefault();
+  filterByLabel(jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('label-id'));
+});
+
 function hideTags(event) {
   $overlay.hide();
 }
+
+$container.on('contextmenu', 'img', function (ev) {
+  ev.preventDefault();
+  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/roi_annotations', {
+    'roi_id': jquery__WEBPACK_IMPORTED_MODULE_0___default()(ev.target).data('roi-id')
+  }, function (r) {
+    showAnnotations(ev, r.rows, r.roi_id);
+  });
+  return false;
+});
 
 function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
@@ -76898,11 +76910,6 @@ function create_or_verify_annotation(roi_id, label_name, annotator_name, callbac
     success: callback
   });
 }
-
-__webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js"); // If you want to pick and choose which modules to include, comment out the above and uncomment
-// the line below
-//import './lib/foundation-explicit-pieces';
-
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ajaxSend(function (event, jqXHR, ajaxOptions) {
   var csrf = getCsrfToken();
@@ -76969,13 +76976,8 @@ $panel.on("scroll", function () {
   }
 });
 
-function loadPage(num) {
-  var filters = getFilters();
-  filters["page"] = num;
-  loadROIs(filters);
-}
+__webpack_require__(/*! foundation-sites */ "./node_modules/foundation-sites/dist/js/foundation.esm.js");
 
-loadPage(scrollPageNum);
 var $add_label_text = new Foundation.Abide(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_label_text"), {});
 Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelection').select2({
@@ -76983,6 +76985,14 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelection').select
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 getLabels();
+
+function loadPage(num) {
+  var filters = getFilters();
+  filters["page"] = num;
+  loadROIs(filters);
+}
+
+loadPage(scrollPageNum);
 
 /***/ }),
 
