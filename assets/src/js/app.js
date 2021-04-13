@@ -228,6 +228,24 @@ function get_labels_callback(r){
         }
     }
 }
+$("#next_label").on('click', nextLabel);
+$("#prev_label").on('click', prevLabel);
+function nextLabel(){
+    let $next = $('#filter-label option:selected').next();
+    if($next.length==0){
+        $next = $('#filter-label option').first();
+    }
+    $next.prop('selected', true).change();
+}
+
+function prevLabel(){
+    let $prev = $('#filter-label option:selected').prev();
+    if($prev.length==0){
+        $prev = $('#filter-label option').last();
+    }
+    $prev.prop('selected', true).change();
+    
+}
 
 $("#unhide-last-form").on('submit', function(ev){
     ev.preventDefault();
