@@ -43,6 +43,8 @@ $('#filter-after-date').datetimepicker({
     formatDate: 'm/d/Y',
 });
 
+let singleClickTile = null;
+let doSelect = null;
 const selection = new SelectionArea({
     // All elements in this container can be selected
     selectables: ['#roi-container > img'],
@@ -62,6 +64,13 @@ const selection = new SelectionArea({
 }).on('start', ({store, event}) => {
     // Remove class if the user isn't pressing the control key or ⌘ key
     if (!event.ctrlKey && !event.metaKey) {
+        singleClickTile = event.target;
+
+        if($(singleClickTile).hasClass("selected")){
+            doSelect = store.stored.length> 1;
+        }else{
+            doSelect = true;
+        }
 
         // Unselect all elements
         for (const el of store.stored) {
@@ -83,10 +92,24 @@ const selection = new SelectionArea({
     for (const el of removed) {
         el.classList.remove('selected');
     }
+
  }).on('stop', ({store, event}) => {
+    $('#roi-container > img').removeClass('selected');
+
     selection.keepSelection()
     $(store.selected).addClass('selected');
     $(store.changed.removed).removeClass('selected');
+
+    if(singleClickTile){
+        if(doSelect){
+            selection.select(singleClickTile);
+            singleClickTile.classList.add('selected');
+        }else{
+            selection.deselect(singleClickTile);
+            singleClickTile.classList.remove('selected');
+        }
+        singleClickTile = null;
+    }
 });
 
 $("body").on('contextmenu', function(ev) {
@@ -101,7 +124,6 @@ $("body").on('click', function(ev) {
 function getCsrfToken() {
     return $('[name="csrfmiddlewaretoken"]').val();
 }
-
 $container.on('contextmenu', 'img', function(ev) {
     ev.preventDefault();
     $.post('api/roi_annotations', {

@@ -13,10 +13,9 @@
     height: 100%;
 
     img{
-        border:5px solid white;
-        margin:3px;
+        margin:7px;
         &.selected{
-            border:5px solid seagreen;
+            outline:5px solid seagreen;
         }
     }
 

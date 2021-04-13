@@ -76542,6 +76542,8 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-after-date').datetimepick
   formatTime: 'H:i',
   formatDate: 'm/d/Y'
 });
+var singleClickTile = null;
+var doSelect = null;
 var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
   // All elements in this container can be selected
   selectables: ['#roi-container > img'],
@@ -76563,7 +76565,15 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
 
   // Remove class if the user isn't pressing the control key or ⌘ key
   if (!event.ctrlKey && !event.metaKey) {
-    // Unselect all elements
+    singleClickTile = event.target;
+
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(singleClickTile).hasClass("selected")) {
+      doSelect = store.stored.length > 1;
+    } else {
+      doSelect = true;
+    } // Unselect all elements
+
+
     var _iterator = _createForOfIteratorHelper(store.stored),
         _step;
 
@@ -76620,9 +76630,22 @@ var selection = new _simonwep_selection_js__WEBPACK_IMPORTED_MODULE_2__["default
 }).on('stop', function (_ref4) {
   var store = _ref4.store,
       event = _ref4.event;
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()('#roi-container > img').removeClass('selected');
   selection.keepSelection();
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.selected).addClass('selected');
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(store.changed.removed).removeClass('selected');
+
+  if (singleClickTile) {
+    if (doSelect) {
+      selection.select(singleClickTile);
+      singleClickTile.classList.add('selected');
+    } else {
+      selection.deselect(singleClickTile);
+      singleClickTile.classList.remove('selected');
+    }
+
+    singleClickTile = null;
+  }
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").on('contextmenu', function (ev) {
   hideTags();
