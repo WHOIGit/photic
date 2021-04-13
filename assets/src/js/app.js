@@ -102,11 +102,10 @@ function getCsrfToken() {
     return $('[name="csrfmiddlewaretoken"]').val();
 }
 
-
 function getFilters() {
     let filters = {}
     filters["annotator"] = $("#filter-annotator").val();
-    filters["label"] = $("#filter-label").val() || getQueryParam("label");
+    filters["label"] =  $("#filter-label").val()!=null ? $("#filter-label").val() : getQueryParam("label");
     filters['collection'] = $('#filter-collection').val();
     filters['sortby'] = $('#filter-sortby').val();
     return filters;
