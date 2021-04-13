@@ -102,20 +102,11 @@ function getCsrfToken() {
     return $('[name="csrfmiddlewaretoken"]').val();
 }
 
-$container.on('contextmenu', 'img', function(ev) {
-    ev.preventDefault();
-    $.post('api/roi_annotations', {
-        'roi_id': $(ev.target).data('roi-id'),
-    }, function(r) {
-        showAnnotations(ev, r.rows, r.roi_id);
-    });
-    return false;
-});
 
 function getFilters() {
     let filters = {}
     filters["annotator"] = $("#filter-annotator").val();
-    filters["label"] = $("#filter-label").val();
+    filters["label"] = $("#filter-label").val() || getQueryParam("label");
     filters['collection'] = $('#filter-collection').val();
     filters['sortby'] = $('#filter-sortby').val();
     return filters;
@@ -146,13 +137,25 @@ function filterChange(ev){
     scrollPageNum = 1;
     let filters = getFilters();
     updateQuery(filters);
-    loadPage(1)
+    loadPage(scrollPageNum)
+};
+function filterByLabel(label_name){
+    $("#filter-label").val(label_name);
+    $("#filter-label").trigger("change");
 };
 
-// $('#filter-collection').select(function(ev) {
-//     ev.preventDefault();
-//     updateFilters();
-// });
+function updateQuery(obj){
+    var url = new URL(document.location);
+    var search_params = url.searchParams;
+    for (const key in obj){
+        search_params.set(key, obj[key]);
+    }
+
+    url.search = search_params.toString();
+
+    window.history.pushState({path:url.toString()},'',url.toString());
+}
+
 function getSelectedWrapper(){
     return selection.getSelection();
 }
@@ -228,8 +231,8 @@ function get_labels_callback(r){
         for (let i=0; i<r.labels.length; i++){
             let label_name = r.labels[i];
             let selected = filterBy==label_name?'selected':'';
-            $filter_label.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
-            $apply_label_select.append($("<option " + selected + " value=" + label_name + ">" + label_name + "</option>"));
+            $filter_label.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
+            $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
         }
     }
 }
@@ -255,7 +258,6 @@ function add_label_callback(r){
         showError("Label already exists");
     }
     getLabels();
-
 }
 
 function showMessage(msg, error=false){
@@ -279,18 +281,6 @@ function  showError(msg){
     showMessage(msg, true);
 }
 
-function updateQuery(obj){
-    var url = new URL(document.location);
-    var search_params = url.searchParams;
-    for (const key in obj){
-        search_params.set(key, obj[key]);
-    }
-
-    url.search = search_params.toString();
-
-    window.history.pushState({path:url.toString()},'',url.toString());
-}
-
 let $overlay = $("#tag-holder");
 let $dt = $overlay.find("table").DataTable( {
     data: [],
@@ -298,7 +288,12 @@ let $dt = $overlay.find("table").DataTable( {
     searching: false,
     info: false,
     columns: [
-        { title: "Label" },
+        { 
+            title: "Label",
+            render: function(data, type, row) {
+                return `<a class="filterByLabel" data-label-id="${data}"> ${data} </a>`;
+            }
+        },
         { title: "Annotator" },
         { title: "Time" },
         { title: 'Verifications' },
@@ -327,10 +322,24 @@ function showAnnotations(event, rows, roi_id) {
         $dt.draw();
     }
 }
+$('body').on('click', '.filterByLabel', function(ev) {
+    ev.preventDefault();
+    filterByLabel($(ev.target).data('label-id'));
+});
 
 function hideTags(event) {
     $overlay.hide();
 }
+
+$container.on('contextmenu', 'img', function(ev) {
+    ev.preventDefault();
+    $.post('api/roi_annotations', {
+        'roi_id': $(ev.target).data('roi-id'),
+    }, function(r) {
+        showAnnotations(ev, r.rows, r.roi_id);
+    });
+    return false;
+});
 
 function create_or_verify_annotation(roi_id, label_name, annotator_name, callback) {
     $.ajax({
@@ -349,11 +358,6 @@ function create_or_verify_annotation(roi_id, label_name, annotator_name, callbac
     });
 }
 
-require('foundation-sites');
-
-// If you want to pick and choose which modules to include, comment out the above and uncomment
-// the line below
-//import './lib/foundation-explicit-pieces';
 
 $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
   let csrf = getCsrfToken();
@@ -419,17 +423,12 @@ $panel.on("scroll", function(){
 }
 });
 
-function loadPage(num){
-    let filters = getFilters();
-    filters["page"] = num;
-    loadROIs(filters);
-}
-
-loadPage(scrollPageNum);
+require('foundation-sites');
 
 var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
 
 Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC
+
 $('.largeOptionSetSelection').select2({
     theme: "foundation"
 });
@@ -437,4 +436,12 @@ $('.largeOptionSetSelection').select2({
 $(document).foundation();
 
 getLabels();
+
+function loadPage(num){
+    let filters = getFilters();
+    filters["page"] = num;
+    loadROIs(filters);
+}
+
+loadPage(scrollPageNum);
 
