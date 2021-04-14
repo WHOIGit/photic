@@ -247,6 +247,16 @@ function prevLabel(){
     
 }
 
+$(document).on('keypress', function(event) {
+    let key = event.key.toUpperCase();
+    if(key == 'N'){
+        nextLabel();
+    }else if( key ==='P'){
+        prevLabel();
+    }
+
+  })
+
 $("#unhide-last-form").on('submit', function(ev){
     ev.preventDefault();
     let last = lastHiddenROIs.pop();
