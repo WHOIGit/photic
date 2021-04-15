@@ -147,10 +147,16 @@ function getSelectedWrapper(){
     return selection.getSelection();
 }
 $("#apply-label-form").on('submit', function(ev){
-    
     ev.preventDefault();
+    applyLabelSubmit();
+});
+
+function applyLabelSubmit(){
     let selected_rois = getSelectedWrapper();
     let label_name = $("#apply_label_select").val();
+    if(!label_name){
+        return false;
+    }
     let annotations = [];
     for (let i=0; i<selected_rois.length; i++){
         let roi = $(selected_rois[i]).data("roi-id");
@@ -166,7 +172,7 @@ $("#apply-label-form").on('submit', function(ev){
         }),
         success: apply_label_callback,
     });
-});
+};
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
     let selected_rois = getSelectedWrapper();
@@ -253,9 +259,10 @@ $(document).on('keypress', function(event) {
         nextLabel();
     }else if( key ==='P'){
         prevLabel();
+    }else if( key ==='ENTER'){
+        $("#apply-label-form").trigger('submit');
     }
-
-  })
+});
 
 $("#unhide-last-form").on('submit', function(ev){
     ev.preventDefault();

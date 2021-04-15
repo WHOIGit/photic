@@ -70,9 +70,12 @@
             <form id="apply-label-form" data-abide> 
                 <label>Assign Label</label>
                 <div class="">
-                  <select class="largeOptionSetSelection" id="apply_label_select" style="width:100%">
+                  <select class="largeOptionSetSelection" id="apply_label_select" style="width:100%" required>
                       <option value="">- Select a Label -</option>
                   </select>
+                  <span data-abide-error  data-form-error-on="required" class="form-error" style="margin-top:0">
+                    Please select a label to apply
+                  </span>
                  
                               
                   <label for="apply_label_hide" class="text-right">Hide            
