@@ -426,9 +426,9 @@ let imagesOutstanding = 0;
 function imageLoaded(evt) {
     imagesOutstanding--;
     if(imagesOutstanding==0){
+        allowLoad = true;
         checkWindowFull();
     }
-
 }
 function checkWindowFull(){//keep loading pages of ROIs until the screen is filled and a scroll bar is present
     if($container.height() < $panel.height() && morePages){
@@ -454,20 +454,23 @@ function handleRoiAjax(r) {
 $(window).on("load", function() {
     console.log("on page load");
 });
-$panel.on("scroll", function(){
-    if(morePages){
-    let s = $panel.scrollTop(),
-     d = $container.height(),
-     c = $panel.height();
+let allowLoad = true;
+function onScroll(){
+    if(morePages&&allowLoad){
+        let s = $panel.scrollTop(),
+        d = $container.height(),
+        c = $panel.height();
 
-    let scrollPercent = (s / (d - c)) * 100;
-    if(scrollPercent>99){
-        scrollPageNum++;
-        loadPage(scrollPageNum);
+        let scrollPercent = (s / (d - c)) * 100;
+        if(scrollPercent>99){
+            scrollPageNum++;
+            allowLoad = false;
+            loadPage(scrollPageNum);
+        }
+
     }
-
-}
-});
+};
+$panel.on("scroll", onScroll);
 
 require('foundation-sites');
 
