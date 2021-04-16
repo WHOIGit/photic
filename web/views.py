@@ -59,7 +59,7 @@ def roi_list(request):
     else:
         rois = qs.all()
 
-    roi_count = len(rois)
+    roi_count = rois.count()
     paginator = Paginator(rois, 50)
 
     try:
