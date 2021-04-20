@@ -357,7 +357,12 @@ let $dt = $overlay.find("table").DataTable( {
             }
         },
         { title: "Annotator" },
-        { title: "Time" },
+        { 
+            title: "Time",
+            render: function(data, type, row) {
+                return moment(data).format('YYYY-MM-DD h:mma Z');
+            }
+        },
         { title: 'Verifications' },
     ]
 } );
@@ -376,13 +381,8 @@ function showAnnotations(event, rows, roi_id) {
     $overlay.show();
     $overlay.find(".roi_id span").html(roi_id);
     $dt.clear();
-    if(rows && rows.length>0) {
-        $.each(rows, function(i, row) {
-            row[2] = moment(row[2]).format('YYYY-MM-DD h:mma Z');
-            $dt.rows.add([row]);
-        });
-        $dt.draw();
-    }
+    $dt.rows.add(rows);
+    $dt.draw();
 }
 $('body').on('click', '.filterByLabel', function(ev) {
     ev.preventDefault();
