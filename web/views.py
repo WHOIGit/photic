@@ -196,9 +196,11 @@ def move_or_copy_to_collection(request):
     delete_from_collection_name = body['delete_from_collection_name']
     rois = body['rois']
 
+    collection_created = None
     collection = ImageCollection.objects.filter(name=collection_name).first()
     if not collection:
         collection = ImageCollection.objects.create(name=collection_name)
+        collection_created = collection_name
 
     if delete_from_collection_name:
         delete_from_collection = get_object_or_404(ImageCollection, name=delete_from_collection_name)
@@ -211,5 +213,6 @@ def move_or_copy_to_collection(request):
             delete_from_collection.rois.remove(roi)
 
     return JsonResponse({
-        'success': True
+        'success': True,
+        'collection_created': collection_created
     })

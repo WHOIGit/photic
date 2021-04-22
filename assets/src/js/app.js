@@ -186,6 +186,11 @@ function add_to_collection_callback(evt){
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
     }
+    console.log(evt)
+    if(evt.collection_created){
+        showMessage(`New Collection "${evt.collection_created}" created`);
+    }
+    showMessage("ROIs added to Collection");
 }
 $("#apply-label-form").on('submit', function(ev){
     ev.preventDefault();
