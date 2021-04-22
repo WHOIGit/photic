@@ -191,6 +191,7 @@ function add_to_collection_callback(evt){
         showMessage(`New Collection "${evt.collection_created}" created`);
     }
     showMessage("ROIs added to Collection");
+    getCollections();
 }
 $("#apply-label-form").on('submit', function(ev){
     ev.preventDefault();
@@ -280,6 +281,26 @@ function get_labels_callback(r){
         }
     }
 }
+
+function getCollections(){
+    $.post('api/get_collections', {}, get_collections_callback);
+}
+function get_collections_callback(r){
+    if(r.collections){
+        let $filter_collection = $('#filter-collection');
+        $filter_collection.empty();
+
+        let filterBy = getQueryParam('collection');
+
+        for (let i=0; i<r.collections.length; i++){
+            let collection_name = r.collections[i];
+            let selected = filterBy==collection_name?'selected':'';
+            $filter_collection.append($(`<option ${selected} value="${collection_name}" > ${collection_name} </option>`));
+        }
+    }
+}
+
+
 $("#next_label").on('click', nextLabel);
 $("#prev_label").on('click', prevLabel);
 function nextLabel(){

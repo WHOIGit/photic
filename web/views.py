@@ -189,6 +189,15 @@ def get_labels(request):
 
 
 @require_POST
+def get_collections(request):
+    collections = ImageCollection.objects.all()
+
+    return JsonResponse({
+        'collections': [collection.name for collection in collections],
+    })
+
+
+@require_POST
 def move_or_copy_to_collection(request):
     body = json.loads(request.body.decode("utf-8"))
 
