@@ -295,6 +295,9 @@ function prevLabel(){
 }
 
 $(document).on('keypress', function(event) {
+    if ($(event.target).closest("input,textarea")[0]) {
+        return;
+    }
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
