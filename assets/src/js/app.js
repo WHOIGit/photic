@@ -146,6 +146,47 @@ function filterByLabel(label_name){
 function getSelectedWrapper(){
     return selection.getSelection();
 }
+$("#add_to_collection_form").on('submit', function(ev){
+    ev.preventDefault();
+    addCollectionSubmit();
+});
+
+function addCollectionSubmit(){
+    let selected_rois = getSelectedWrapper();
+    let collection_name = $("#add_to_collection_select").val();
+    
+    let rois = [];
+    for (let i=0; i<selected_rois.length; i++){
+        let roi_id = $(selected_rois[i]).data("roi-id");
+        rois.push(roi_id);
+    }
+    let current_collection_name = null;
+    if($("#add_to_collection_remove").is(':checked')){
+        current_collection_name = $("#filter-collection").val();
+    }
+    $.ajax({
+        url: '/api/move_or_copy_to_collection',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify({
+            'collection_name': collection_name,
+            'delete_from_collection_name': current_collection_name,
+            'rois': rois,
+        }),
+        success: add_to_collection_callback,
+    });
+};
+function add_to_collection_callback(evt){
+    let selected_rois = getSelectedWrapper();
+    for (let i=0; i<selected_rois.length; i++){
+        if($("#add_to_collection_remove").is(':checked')){
+            $(selected_rois[i]).fadeOut();
+        }else{
+            $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
+        }
+    }
+}
 $("#apply-label-form").on('submit', function(ev){
     ev.preventDefault();
     applyLabelSubmit();
@@ -480,6 +521,10 @@ Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUM
 
 $('.largeOptionSetSelection').select2({
     theme: "foundation"
+});
+$('.largeOptionSetSelectionTag').select2({
+    theme: "foundation",
+    tags:true
 });
 
 $(document).foundation();

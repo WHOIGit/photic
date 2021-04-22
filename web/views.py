@@ -186,3 +186,27 @@ def get_labels(request):
     return JsonResponse({
         'labels': [label.name for label in labels],
     })
+
+
+@require_POST
+def move_or_copy_to_collection(request):
+    body = json.loads(request.body.decode("utf-8"))
+
+    collection_name = body['collection_name']
+    delete_from_collection_name = body['delete_from_collection_name']
+    rois = body['rois']
+
+    collection = get_object_or_404(ImageCollection, name=collection_name)
+    if delete_from_collection_name:
+        delete_from_collection = get_object_or_404(ImageCollection, name=delete_from_collection_name)
+
+    for roi_id in rois:
+        roi = get_object_or_404(ROI, id=roi_id)
+        collection.rois.add(roi)
+
+        if delete_from_collection:
+            delete_from_collection.rois.remove(roi)
+
+    return JsonResponse({
+        'success': True
+    })
