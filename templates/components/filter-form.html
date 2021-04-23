@@ -97,11 +97,8 @@
                   </span>
                   <input type="submit" class="button small primary expanded" id="add_label" value="Add Label">
                 </div>
-              {% else %}
-                To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
-              {% endif %}
             </form>
-            <form id="add_to_collection_form" data-abide> 
+            <form id="add_to_collection_form" data-abide>
                 <label>Add ROIs to Collection:</label>
                 <div class="">
                   <select class="largeOptionSetSelectionTag" id="add_to_collection_select" style="width:100%">
@@ -115,6 +112,9 @@
                   <input type="submit" class="button small primary expanded" id="apply_label" value="Add to Collection">
                 </div>
             </form>
+            {% else %}
+              To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
+            {% endif %}
           </div>
         </li>
       </ul>
