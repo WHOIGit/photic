@@ -1,3 +1,28 @@
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Nunito/nunito-v16-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/Nunito/nunito-v16-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Nunito/nunito-v16-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/Nunito/nunito-v16-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/Nunito/nunito-v16-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/Nunito/nunito-v16-latin-regular.svg#Nunito') format('svg'); /* Legacy iOS */
+  }
+@font-face {
+    font-family: 'Roboto Condensed';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/RobotoCondensed/roboto-condensed-v19-latin-regular.svg#RobotoCondensed') format('svg'); /* Legacy iOS */
+  }
+
 .contact-details p{
     font-size:0.8rem;
     margin-bottom:.25rem;
