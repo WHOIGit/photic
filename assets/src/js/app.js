@@ -427,7 +427,12 @@ let $dt = $overlay.find("table").DataTable( {
             }
         },
         { title: "Annotator" },
-        { title: "Time" },
+        { 
+            title: "Time",
+            render: function(data, type, row) {
+                return moment(data).format('YYYY-MM-DD h:mma Z');
+            }
+        },
         { title: 'Verifications' },
     ]
 } );
@@ -446,14 +451,10 @@ function showAnnotations(event, rows, roi_id) {
     $overlay.show();
     $overlay.find(".roi_id span").html(roi_id);
     $dt.clear();
-    if(rows && rows.length>0) {
-        $.each(rows, function(i, row) {
-            row[2] = moment(row[2]).format('YYYY-MM-DD h:mma Z');
-            $dt.rows.add([row]);
-        });
-        $dt.draw();
-    }
+    $dt.rows.add(rows);
+    $dt.draw(); 
 }
+
 $('body').on('click', '.filterByLabel', function(ev) {
     ev.preventDefault();
     filterByLabel($(ev.target).data('label-id'));
@@ -472,8 +473,6 @@ $container.on('contextmenu', 'img', function(ev) {
     });
     return false;
 });
-
-
 
 $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
   let csrf = getCsrfToken();
@@ -544,7 +543,7 @@ $panel.on("scroll", onScroll);
 
 require('foundation-sites');
 
-var $add_label_text = new Foundation.Abide($("#add_label_text"), {});
+let $add_label_text = new Foundation.Abide($("#add_label_text"), {});
 
 Foundation.Abide.defaults.patterns['alpha_numeric_score_space'] = REGEX_ALPHANUMERIC
 

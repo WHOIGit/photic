@@ -78,11 +78,6 @@ def roi_list(request):
         'roi_count': roi_count,
         'has_next_page': rois.has_next(),
     })
-# class ROIView(ListView):
-#     model = ROI
-#     paginate_by = 5
-#     context_object_name = 'roi'
-#     template_name = 'blog/articles.html'
 
 @require_POST
 def roi_annotations(request):
