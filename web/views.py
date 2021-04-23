@@ -50,7 +50,6 @@ def roi_list(request):
         qs = qs.filter(collections__name=requested_collection)
 
     if requested_label:
-        qs = qs.filter(collections__name=requested_collection)
         if requested_label == 'unlabeled':
             rois = qs.unlabeled()
         else:
@@ -60,7 +59,7 @@ def roi_list(request):
         rois = qs.all()
 
     roi_count = rois.count()
-    paginator = Paginator(rois, 50)
+    paginator = Paginator(rois.values_list('id', 'path'), 100)
 
     try:
         rois = paginator.page(page)
@@ -69,11 +68,10 @@ def roi_list(request):
     except EmptyPage:
         rois = paginator.page(paginator.num_pages)
 
-
     roi_records = [{
-        'id': r.id,
-        'path': r.path,
-    } for r in rois]
+        'id': rid,
+        'path': path,
+    } for rid, path in rois]
 
     return JsonResponse({
         'rois': roi_records,
