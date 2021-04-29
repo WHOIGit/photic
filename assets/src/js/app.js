@@ -27,8 +27,8 @@ require('datatables.net-searchpanes-zf');
 window.moment = require('moment');
 
 const $panel = $("#main-panel");
-const $container = $("#roi-container");
-const $container_inner = $("#roi-container-inner");
+const $container = $("#roi-container-wrapper");
+const $container_inner = $("#roi-container");
 
 $('#filter-before-date').datetimepicker({
     inline: false,
