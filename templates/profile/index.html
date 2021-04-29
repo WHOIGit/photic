@@ -15,6 +15,18 @@
     </div>
     <div class="grid-x grid-padding-x align-center">
         <div class="cell medium-10 large-8">
+            <h5><b>{{user.first_name}} {{user.last_name}}</b> </h5>
+            <div> Username: <b>{{user.username}}</b> </div>
+            <div> Email: <b>{{user.email}}</b> </div>
+        </div>
+    </div>
+    <div class="grid-x align-center">
+        <div class="cell medium-10 large-8">
+            <hr>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell medium-10 large-8">
             {% if request.GET.password_updated %}
             <div class="callout primary" >
                 <p>Password Updated</p>
@@ -27,7 +39,6 @@
                     <p><i class="alert-icon"></i> There are errors with the form below.  Please confirm your entries.</p>
                 </div>
                 <div class="grid-x grid-padding-x small-up-2 padding-vertical-2">
-                    
                     <div class="cell">
                         <label>{{ form.new_password.label_tag }}
                             {{ form.new_password }}
