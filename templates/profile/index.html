@@ -14,10 +14,15 @@
         </div>
     </div>
     <div class="grid-x grid-padding-x align-center">
-        <div class="cell medium-10 large-8">
+        <div class="cell medium-5 large-4">
             <h5><b>{{user.first_name}} {{user.last_name}}</b> </h5>
             <div> Username: <b>{{user.username}}</b> </div>
             <div> Email: <b>{{user.email}}</b> </div>
+        </div>
+        <div class="cell medium-5 large-4">
+            <div> User Power: <b>{{user_power}}</b> </div>
+            <div> Annotations Made: <b>{{annotation_count}}</b> </div>
+            <div> Last Annotation: <b>{{last_annotation.timestamp}}</b> </div>
         </div>
     </div>
     <div class="grid-x align-center">
