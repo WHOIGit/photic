@@ -10,6 +10,7 @@ from .forms import UserForm
 from .forms import ShortUserForm
 from .utils import staff_required
 from core.models import Annotator
+from core.models import Annotation
 from core.forms import AnnotatorForm
 from django.contrib.auth.decorators import login_required
 
@@ -37,6 +38,10 @@ def profile(request, id=None):
 
     user = request.user
     form = ShortUserForm(instance=user)
+
+    annotations = Annotation.objects.filter(user=user)
+    user_power = Annotator.objects.get(user=user).power
+
     if request.method == "POST":
         form = ShortUserForm(request.POST, instance=user)
 
@@ -54,6 +59,9 @@ def profile(request, id=None):
     return render(request, "profile/index.html", {
         'user': user,
         'form': form,
+        'user_power': user_power,
+        'last_annotation': annotations.latest('timestamp'),
+        'annotation_count': annotations.count(),
     })
 
 @staff_required
