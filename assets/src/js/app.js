@@ -133,7 +133,7 @@ $("#labels_only_collection").on('change', getLabels);
 
 function filterChange(ev){
     ev.preventDefault();
-    $container.empty()
+    $container_inner.empty()
     scrollPageNum = 1;
     let filters = getFilters();
     updateQuery(filters);
