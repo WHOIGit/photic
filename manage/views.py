@@ -88,8 +88,6 @@ def edit_user(request, id=None):
 
         annotator_form = AnnotatorForm(request.POST, instance=user.annotator)
 
-        if annotator_form.is_valid():
-            annotator_form.save()
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -100,7 +98,9 @@ def edit_user(request, id=None):
 
             user.save()
 
-            return redirect(reverse("manage:users"))
+            if annotator_form.is_valid():
+                annotator_form.save()
+                return redirect(reverse("manage:users"))
 
     return render(request, "manage/edit_user.html", {
         'user': user,

@@ -116,8 +116,8 @@
                         </label>
                         {{ annotator_form.power }}
 
-                        {% if form.power.errors %}
-                        <div class="form-error is-visible">{{ form.power.errors.as_text }}</div>
+                        {% if annotator_form.power.errors %}
+                        <div class="form-error is-visible">{{ annotator_form.power.errors.as_text }}</div>
                         {% endif %}
                     </div>
                 </div>
