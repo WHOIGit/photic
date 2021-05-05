@@ -9,6 +9,8 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .forms import UserForm
 from .forms import ShortUserForm
 from .utils import staff_required
+from core.models import Annotator
+from core.forms import AnnotatorForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -63,8 +65,20 @@ def edit_user(request, id=None):
 
     form = UserForm(instance=user)
 
+    try:
+        annotator_form = AnnotatorForm(instance=user.annotator)
+    except:
+        user.annotator = Annotator()
+        annotator_form = AnnotatorForm(instance=user.annotator)
+        user.save()
+
     if request.method == "POST":
         form = UserForm(request.POST, instance=user)
+
+        annotator_form = AnnotatorForm(request.POST, instance=user.annotator)
+
+        if annotator_form.is_valid():
+            annotator_form.save()
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -80,6 +94,7 @@ def edit_user(request, id=None):
     return render(request, "manage/edit_user.html", {
         'user': user,
         'form': form,
+        'annotator_form': annotator_form,
     })
 
 

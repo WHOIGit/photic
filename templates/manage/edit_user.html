@@ -109,6 +109,17 @@
                             <div class="form-error is-visible">{{ form.is_staff.errors.as_text }}</div>
                         {% endif %}
                     </div>
+
+                    <div class="cell">
+                        <label>
+                            {{ annotator_form.power.label_tag }}
+                        </label>
+                        {{ annotator_form.power }}
+
+                        {% if form.power.errors %}
+                        <div class="form-error is-visible">{{ form.power.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="grid-x grid-padding-x">
                     <div class="cell small-12">
