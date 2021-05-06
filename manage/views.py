@@ -39,6 +39,10 @@ def profile(request, id=None):
 
     annotations = Annotation.objects.filter(user=user)
     user_power = Annotator.objects.get(user=user).power
+    
+    last_annotation = None
+    if annotations.count() > 0:
+        last_annotation = annotations.latest('timestamp')
 
     if request.method == "POST":
         form = ShortUserForm(request.POST, instance=user)
@@ -58,7 +62,7 @@ def profile(request, id=None):
         'user': user,
         'form': form,
         'user_power': user_power,
-        'last_annotation': annotations.latest('timestamp'),
+        'last_annotation': last_annotation,
         'annotation_count': annotations.count(),
     })
 

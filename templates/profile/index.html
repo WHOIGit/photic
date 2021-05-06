@@ -22,7 +22,9 @@
         <div class="cell medium-5 large-4">
             <div> User Power: <b>{{user_power}}</b> </div>
             <div> Annotations Made: <b>{{annotation_count}}</b> </div>
+            {% if last_annotation %}
             <div> Last Annotation: <b>{{last_annotation.timestamp}}</b> </div>
+            {% endif %}
         </div>
     </div>
     <div class="grid-x align-center">
