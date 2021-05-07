@@ -515,13 +515,15 @@ function checkWindowFull(){//keep loading pages of ROIs until the screen is fill
     }
 }
 function handleRoiAjax(r) {
-    if(r.rois){
+    if(r.roi_count!=0){
         for (let i=0;i< r.rois.length; i++) {
             imagesOutstanding++;
             let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
+    }else{
+        showLoader(false);
     }
 
     $("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>")
