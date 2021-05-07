@@ -11,7 +11,6 @@
     overflow: visible;
     overflow-y:auto;
     height: 100%;
-
     img{
         border:5px solid white;
         margin:3px;
@@ -19,7 +18,17 @@
             border:5px solid seagreen;
         }
     }
-
+}
+#roi-container-loader{
+    text-align: center;
+    margin-bottom:5px;
+    visibility: hidden;
+    &.visible{
+        visibility: visible;
+    }
+    i{
+        color:$primary-color;
+    }
 }
 .mobileNavHeader{
     background: $secondary-color;

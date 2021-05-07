@@ -26,8 +26,9 @@ require('datatables.net-rowgroup-zf');
 require('datatables.net-searchpanes-zf');
 window.moment = require('moment');
 
-const $panel= $("#main-panel");
-const $container= $("#roi-container");
+const $panel = $("#main-panel");
+const $container = $("#roi-container-wrapper");
+const $container_inner = $("#roi-container");
 
 $('#filter-before-date').datetimepicker({
     inline: false,
@@ -132,7 +133,7 @@ $("#labels_only_collection").on('change', getLabels);
 
 function filterChange(ev){
     ev.preventDefault();
-    $container.empty()
+    $container_inner.empty()
     scrollPageNum = 1;
     let filters = getFilters();
     updateQuery(filters);
@@ -487,15 +488,23 @@ function loadROIs(filters={}){
         filters,
         handleRoiAjax
     )
+    showLoader(true);
 }
 let scrollPageNum = 1;
 let morePages = true;
 let imagesOutstanding = 0;
-
+function showLoader(show){
+    if(show){
+        $("#roi-container-loader").addClass("visible");
+    }else{
+        $("#roi-container-loader").removeClass("visible");
+    }
+}
 function imageLoaded(evt) {
     imagesOutstanding--;
     if(imagesOutstanding==0){
         allowLoad = true;
+        showLoader(false);
         checkWindowFull();
     }
 }
@@ -506,13 +515,15 @@ function checkWindowFull(){//keep loading pages of ROIs until the screen is fill
     }
 }
 function handleRoiAjax(r) {
-    if(r.rois){
+    if(r.roi_count!=0){
         for (let i=0;i< r.rois.length; i++) {
             imagesOutstanding++;
             let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
             $img.on("load", imageLoaded);
-            $container.append($img);
+            $container_inner.append($img);
         }
+    }else{
+        showLoader(false);
     }
 
     $("#roi_count").html("<h5>" + r.roi_count + " ROI(s) found</h5>")
