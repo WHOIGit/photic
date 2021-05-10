@@ -187,7 +187,6 @@ function add_to_collection_callback(evt){
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
     }
-    console.log(evt)
     if(evt.collection_created){
         showMessage(`New Collection "${evt.collection_created}" created`);
     }
@@ -220,6 +219,8 @@ function applyLabelSubmit(){
         }),
         success: apply_label_callback,
     });
+
+    pushRecentLabel(label_name);
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
@@ -261,25 +262,41 @@ function getLabels(evt){
     }
     $.post('api/get_labels', data, get_labels_callback);
 }
-
+let LABEL_LIST;
 function get_labels_callback(r){
     if(r.labels){
-        let $filter_label = $('#filter-label');
-        let $apply_label_select = $('#apply_label_select');
-        $filter_label.empty();
-        $apply_label_select.empty();
+        LABEL_LIST = r.labels;
+        buildLabelSelect();
+    }
+}
+function buildLabelSelect(){
 
-        let filterBy = getQueryParam('label');
-        
-        $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
-        $apply_label_select.append('<option value="">- Select a Label -</option>');
+    let $filter_label = $('#filter-label');
+    let $apply_label_select = $('#apply_label_select');
+    $filter_label.empty();
+    $apply_label_select.empty();
 
-        for (let i=0; i<r.labels.length; i++){
-            let label_name = r.labels[i];
-            let selected = filterBy==label_name?'selected':'';
-            $filter_label.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
+    let filterBy = getQueryParam('label');
+    
+    $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
+    $apply_label_select.append('<option value="">- Select a Label -</option>');
+
+    let recent_labels = getRecentLabels();
+    if(recent_labels){
+        for (let i=0; i<recent_labels.length; i++){
+            let label_name = recent_labels[i];
+            let selected = i==0?'selected':'';
             $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
         }
+    }
+    $apply_label_select.append('<option value="">━━━━━━━━━━━━━━━━</option>');
+
+
+    for (let i=0; i<LABEL_LIST.length; i++){
+        let label_name = LABEL_LIST[i];
+        let selected = filterBy==label_name?'selected':'';
+        $filter_label.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
+        $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
     }
 }
 
@@ -388,14 +405,30 @@ function showMessage(msg, error=false){
 function showError(msg){
     showMessage(msg, true);
 }
+let recent_labels_max = 5;
+function getRecentLabels(){
+    return JSON.parse(window.localStorage.getItem('recent_labels')||"[]");
+}
+function pushRecentLabel(value){
+    let recent_labels = getRecentLabels();
+    let index = recent_labels.indexOf(value);
+    if(index!=-1){
+        recent_labels.splice(index, 1);
+    }
+    recent_labels.unshift(value);
+    while(recent_labels.length>recent_labels_max){
+        recent_labels.pop();
+    }
+    window.localStorage.setItem('recent_labels', JSON.stringify(recent_labels));
 
+    buildLabelSelect();
+}
 function updateQuery(obj){
     let url = new URL(document.location);
     let search_params = url.searchParams;
     for (const key in obj){
         search_params.set(key, obj[key]);
     }
-
     url.search = search_params.toString();
     window.localStorage.setItem('search_params', url.search);
     window.history.pushState({path:url.toString()},'',url.toString());
@@ -532,7 +565,6 @@ function handleRoiAjax(r) {
     morePages = r.has_next_page;
 }
 $(window).on("load", function() {
-    console.log("on page load");
 });
 let allowLoad = true;
 function onScroll(){
