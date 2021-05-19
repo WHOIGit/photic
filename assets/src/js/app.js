@@ -85,7 +85,7 @@ const selection = new SelectionArea({
         el.classList.remove('selected');
     }
  }).on('stop', ({store, event}) => {
-    selection.keepSelection()
+    selection.keepSelection();
     $(store.selected).addClass('selected');
     $(store.changed.removed).removeClass('selected');
 });
@@ -151,6 +151,7 @@ function getSelectedWrapper(){
 
 function selectAllVisible(){
     selection.select('img');
+    selection.keepSelection();
 }
 $("#add_to_collection_form").on('submit', function(ev){
     ev.preventDefault();
@@ -330,12 +331,12 @@ $(document).on('keydown', function(event) {
     if ($(event.target).closest("input,textarea")[0]) {
         return;
     }
-    event.preventDefault()
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
     }else if(event.ctrlKey && key == 'A'){
         selectAllVisible();
+        event.preventDefault()
     }else if( key ==='P'){
         prevLabel();
     }else if( key ==='ENTER'){
