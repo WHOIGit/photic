@@ -90,6 +90,7 @@ const selection = new SelectionArea({
     $(store.changed.removed).removeClass('selected');
 });
 
+
 $("body").on('contextmenu', function(ev) {
     hideTags();
 });
@@ -146,6 +147,10 @@ function filterByLabel(label_name){
 
 function getSelectedWrapper(){
     return selection.getSelection();
+}
+
+function selectAllVisible(){
+    selection.select('img');
 }
 $("#add_to_collection_form").on('submit', function(ev){
     ev.preventDefault();
@@ -321,13 +326,16 @@ function prevLabel(){
     
 }
 
-$(document).on('keypress', function(event) {
+$(document).on('keydown', function(event) {
     if ($(event.target).closest("input,textarea")[0]) {
         return;
     }
+    event.preventDefault()
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
+    }else if(event.ctrlKey && key == 'A'){
+        selectAllVisible();
     }else if( key ==='P'){
         prevLabel();
     }else if( key ==='ENTER'){
@@ -531,9 +539,7 @@ function handleRoiAjax(r) {
 
     morePages = r.has_next_page;
 }
-$(window).on("load", function() {
-    console.log("on page load");
-});
+
 let allowLoad = true;
 function onScroll(){
     if(morePages&&allowLoad){
