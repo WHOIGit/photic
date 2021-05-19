@@ -275,10 +275,11 @@ function get_labels_callback(r){
         $apply_label_select.append('<option value="">- Select a Label -</option>');
 
         for (let i=0; i<r.labels.length; i++){
-            let label_name = r.labels[i];
+            let label_name = r.labels[i].label_name;
             let selected = filterBy==label_name?'selected':'';
-            $filter_label.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
-            $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
+            let has_winning_class = r.labels[i].has_winning?'class="has_winning"':'';
+            $filter_label.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
+            $apply_label_select.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
         }
     }
 }
@@ -304,20 +305,37 @@ function get_collections_callback(r){
 
 $("#next_label").on('click', nextLabel);
 $("#prev_label").on('click', prevLabel);
+
+
+
 function nextLabel(){
-    let $next = $('#filter-label option:selected').next();
+    nextLabelLoop($('#filter-label option:selected'));
+}
+function nextLabelLoop($ele){
+    let $next = $ele.next();
     if($next.length==0){
         $next = $('#filter-label option').first();
     }
-    $next.prop('selected', true).change();
+    if(!$next.hasClass('has_winning') && $('#filter-label option.has_winning').length>0){
+        nextLabelLoop($next);
+    }else{
+        $next.prop('selected', true).change();
+    }
 }
 
 function prevLabel(){
-    let $prev = $('#filter-label option:selected').prev();
+    prevLabelLoop($('#filter-label option:selected'));
+}
+function prevLabelLoop($ele){
+    let $prev = $ele.prev();
     if($prev.length==0){
         $prev = $('#filter-label option').last();
     }
-    $prev.prop('selected', true).change();
+    if(!$prev.hasClass('has_winning') && $('#filter-label option.has_winning').length>0){
+        prevLabelLoop($prev);
+    }else{
+        $prev.prop('selected', true).change();
+    }
     
 }
 

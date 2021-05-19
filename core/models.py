@@ -209,9 +209,17 @@ class ImageCollection(models.Model):
     name = models.CharField(max_length=255, unique=True)
     rois = models.ManyToManyField(ROI, related_name="collections")
 
-    def labels(self):
+    def labels(self, check_if_has_winning=False):
         label_ids = [i['annotations__label'] for i in self.rois.values('annotations__label').distinct()]
-        return sorted(Label.objects.in_bulk(label_ids).values(), key=lambda label: label.name.lower())
+        labels = sorted(Label.objects.in_bulk(label_ids).values(), key=lambda label: label.name.lower())
+
+        if check_if_has_winning:
+            winning_label_ids = [i['winning_annotation__label'] for i in self.rois.values('winning_annotation__label').distinct()]
+            ret = [{'label_name': i.name, 'has_winning': i.id in winning_label_ids} for i in labels]
+        else:
+            ret = [{'label_name': i.name, 'has_winning': True} for i in labels]
+
+        return ret
 
     def __str__(self):
         return self.name
