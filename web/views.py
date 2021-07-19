@@ -44,7 +44,8 @@ def roi_list(request):
     page = request.POST.get('page', 1)
     
     sortby_query = SORTBY_OPTIONS[sortby]
-    qs = ROI.objects.order_by(sortby_query)
+
+    qs = ROI.objects
 
     if requested_collection:
         qs = qs.filter(collections__name=requested_collection)
@@ -57,6 +58,8 @@ def roi_list(request):
             rois = qs.with_cached_label(label)
     else:
         rois = qs.all()
+
+    rois = rois.order_by(sortby_query)
 
     roi_count = rois.count()
     paginator = Paginator(rois.values_list('id', 'path'), 100)
