@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -221,3 +221,17 @@ def move_or_copy_to_collection(request):
         'success': True,
         'collection_created': collection_created
     })
+
+
+def api_winning_annotations(request, collection_name):
+    output = ROI.objects.filter(collections__name=collection_name).\
+        values_list('roi_id', 'winning_annotation__label__name', 'winning_annotation__user__username',
+                    'winning_annotation__timestamp', 'winning_annotation__verifications')
+    # non-Pandas CSV generation
+    lines = ['roi_id,label,annotator,timestamp,verifications\n']
+    lines += [','.join(map(str, row)) + '\n' for row in output if row[1] is not None]
+    # response as attachment CSV file
+    response = HttpResponse(lines, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{collection_name}_annotations.csv"'
+    return response
+
