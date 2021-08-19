@@ -290,11 +290,11 @@ function buildLabelSelect(){
         }
     }
     $apply_label_select.append('<option value="">━━━━━━━━━━━━━━━━</option>');
-
+    
     for (let i=0; i<LABEL_LIST.length; i++){
-        let label_name = LABEL_LIST[i];
+        let label_name = LABEL_LIST[i].label_name;
         let selected = filterBy==label_name?'selected':'';
-        let has_winning_class = r.labels[i].has_winning?'class="has_winning"':'';
+        let has_winning_class = LABEL_LIST[i].has_winning?'class="has_winning"':'';
         $filter_label.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
         $apply_label_select.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
     }
