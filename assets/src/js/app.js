@@ -200,6 +200,7 @@ $("#apply-label-form").on('submit', function(ev){
 
 function applyLabelSubmit(){
     let selected_rois = getSelectedWrapper();
+    if (selected_rois.length==0) return;
     let label_name = $("#apply_label_select").val();
     if(!label_name){
         return false;
@@ -290,7 +291,7 @@ function buildLabelSelect(){
         }
     }
     $apply_label_select.append('<option value="">━━━━━━━━━━━━━━━━</option>');
-    
+
     for (let i=0; i<LABEL_LIST.length; i++){
         let label_name = LABEL_LIST[i].label_name;
         let selected = filterBy==label_name?'selected':'';
