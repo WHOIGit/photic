@@ -29,10 +29,10 @@ def index(request):
     })
 
 SORTBY_OPTIONS = {
-    'HEIGHT_ASC':'height',
-    'HEIGHT_DESC':'-height',
-    'ROI_ID_ASC':'roi_id',
-    'ROI_ID_DESC':'-roi_id',
+    'HEIGHT_ASC': ['height', 'roi_id'],
+    'HEIGHT_DESC': ['-height', 'roi_id'],
+    'ROI_ID_ASC': ['roi_id'],
+    'ROI_ID_DESC': ['-roi_id'],
 }
 
 @require_POST
@@ -59,7 +59,7 @@ def roi_list(request):
     else:
         rois = qs.all()
 
-    rois = rois.order_by(sortby_query)
+    rois = rois.order_by(*sortby_query)
 
     roi_count = rois.count()
     paginator = Paginator(rois.values_list('id', 'path'), 100)
