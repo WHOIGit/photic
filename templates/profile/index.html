@@ -14,6 +14,25 @@
         </div>
     </div>
     <div class="grid-x grid-padding-x align-center">
+        <div class="cell medium-5 large-4">
+            <h5><b>{{user.first_name}} {{user.last_name}}</b> </h5>
+            <div> Username: <b>{{user.username}}</b> </div>
+            <div> Email: <b>{{user.email}}</b> </div>
+        </div>
+        <div class="cell medium-5 large-4">
+            <div> User Power: <b>{{user_power}}</b> </div>
+            <div> Annotations Made: <b>{{annotation_count}}</b> </div>
+            {% if last_annotation %}
+            <div> Last Annotation: <b>{{last_annotation.timestamp}}</b> </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="grid-x align-center">
+        <div class="cell medium-10 large-8">
+            <hr>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
         <div class="cell medium-10 large-8">
             {% if request.GET.password_updated %}
             <div class="callout primary" >
@@ -27,7 +46,6 @@
                     <p><i class="alert-icon"></i> There are errors with the form below.  Please confirm your entries.</p>
                 </div>
                 <div class="grid-x grid-padding-x small-up-2 padding-vertical-2">
-                    
                     <div class="cell">
                         <label>{{ form.new_password.label_tag }}
                             {{ form.new_password }}

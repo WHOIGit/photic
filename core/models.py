@@ -50,8 +50,11 @@ class ROIQuerySet(models.QuerySet):
             ORDER BY a.roi_id
         """, roi_params + winner_params)
 
-    def unlabeled(self):
-        return self.exclude(id__in=Annotation.objects.values_list('roi__id', flat=True))
+    def unlabeled(self, cached=True):
+        if cached:
+            return self.filter(winning_annotation__isnull=True)
+        else:
+            return self.exclude(id__in=Annotation.objects.values_list('roi__id', flat=True))
 
 
 class ROIManager(models.Manager):
