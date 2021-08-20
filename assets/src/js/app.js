@@ -133,7 +133,12 @@ $("#labels_only_collection").on('change', getLabels);
 
 function filterChange(ev){
     ev.preventDefault();
-    $container_inner.empty()
+    $container_inner.empty();
+
+    requestArray.forEach(function (req) {
+        req.abort();
+    });
+    requestArray = [];
     scrollPageNum = 1;
     let filters = getFilters();
     updateQuery(filters);
@@ -532,13 +537,14 @@ $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
     jqXHR.setRequestHeader('X-CSRFToken', csrf);
   }
 });
-
+let requestArray = [];
 function loadROIs(filters={}){
-    $.post(
+    let req = $.post(
         'api/roi_list',
         filters,
         handleRoiAjax
     )
+    requestArray.push(req);
     showLoader(true);
 }
 let scrollPageNum = 1;
