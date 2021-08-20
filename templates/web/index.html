@@ -18,6 +18,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <label for="image-scale" class="">
+                        Scale
+                        <select id="image-scale" style="width:65px">
+                            <option value="2">200%</option>
+                            <option value="1.75">175%</option>
+                            <option value="1.5">150%</option>
+                            <option value="1.25">125%</option>
+                            <option value="1" selected>100%</option>
+                            <option value=".75">75%</option>
+                            <option value=".5">50%</option>
+                            <option value=".25">25%</option>
+                        </select>
+                    </label>
+                </div>
                 <div class="cell auto" style="overflow-y:auto;">
                     {% include 'components/filter-form.html' %}
                 </div>
@@ -25,24 +40,6 @@
         </div>
     </div>
     <div class="cell large-auto height-100">
-        <div class="grid-x grid-frame">
-            <div class="cell small-2 small-offset-10 " style="margin-top:4px;padding-right:4px">
-                <label for="image-scale" class="float-right">
-                Scale
-                <select id="image-scale" style="width:65px">
-                    <option value="2">200%</option>
-                    <option value="1.75">175%</option>
-                    <option value="1.5">150%</option>
-                    <option value="1.25">125%</option>
-                    <option value="1" selected>100%</option>
-                    <option value=".75">75%</option>
-                    <option value=".5">50%</option>
-                    <option value=".25">25%</option>
-                </select>
-                </label>
-            </div>
-        </div>
-
         <div class="grid-y grid-frame">
             <div class="cell" id="main-panel">
                 <div id="roi-container-wrapper">
