@@ -62,7 +62,7 @@ def roi_list(request):
     rois = rois.order_by(*sortby_query)
 
     roi_count = rois.count()
-    paginator = Paginator(rois.values_list('id', 'path'), 100)
+    paginator = Paginator(rois.values_list('id', 'path'), 1000)
 
     try:
         rois = paginator.page(page)
