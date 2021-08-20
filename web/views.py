@@ -177,10 +177,10 @@ def get_labels(request):
         labels = Label.objects.all().order_by('name')
     else:
         rc = get_object_or_404(ImageCollection, name=collection_name)
-        labels = rc.labels()
+        labels = rc.labels(check_if_has_winning=True) # This is currently our switch to enable/disable skipping empty labels
 
     return JsonResponse({
-        'labels': [label.name for label in labels],
+        'labels': labels,
     })
 
 
