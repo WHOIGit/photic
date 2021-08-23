@@ -234,6 +234,7 @@ function apply_label_callback(evt){
     for (let i=0; i<selected_rois.length; i++){
         if($("#apply_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
+            selection.deselect(selected_rois[i]);
         }else{
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
