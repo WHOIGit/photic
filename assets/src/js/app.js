@@ -558,6 +558,11 @@ function showLoader(show){
     }
 }
 function imageLoaded(evt) {
+    let $image = $(this);
+    $image.attr("original-width", $image.width());
+    scaleImage($image);
+    $image.css("visibility", "visible")
+
     imagesOutstanding--;
     if(imagesOutstanding==0){
         allowLoad = true;
@@ -565,6 +570,22 @@ function imageLoaded(evt) {
         checkWindowFull();
     }
 }
+
+function scaleImages(){
+    let images = $(".image-tile");
+
+    $.each(images, function(_, element) {
+        scaleImage(element)
+    });
+}
+
+function scaleImage(image) {
+    let scale = parseFloat($("#image-scale").val());
+    let originalWidth = parseFloat($(image).attr("original-width"));
+
+    $(image).width(originalWidth * scale);
+}
+
 function checkWindowFull(){//keep loading pages of ROIs until the screen is filled and a scroll bar is present
     if($container.height() < $panel.height() && morePages){
         scrollPageNum++;
@@ -575,7 +596,7 @@ function handleRoiAjax(r) {
     if(r.roi_count!=0){
         for (let i=0;i< r.rois.length; i++) {
             imagesOutstanding++;
-            let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" />');
+            let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" style="visibility: hidden" />');
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
@@ -633,4 +654,8 @@ function loadPage(num){
 }
 
 loadPage(scrollPageNum);
+
+$("#image-scale").change(function(){
+    scaleImages()
+});
 
