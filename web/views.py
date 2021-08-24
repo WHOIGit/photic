@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -29,10 +29,10 @@ def index(request):
     })
 
 SORTBY_OPTIONS = {
-    'HEIGHT_ASC':'height',
-    'HEIGHT_DESC':'-height',
-    'ROI_ID_ASC':'roi_id',
-    'ROI_ID_DESC':'-roi_id',
+    'HEIGHT_ASC': ['height', 'roi_id'],
+    'HEIGHT_DESC': ['-height', 'roi_id'],
+    'ROI_ID_ASC': ['roi_id'],
+    'ROI_ID_DESC': ['-roi_id'],
 }
 
 @require_POST
@@ -44,7 +44,8 @@ def roi_list(request):
     page = request.POST.get('page', 1)
     
     sortby_query = SORTBY_OPTIONS[sortby]
-    qs = ROI.objects.order_by(sortby_query)
+
+    qs = ROI.objects
 
     if requested_collection:
         qs = qs.filter(collections__name=requested_collection)
@@ -58,8 +59,10 @@ def roi_list(request):
     else:
         rois = qs.all()
 
+    rois = rois.order_by(*sortby_query)
+
     roi_count = rois.count()
-    paginator = Paginator(rois.values_list('id', 'path'), 100)
+    paginator = Paginator(rois.values_list('id', 'path'), 1000)
 
     try:
         rois = paginator.page(page)
@@ -174,10 +177,10 @@ def get_labels(request):
         labels = Label.objects.all().order_by('name')
     else:
         rc = get_object_or_404(ImageCollection, name=collection_name)
-        labels = rc.labels()
+        labels = rc.labels(check_if_has_winning=True) # This is currently our switch to enable/disable skipping empty labels
 
     return JsonResponse({
-        'labels': [label.name for label in labels],
+        'labels': labels,
     })
 
 
@@ -218,3 +221,17 @@ def move_or_copy_to_collection(request):
         'success': True,
         'collection_created': collection_created
     })
+
+
+def api_winning_annotations(request, collection_name):
+    output = ROI.objects.filter(collections__name=collection_name).\
+        values_list('roi_id', 'winning_annotation__label__name', 'winning_annotation__user__username',
+                    'winning_annotation__timestamp', 'winning_annotation__verifications')
+    # non-Pandas CSV generation
+    lines = ['roi_id,label,annotator,timestamp,verifications\n']
+    lines += [','.join(map(str, row)) + '\n' for row in output if row[1] is not None]
+    # response as attachment CSV file
+    response = HttpResponse(lines, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{collection_name}_annotations.csv"'
+    return response
+

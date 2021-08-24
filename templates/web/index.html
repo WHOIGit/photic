@@ -18,6 +18,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <label for="image-scale" class="">
+                        Scale
+                        <select id="image-scale" style="width:65px">
+                            <option value="2">200%</option>
+                            <option value="1.75">175%</option>
+                            <option value="1.5">150%</option>
+                            <option value="1.25">125%</option>
+                            <option value="1" selected>100%</option>
+                            <option value=".75">75%</option>
+                            <option value=".5">50%</option>
+                            <option value=".25">25%</option>
+                        </select>
+                    </label>
+                </div>
                 <div class="cell auto" style="overflow-y:auto;">
                     {% include 'components/filter-form.html' %}
                 </div>

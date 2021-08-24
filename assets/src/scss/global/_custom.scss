@@ -30,6 +30,9 @@
         color:$primary-color;
     }
 }
+#roi-container{
+    user-select: none;
+}
 .mobileNavHeader{
     background: $secondary-color;
 }
