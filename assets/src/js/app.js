@@ -327,7 +327,8 @@ function prevLabel(){
     
 }
 function platformCtrlKey(event){
-    if(window.navigator.platform=="MacIntel"){
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+    if(macosPlatforms.indexOf(window.navigator.platform)!=-1){
         if(event.metaKey) return true;
     }else{
         if(event.ctrlKey) return true;
