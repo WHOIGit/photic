@@ -545,7 +545,6 @@ function loadROIs(filters={}){
         handleRoiAjax
     )
     requestArray.push(req);
-    console.log("showloader loadROIs");
     showLoader(true);
 }
 let scrollPageNum = 1;
@@ -566,7 +565,6 @@ function imageLoaded(evt) {
 
     imagesOutstanding--;
     
-    console.log("showloader imageLoaded imagesOutstanding:" + imagesOutstanding);
     if(imagesOutstanding==0){
         allowLoad = true;
         showLoader(false);
