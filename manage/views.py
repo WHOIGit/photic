@@ -70,35 +70,22 @@ def profile(request, id=None):
 
 @staff_required
 def edit_user(request, id=None):
-    if id:
-        user = get_object_or_404(User, pk=id)
-    else:
-        user = User()
-
+    user = User.objects.filter(pk=id).first()
     form = UserForm(instance=user)
-
-    try:
+    if user:
         annotator_form = AnnotatorForm(instance=user.annotator)
-    except:
-        user.annotator = Annotator()
-        annotator_form = AnnotatorForm(instance=user.annotator)
-        user.save()
+    else:
+        annotator_form = AnnotatorForm()
 
     if request.method == "POST":
         form = UserForm(request.POST, instance=user)
-
-        annotator_form = AnnotatorForm(request.POST, instance=user.annotator)
-
-
         if form.is_valid():
-            user = form.save(commit=False)
-
             new_password = form.cleaned_data["new_password"]
             if new_password:
-                user.password = make_password(new_password)
+                form.instance.password = make_password(new_password)
 
-            user.save()
-
+            user = form.save()
+            annotator_form = AnnotatorForm(request.POST, instance=user.annotator)
             if annotator_form.is_valid():
                 annotator_form.save()
                 return redirect(reverse("manage:users"))
