@@ -326,7 +326,14 @@ function prevLabel(){
     $prev.prop('selected', true).change();
     
 }
-
+function platformCtrlKey(event){
+    if(window.navigator.platform=="MacIntel"){
+        if(event.metaKey) return true;
+    }else{
+        if(event.ctrlKey) return true;
+    }
+    return false
+}
 $(document).on('keydown', function(event) {
     if ($(event.target).closest("input,textarea")[0]) {
         return;
@@ -334,9 +341,9 @@ $(document).on('keydown', function(event) {
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
-    }else if(event.ctrlKey && key == 'A'){
+    }else if(platformCtrlKey(event) && key == 'A'){
         selectAllVisible();
-        event.preventDefault()
+        event.preventDefault();
     }else if( key ==='P'){
         prevLabel();
     }else if( key ==='ENTER'){
@@ -371,7 +378,6 @@ function add_label_callback(r){
     if(r.created){
         showMessage("Label created");
     }else{
-
         showError("Label already exists");
     }
     getLabels();
