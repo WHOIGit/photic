@@ -158,9 +158,15 @@ $("#add_to_collection_form").on('submit', function(ev){
 });
 
 function addCollectionSubmit(){
-    let selected_rois = getSelectedWrapper();
+    let moveAll = $("#moveAll").is(":checked")
+    let selected_rois = moveAll ? $("#roi-container > img") : getSelectedWrapper();
     let collection_name = $("#add_to_collection_select").val();
-    
+
+    let action = $("#add_to_collection_remove").is(':checked') ? "move" : "copy";
+    if (moveAll && !confirm(`This will ${action} ALL ROIs. Are you sure you want to continue?`)) {
+        return;
+    }
+
     let rois = [];
     for (let i=0; i<selected_rois.length; i++){
         let roi_id = $(selected_rois[i]).data("roi-id");
@@ -184,7 +190,9 @@ function addCollectionSubmit(){
     });
 };
 function add_to_collection_callback(evt){
-    let selected_rois = getSelectedWrapper();
+    let moveAll = $("#moveAll").is(":checked")
+    let selected_rois = moveAll ? $("#roi-container > img") : getSelectedWrapper();
+
     for (let i=0; i<selected_rois.length; i++){
         if($("#add_to_collection_remove").is(':checked')){
             $(selected_rois[i]).fadeOut();
@@ -289,7 +297,7 @@ function buildLabelSelect(){
     let recent_labels = getRecentLabels();
     if(recent_labels){
         for (let i=0; i<recent_labels.length; i++){
-            let label_name = recent_labels[i];
+            let label_name = recent_labels[i].name;
             let selected = i==0?'selected':'';
             $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
         }

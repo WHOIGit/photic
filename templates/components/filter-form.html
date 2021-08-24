@@ -106,6 +106,12 @@
                       <option value="{{ collection.name }}" >{{ collection.name }}</option>
                       {% endfor %}
                   </select>
+                  <label>
+                    <input type="radio" name="moveAll" id="moveAll" />All
+                  </label>
+                  <label>
+                    <input type="radio" name="moveAll" id="moveSelected" checked />Selected
+                  </label>
                   <label for="add_to_collection_remove" class="text-right">Remove from current collection:
                       <input type="checkbox" id="add_to_collection_remove">
                   </label>
