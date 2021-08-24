@@ -140,6 +140,7 @@ function filterChange(ev){
     });
     requestArray = [];
     scrollPageNum = 1;
+    imagesOutstanding = 0;
     let filters = getFilters();
     updateQuery(filters);
     loadPage(scrollPageNum)
@@ -564,6 +565,7 @@ function imageLoaded(evt) {
     $image.css("visibility", "visible")
 
     imagesOutstanding--;
+    
     if(imagesOutstanding==0){
         allowLoad = true;
         showLoader(false);
