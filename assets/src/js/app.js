@@ -228,7 +228,6 @@ function applyLabelSubmit(){
     });
 
     pushRecentLabel(label_name);
-    $("#apply_label_select").select2("open");
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
@@ -646,7 +645,7 @@ $('.largeOptionSetSelectionTag').select2({
     tags:true
 });
 
-$(document).on('select2:open', () => {
+$("#apply_label_select").on('select2:open', () => {
     document.querySelector('.select2-search__field').focus();
 });
 
