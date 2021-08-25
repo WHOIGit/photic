@@ -232,7 +232,7 @@ function applyLabelSubmit(){
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
-    let selected_rois = getSelectedWrapper();
+    let selected_rois = [...getSelectedWrapper()];
     for (let i=0; i<selected_rois.length; i++){
         if($("#apply_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
@@ -383,7 +383,7 @@ $("#unhide-last-form").on('submit', function(ev){
     if(last){
         $(last).fadeIn();
     }
-    if(lastHiddenROIs){
+    if(lastHiddenROIs.length==0){
         $("#unhide_last").addClass("disabled");
     }
 });
