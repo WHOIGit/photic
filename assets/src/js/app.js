@@ -266,14 +266,13 @@ function applyLabelSubmit(){
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
-    let selected_rois = getSelectedWrapper();
-    for (let i=0; i<selected_rois.length; i++){
-        if($("#apply_label_hide").is(':checked')){
-            $(selected_rois[i]).fadeOut();
-            selection.deselect(selected_rois[i]);
-        }else{
-            $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
-        }
+    let selected_rois = [...getSelectedWrapper()];
+    if($("#apply_label_hide").is(':checked')){
+        $(selected_rois).fadeOut();
+        selection.deselect(selected_rois);
+        selection.clearSelection();
+    }else{
+        $(selected_rois).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
     }
 
     if($("#apply_label_hide").is(':checked')){
@@ -282,6 +281,20 @@ function apply_label_callback(evt){
         $("#unhide_last").removeClass("disabled");
     }
 }
+
+$("#unhide-last-form").on('submit', function(ev){
+    ev.preventDefault();
+    let last = lastHiddenROIs.pop();
+    if(last){
+        $(last).fadeIn();
+        selection.select(last);
+        selection.keepSelection();
+    }
+    if(lastHiddenROIs.length==0){
+        $("#unhide_last").addClass("disabled");
+    }
+});
+
 
 let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
 $("#add-label-form").on("keyup", function(ev){
@@ -422,16 +435,6 @@ $(document).on('keydown', function(event) {
     }
 });
 
-$("#unhide-last-form").on('submit', function(ev){
-    ev.preventDefault();
-    let last = lastHiddenROIs.pop();
-    if(last){
-        $(last).fadeIn();
-    }
-    if(lastHiddenROIs){
-        $("#unhide_last").addClass("disabled");
-    }
-});
 
 $("#add-label-form").on('submit', function(ev){
     ev.preventDefault();
@@ -689,7 +692,7 @@ $('.largeOptionSetSelectionTag').select2({
     tags:true
 });
 
-$(document).on('select2:open', () => {
+$("#apply_label_select").on('select2:open', () => {
     document.querySelector('.select2-search__field').focus();
 });
 
