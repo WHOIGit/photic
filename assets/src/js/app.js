@@ -156,20 +156,16 @@ function getSelectedWrapper(){
 }
 
 function selectAllVisible(){
-    selection.clearSelection();
     let visibleImgs = [];
     $("#roi-container img").each(function(i){
         let obj = this;
         selection.deselect(obj);
-        console.log(obj);
         if(checkInView(obj, true)){
             visibleImgs.push(obj);
         }
     })
-    //selection.clearSelection();
-    console.log(visibleImgs.length);
+    selection.clearSelection();
     selection.select(visibleImgs);
-
     selection.keepSelection();
 }
 function checkInView(elem,partial)
@@ -181,7 +177,6 @@ function checkInView(elem,partial)
 
     var elemTop = $(elem).offset().top - container.offset().top;
     var elemBottom = elemTop + $(elem).height();
-    console.log("elemTop: " + elemTop + " elemBottom: " + elemBottom + "  contHeight: " + contHeight);
     var isTotal = (elemTop >= 0 && elemBottom <=contHeight);
     var isPart = ((elemTop < 0 && elemBottom > 0 ) || (elemTop > 0 && elemTop <= container.height())) && partial ;
 
