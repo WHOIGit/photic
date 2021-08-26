@@ -85,10 +85,11 @@ const selection = new SelectionArea({
         el.classList.remove('selected');
     }
  }).on('stop', ({store, event}) => {
-    selection.keepSelection()
+    selection.keepSelection();
     $(store.selected).addClass('selected');
     $(store.changed.removed).removeClass('selected');
 });
+
 
 $("body").on('contextmenu', function(ev) {
     hideTags();
@@ -152,6 +153,34 @@ function filterByLabel(label_name){
 
 function getSelectedWrapper(){
     return selection.getSelection();
+}
+
+function selectAllVisible(){
+    let visibleImgs = [];
+    $("#roi-container img").each(function(i){
+        let obj = this;
+        selection.deselect(obj);
+        if(checkInView(obj, true)){
+            visibleImgs.push(obj);
+        }
+    })
+    selection.clearSelection();
+    selection.select(visibleImgs);
+    selection.keepSelection();
+}
+function checkInView(elem,partial)
+{
+    var container = $("#main-panel");
+    var contHeight = container.height();
+    var contTop = container.scrollTop();
+    var contBottom = contTop + contHeight ;
+
+    var elemTop = $(elem).offset().top - container.offset().top;
+    var elemBottom = elemTop + $(elem).height();
+    var isTotal = (elemTop >= 0 && elemBottom <=contHeight);
+    var isPart = ((elemTop < 0 && elemBottom > 0 ) || (elemTop > 0 && elemTop <= container.height())) && partial ;
+
+    return  isTotal  || isPart ;
 }
 $("#add_to_collection_form").on('submit', function(ev){
     ev.preventDefault();
@@ -374,14 +403,25 @@ function prevLabelLoop($ele){
     }
     
 }
-
-$(document).on('keypress', function(event) {
+function platformCtrlKey(event){
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+    if(macosPlatforms.indexOf(window.navigator.platform)!=-1){
+        if(event.metaKey) return true;
+    }else{
+        if(event.ctrlKey) return true;
+    }
+    return false
+}
+$(document).on('keydown', function(event) {
     if ($(event.target).closest("input,textarea")[0]) {
         return;
     }
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
+    }else if(platformCtrlKey(event) && key == 'A'){
+        event.preventDefault();
+        selectAllVisible();
     }else if( key ==='P'){
         prevLabel();
     }else if( key ==='ENTER'){
@@ -406,7 +446,6 @@ function add_label_callback(r){
     if(r.created){
         showMessage("Label created");
     }else{
-
         showError("Label already exists");
     }
     getLabels();
@@ -614,8 +653,7 @@ function handleRoiAjax(r) {
 
     morePages = r.has_next_page;
 }
-$(window).on("load", function() {
-});
+
 let allowLoad = true;
 function onScroll(){
     if(morePages&&allowLoad){
