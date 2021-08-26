@@ -141,6 +141,7 @@ function filterChange(ev){
     });
     requestArray = [];
     scrollPageNum = 1;
+    imagesOutstanding = 0;
     let filters = getFilters();
     updateQuery(filters);
     loadPage(scrollPageNum)
@@ -233,6 +234,7 @@ function applyLabelSubmit(){
     });
 
     pushRecentLabel(label_name);
+    $("#apply_label_select").select2("open");
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
@@ -240,6 +242,7 @@ function apply_label_callback(evt){
     for (let i=0; i<selected_rois.length; i++){
         if($("#apply_label_hide").is(':checked')){
             $(selected_rois[i]).fadeOut();
+            selection.deselect(selected_rois[i]);
         }else{
             $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
         }
@@ -282,7 +285,6 @@ function get_labels_callback(r){
     }
 }
 function buildLabelSelect(){
-
     let $filter_label = $('#filter-label');
     let $apply_label_select = $('#apply_label_select');
     $filter_label.empty();
@@ -580,6 +582,7 @@ function imageLoaded(evt) {
     $image.css("visibility", "visible")
 
     imagesOutstanding--;
+    
     if(imagesOutstanding==0){
         allowLoad = true;
         showLoader(false);
@@ -656,6 +659,10 @@ $('.largeOptionSetSelection').select2({
 $('.largeOptionSetSelectionTag').select2({
     theme: "foundation",
     tags:true
+});
+
+$(document).on('select2:open', () => {
+    document.querySelector('.select2-search__field').focus();
 });
 
 $(document).foundation();
