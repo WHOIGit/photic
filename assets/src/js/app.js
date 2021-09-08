@@ -30,6 +30,8 @@ const $panel = $("#main-panel");
 const $container = $("#roi-container-wrapper");
 const $container_inner = $("#roi-container");
 
+let lastAppliedLabel = undefined;
+
 $('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
@@ -210,6 +212,7 @@ function applyLabelSubmit(){
     if(!label_name){
         return false;
     }
+    lastAppliedLabel = label_name;
     let annotations = [];
     for (let i=0; i<selected_rois.length; i++){
         let roi = $(selected_rois[i]).data("roi-id");
@@ -291,7 +294,7 @@ function buildLabelSelect(){
     if(recent_labels){
         for (let i=0; i<recent_labels.length; i++){
             let label_name = recent_labels[i];
-            let selected = i==0?'selected':'';
+            let selected = label_name==lastAppliedLabel?'selected':'';
             $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
         }
     }
@@ -302,7 +305,7 @@ function buildLabelSelect(){
         let selected = filterBy==label_name?'selected':'';
         let has_winning_class = LABEL_LIST[i].has_winning?'class="has_winning"':'';
         $filter_label.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
-        if(recent_labels){//if you have a recent label at all, it has been selected above, so prevent selection here.
+        if(lastAppliedLabel){//if you have a last applied label, it has been selected above, so prevent selection here.
             selected = "";
         }
         $apply_label_select.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
