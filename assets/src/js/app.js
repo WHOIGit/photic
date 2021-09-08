@@ -302,6 +302,9 @@ function buildLabelSelect(){
         let selected = filterBy==label_name?'selected':'';
         let has_winning_class = LABEL_LIST[i].has_winning?'class="has_winning"':'';
         $filter_label.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
+        if(recent_labels){//if you have a recent label at all, it has been selected above, so prevent selection here.
+            selected = "";
+        }
         $apply_label_select.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
     }
 }
