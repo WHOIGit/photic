@@ -32,6 +32,7 @@
 }
 #roi-container{
     user-select: none;
+    position: relative;
 }
 .mobileNavHeader{
     background: $secondary-color;
@@ -75,4 +76,8 @@
         border-right: 15px solid transparent;
         border-bottom: 15px solid $primary-color;
     }
+}
+
+.select2-container--foundation .select2-results__option[aria-disabled=true]{
+    color:grey !important;
 }
