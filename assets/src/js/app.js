@@ -131,6 +131,17 @@ $("#filter-button").on('click', filterChange);
 $("#filter-collection").on('change', getLabels);
 $("#labels_only_collection").on('change', getLabels);
 
+
+$("#skip-to-page").on('keyup', changeSkipInput);
+
+function changeSkipInput(ev){
+    if($("#skip-to-page").val()){
+        $("#skip-to-page-submit").removeAttr('disabled');
+    }else{
+        $("#skip-to-page-submit").attr('disabled','disabled');
+    }
+}
+
 function filterChange(ev){
     ev.preventDefault();
     $container_inner.empty();
