@@ -284,8 +284,10 @@ function buildLabelSelect(){
 
     let filterBy = getQueryParam('label');
     
-    $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
-    $apply_label_select.append('<option value="">- Select a Label -</option>');
+    $filter_label.append(`<option value="" disabled="disabled" selected >- Select a Label -</option>`);
+    let hasSelectedUnlabeled = filterBy=="unlabeled"?'selected':'';//need a more elegant way to handle "unlabeled"
+    $filter_label.append(`<option value="">All</option><option value="unlabeled" ${hasSelectedUnlabeled} >unlabeled</option>`);
+    $apply_label_select.append(`<option value="">- Select a Label -</option>`);
 
     let recent_labels = getRecentLabels();
     if(recent_labels){
@@ -653,7 +655,10 @@ function loadPage(num){
     loadROIs(filters);
 }
 
-loadPage(scrollPageNum);
+if(getQueryParam('label')){
+    $container_inner.empty();
+    loadPage(scrollPageNum);
+}
 
 $("#image-scale").change(function(){
     scaleImages()
