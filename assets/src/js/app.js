@@ -133,6 +133,7 @@ $("#labels_only_collection").on('change', getLabels);
 
 
 $("#skip-to-page").on('keyup', changeSkipInput);
+$("#skip-to-page").on('change', changeSkipInput);
 
 function changeSkipInput(ev){
     if($("#skip-to-page").val()){
@@ -145,6 +146,7 @@ function changeSkipInput(ev){
 function filterChange(ev){
     ev.preventDefault();
     $container_inner.empty();
+    $("#skip-to-page").val("");
 
     requestArray.forEach(function (req) {
         req.abort();
@@ -159,7 +161,6 @@ function filterChange(ev){
 $("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
     ev.preventDefault();
     let targetPage = $("#skip-to-page").val();
-    $("#skip-to-page").val("");
     $container_inner.empty();
 
     requestArray.forEach(function (req) {
