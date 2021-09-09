@@ -144,6 +144,23 @@ function filterChange(ev){
     updateQuery(filters);
     loadPage(scrollPageNum)
 };
+
+$("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
+    ev.preventDefault();
+    $container_inner.empty();
+
+    requestArray.forEach(function (req) {
+        req.abort();
+    });
+    requestArray = [];
+    scrollPageNum = $("#skip-to-page").val();
+    let filters = getFilters();
+    updateQuery(filters);
+    loadPage(scrollPageNum)
+
+
+});
+
 function filterByLabel(label_name){
     $("#filter-label").val(label_name);
     $("#filter-label").trigger("change");
@@ -600,6 +617,7 @@ function handleRoiAjax(r) {
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
+        $container_inner.append('<div class="page_divider"><div>' + scrollPageNum + '</div></div>' );
     }else{
         showLoader(false);
     }
