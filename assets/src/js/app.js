@@ -147,13 +147,15 @@ function filterChange(ev){
 
 $("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
     ev.preventDefault();
+    let targetPage = $("#skip-to-page").val();
+    $("#skip-to-page").val("");
     $container_inner.empty();
 
     requestArray.forEach(function (req) {
         req.abort();
     });
     requestArray = [];
-    scrollPageNum = $("#skip-to-page").val();
+    scrollPageNum = targetPage;
     let filters = getFilters();
     updateQuery(filters);
     loadPage(scrollPageNum)
