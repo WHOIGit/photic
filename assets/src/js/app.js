@@ -133,9 +133,22 @@ $("#filter-button").on('click', filterChange);
 $("#filter-collection").on('change', getLabels);
 $("#labels_only_collection").on('change', getLabels);
 
+
+$("#skip-to-page").on('keyup', changeSkipInput);
+$("#skip-to-page").on('change', changeSkipInput);
+
+function changeSkipInput(ev){
+    if($("#skip-to-page").val()){
+        $("#skip-to-page-submit").removeAttr('disabled');
+    }else{
+        $("#skip-to-page-submit").attr('disabled','disabled');
+    }
+}
+
 function filterChange(ev){
     ev.preventDefault();
     $container_inner.empty();
+    $("#skip-to-page").val("");
 
     requestArray.forEach(function (req) {
         req.abort();
@@ -146,6 +159,24 @@ function filterChange(ev){
     updateQuery(filters);
     loadPage(scrollPageNum)
 };
+
+$("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
+    ev.preventDefault();
+    let targetPage = $("#skip-to-page").val();
+    $container_inner.empty();
+
+    requestArray.forEach(function (req) {
+        req.abort();
+    });
+    requestArray = [];
+    scrollPageNum = targetPage;
+    let filters = getFilters();
+    updateQuery(filters);
+    loadPage(scrollPageNum)
+
+
+});
+
 function filterByLabel(label_name){
     $("#filter-label").val(label_name);
     $("#filter-label").trigger("change");
@@ -608,6 +639,7 @@ function handleRoiAjax(r) {
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
+        $container_inner.append('<div class="page_divider"><div>' + r.page_num + '</div></div>' );
     }else{
         showLoader(false);
     }

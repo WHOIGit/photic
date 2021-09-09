@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <label for="image-scale" class="">
+                    <label for="image-scale" style="display:inline-block;"  >
                         Scale
                         <select id="image-scale" style="width:65px">
                             <option value="2">200%</option>
@@ -32,6 +32,10 @@
                             <option value=".25">25%</option>
                         </select>
                     </label>
+                    <form id="skip-form" style="display:inline-block;" >
+                        <input id="skip-to-page" type="number" min="1" style="width:65px; display:inline-block;">
+                        <input type="submit" disabled="disabled" class="button small primary expanded" value="Skip to page" id="skip-to-page-submit" style="display:inline-block;width:auto;margin:0;">
+                    </form>
                 </div>
                 <div class="cell auto" style="overflow-y:auto;">
                     {% include 'components/filter-form.html' %}
