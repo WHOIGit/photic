@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <label for="image-scale" class="" style="display:inline-block;" >
+                    <label for="image-scale" style="display:inline-block;"  >
                         Scale
                         <select id="image-scale" style="width:65px">
                             <option value="2">200%</option>
@@ -32,11 +32,9 @@
                             <option value=".25">25%</option>
                         </select>
                     </label>
-                    <form id="skip-form" style="display:inline-block;">         
-                        <label for="skip-to-page">
-                            Skip to page
-                            <input id="skip-to-page" type="text" style="width:65px; display:inline-block;">
-                        </label>
+                    <form id="skip-form" style="display:inline-block;" >
+                        <input id="skip-to-page" type="number" style="width:65px; display:inline-block;">
+                        <input type="submit" class="button small primary expanded" value="Skip to page" style="display:inline-block;width:auto;margin:0;">
                     </form>
                 </div>
                 <div class="cell auto" style="overflow-y:auto;">

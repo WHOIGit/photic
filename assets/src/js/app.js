@@ -617,7 +617,7 @@ function handleRoiAjax(r) {
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
-        $container_inner.append('<div class="page_divider"><div>' + scrollPageNum + '</div></div>' );
+        $container_inner.append('<div class="page_divider"><div>' + r.page_num + '</div></div>' );
     }else{
         showLoader(false);
     }
