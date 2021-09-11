@@ -76487,14 +76487,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! select2 */ "./node_modules/select2/dist/js/select2.js");
 /* harmony import */ var select2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(select2__WEBPACK_IMPORTED_MODULE_7__);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -76539,7 +76531,6 @@ window.moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.
 var $panel = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#main-panel");
 var $container = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi-container-wrapper");
 var $container_inner = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi-container");
-var lastAppliedLabel = undefined;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('#filter-before-date').datetimepicker({
   inline: false,
   format: 'm/d/Y H:i',
@@ -76674,47 +76665,21 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change',
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-button").on('click', filterChange);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-collection").on('change', getLabels);
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#labels_only_collection").on('change', getLabels);
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page").on('keyup', changeSkipInput);
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page").on('change', changeSkipInput);
-
-function changeSkipInput(ev) {
-  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page").val()) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page-submit").removeAttr('disabled');
-  } else {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page-submit").attr('disabled', 'disabled');
-  }
-}
 
 function filterChange(ev) {
   ev.preventDefault();
   $container_inner.empty();
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page").val("");
   requestArray.forEach(function (req) {
     req.abort();
   });
   requestArray = [];
   scrollPageNum = 1;
-  imagesOutstanding = 0;
   var filters = getFilters();
   updateQuery(filters);
   loadPage(scrollPageNum);
 }
 
 ;
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-form").on('submit', function (ev) {
-  //very similar to filter change, consider merging
-  ev.preventDefault();
-  var targetPage = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#skip-to-page").val();
-  $container_inner.empty();
-  requestArray.forEach(function (req) {
-    req.abort();
-  });
-  requestArray = [];
-  scrollPageNum = targetPage;
-  var filters = getFilters();
-  updateQuery(filters);
-  loadPage(scrollPageNum);
-});
 
 function filterByLabel(label_name) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#filter-label").val(label_name);
@@ -76725,33 +76690,6 @@ function filterByLabel(label_name) {
 
 function getSelectedWrapper() {
   return selection.getSelection();
-}
-
-function selectAllVisible() {
-  var visibleImgs = [];
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#roi-container img").each(function (i) {
-    var obj = this;
-    selection.deselect(obj);
-
-    if (checkInView(obj, true)) {
-      visibleImgs.push(obj);
-    }
-  });
-  selection.clearSelection();
-  selection.select(visibleImgs);
-  selection.keepSelection();
-}
-
-function checkInView(elem, partial) {
-  var container = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#main-panel");
-  var contHeight = container.height();
-  var contTop = container.scrollTop();
-  var contBottom = contTop + contHeight;
-  var elemTop = jquery__WEBPACK_IMPORTED_MODULE_0___default()(elem).offset().top - container.offset().top;
-  var elemBottom = elemTop + jquery__WEBPACK_IMPORTED_MODULE_0___default()(elem).height();
-  var isTotal = elemTop >= 0 && elemBottom <= contHeight;
-  var isPart = (elemTop < 0 && elemBottom > 0 || elemTop > 0 && elemTop <= container.height()) && partial;
-  return isTotal || isPart;
 }
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add_to_collection_form").on('submit', function (ev) {
@@ -76824,7 +76762,6 @@ function applyLabelSubmit() {
     return false;
   }
 
-  lastAppliedLabel = label_name;
   var annotations = [];
 
   for (var i = 0; i < selected_rois.length; i++) {
@@ -76852,14 +76789,14 @@ function applyLabelSubmit() {
 var lastHiddenROIs = [];
 
 function apply_label_callback(evt) {
-  var selected_rois = _toConsumableArray(getSelectedWrapper());
+  var selected_rois = getSelectedWrapper();
 
-  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_hide").is(':checked')) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois).fadeOut();
-    selection.deselect(selected_rois);
-    selection.clearSelection();
-  } else {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
+  for (var i = 0; i < selected_rois.length; i++) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_hide").is(':checked')) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeOut();
+    } else {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
+    }
   }
 
   if (jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_hide").is(':checked')) {
@@ -76868,20 +76805,6 @@ function apply_label_callback(evt) {
   }
 }
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide-last-form").on('submit', function (ev) {
-  ev.preventDefault();
-  var last = lastHiddenROIs.pop();
-
-  if (last) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(last).fadeIn();
-    selection.select(last);
-    selection.keepSelection();
-  }
-
-  if (lastHiddenROIs.length == 0) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide_last").addClass("disabled");
-  }
-});
 var REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on("keyup", function (ev) {
   testField(REGEX_ALPHANUMERIC, jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form"), jquery__WEBPACK_IMPORTED_MODULE_0___default()('#add_label_text'));
@@ -76932,7 +76855,7 @@ function buildLabelSelect() {
   if (recent_labels) {
     for (var i = 0; i < recent_labels.length; i++) {
       var label_name = recent_labels[i];
-      var selected = label_name == lastAppliedLabel ? 'selected' : '';
+      var selected = i == 0 ? 'selected' : '';
       $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option ".concat(selected, " value=\"").concat(label_name, "\" > ").concat(label_name, " </option>")));
     }
   }
@@ -76946,12 +76869,6 @@ function buildLabelSelect() {
 
     var has_winning_class = LABEL_LIST[_i].has_winning ? 'class="has_winning"' : '';
     $filter_label.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option ".concat(_selected, " value=\"").concat(_label_name, "\" ").concat(has_winning_class, " > ").concat(_label_name, " </option>")));
-
-    if (lastAppliedLabel) {
-      //if you have a last applied label, it has been selected above, so prevent selection here.
-      _selected = "";
-    }
-
     $apply_label_select.append(jquery__WEBPACK_IMPORTED_MODULE_0___default()("<option ".concat(_selected, " value=\"").concat(_label_name, "\" ").concat(has_winning_class, " > ").concat(_label_name, " </option>")));
   }
 }
@@ -77013,19 +76930,7 @@ function prevLabelLoop($ele) {
   }
 }
 
-function platformCtrlKey(event) {
-  var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
-
-  if (macosPlatforms.indexOf(window.navigator.platform) != -1) {
-    if (event.metaKey) return true;
-  } else {
-    if (event.ctrlKey) return true;
-  }
-
-  return false;
-}
-
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('keydown', function (event) {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('keypress', function (event) {
   if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).closest("input,textarea")[0]) {
     return;
   }
@@ -77034,13 +76939,22 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('keydown', function (
 
   if (key == 'N') {
     nextLabel();
-  } else if (platformCtrlKey(event) && key == 'A') {
-    event.preventDefault();
-    selectAllVisible();
   } else if (key === 'P') {
     prevLabel();
   } else if (key === 'ENTER') {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply-label-form").trigger('submit');
+  }
+});
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide-last-form").on('submit', function (ev) {
+  ev.preventDefault();
+  var last = lastHiddenROIs.pop();
+
+  if (last) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(last).fadeIn();
+  }
+
+  if (lastHiddenROIs) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#unhide_last").addClass("disabled");
   }
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add-label-form").on('submit', function (ev) {
@@ -77272,8 +77186,6 @@ function handleRoiAjax(r) {
       $img.on("load", imageLoaded);
       $container_inner.append($img);
     }
-
-    $container_inner.append('<div class="page_divider"><div>' + r.page_num + '</div></div>');
   } else {
     showLoader(false);
   }
@@ -77283,6 +77195,7 @@ function handleRoiAjax(r) {
   morePages = r.has_next_page;
 }
 
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on("load", function () {});
 var allowLoad = true;
 
 function onScroll() {
@@ -77313,9 +77226,6 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelection').select
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.largeOptionSetSelectionTag').select2({
   theme: "foundation",
   tags: true
-});
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#apply_label_select").on('select2:open', function () {
-  document.querySelector('.select2-search__field').focus();
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).foundation();
 getLabels();
