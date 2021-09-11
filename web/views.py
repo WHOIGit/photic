@@ -60,26 +60,28 @@ def roi_list(request):
         rois = qs.all()
 
     rois = rois.order_by(*sortby_query)
-
     roi_count = rois.count()
-    paginator = Paginator(rois.values_list('id', 'path'), 1000)
+    rois_list = rois.values_list('id', 'path')
 
+    paginator = Paginator(rois_list, 1000)
+    
     try:
-        rois = paginator.page(page)
+        roi_page = paginator.page(page)
     except PageNotAnInteger:
-        rois = paginator.page(1)
+        roi_page = paginator.page(1)
     except EmptyPage:
-        rois = paginator.page(paginator.num_pages)
+        roi_page = paginator.page(paginator.num_pages)
 
     roi_records = [{
         'id': rid,
         'path': path,
-    } for rid, path in rois]
+    } for rid, path in roi_page]
 
     return JsonResponse({
         'rois': roi_records,
         'roi_count': roi_count,
-        'has_next_page': rois.has_next(),
+        'page_num':roi_page.number,
+        'has_next_page': roi_page.has_next(),
     })
 
 @require_POST

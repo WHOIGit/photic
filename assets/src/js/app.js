@@ -30,6 +30,8 @@ const $panel = $("#main-panel");
 const $container = $("#roi-container-wrapper");
 const $container_inner = $("#roi-container");
 
+let lastAppliedLabel = undefined;
+
 $('#filter-before-date').datetimepicker({
     inline: false,
     format: 'm/d/Y H:i',
@@ -132,9 +134,22 @@ $("#filter-button").on('click', filterChange);
 $("#filter-collection").on('change', getLabels);
 $("#labels_only_collection").on('change', getLabels);
 
+
+$("#skip-to-page").on('keyup', changeSkipInput);
+$("#skip-to-page").on('change', changeSkipInput);
+
+function changeSkipInput(ev){
+    if($("#skip-to-page").val()){
+        $("#skip-to-page-submit").removeAttr('disabled');
+    }else{
+        $("#skip-to-page-submit").attr('disabled','disabled');
+    }
+}
+
 function filterChange(ev){
     ev.preventDefault();
     $container_inner.empty();
+    $("#skip-to-page").val("");
 
     requestArray.forEach(function (req) {
         req.abort();
@@ -146,6 +161,24 @@ function filterChange(ev){
     updateQuery(filters);
     loadPage(scrollPageNum)
 };
+
+$("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
+    ev.preventDefault();
+    let targetPage = $("#skip-to-page").val();
+    $container_inner.empty();
+
+    requestArray.forEach(function (req) {
+        req.abort();
+    });
+    requestArray = [];
+    scrollPageNum = targetPage;
+    let filters = getFilters();
+    updateQuery(filters);
+    loadPage(scrollPageNum)
+
+
+});
+
 function filterByLabel(label_name){
     $("#filter-label").val(label_name);
     $("#filter-label").trigger("change");
@@ -240,6 +273,7 @@ function applyLabelSubmit(){
     if(!label_name){
         return false;
     }
+    lastAppliedLabel = label_name;
     let annotations = [];
     for (let i=0; i<selected_rois.length; i++){
         let roi = $(selected_rois[i]).data("roi-id");
@@ -327,14 +361,16 @@ function buildLabelSelect(){
 
     let filterBy = getQueryParam('label');
     
-    $filter_label.append('<option value="">All</option><option value="unlabeled">unlabeled</option>');
-    $apply_label_select.append('<option value="">- Select a Label -</option>');
+    $filter_label.append(`<option value="" disabled="disabled" selected >- Select a Label -</option>`);
+    let hasSelectedUnlabeled = filterBy=="unlabeled"?'selected':'';//need a more elegant way to handle "unlabeled"
+    $filter_label.append(`<option value="">All</option><option value="unlabeled" ${hasSelectedUnlabeled} >unlabeled</option>`);
+    $apply_label_select.append(`<option value="">- Select a Label -</option>`);
 
     let recent_labels = getRecentLabels();
     if(recent_labels){
         for (let i=0; i<recent_labels.length; i++){
             let label_name = recent_labels[i];
-            let selected = i==0?'selected':'';
+            let selected = label_name==lastAppliedLabel?'selected':'';
             $apply_label_select.append($(`<option ${selected} value="${label_name}" > ${label_name} </option>`));
         }
     }
@@ -345,6 +381,9 @@ function buildLabelSelect(){
         let selected = filterBy==label_name?'selected':'';
         let has_winning_class = LABEL_LIST[i].has_winning?'class="has_winning"':'';
         $filter_label.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
+        if(lastAppliedLabel){//if you have a last applied label, it has been selected above, so prevent selection here.
+            selected = "";
+        }
         $apply_label_select.append($(`<option ${selected} value="${label_name}" ${has_winning_class} > ${label_name} </option>`));
     }
 }
@@ -644,6 +683,7 @@ function handleRoiAjax(r) {
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
+        $container_inner.append('<div class="page_divider"><div>' + r.page_num + '</div></div>' );
     }else{
         showLoader(false);
     }
@@ -700,7 +740,10 @@ function loadPage(num){
     loadROIs(filters);
 }
 
-loadPage(scrollPageNum);
+if(getQueryParam('label')){
+    $container_inner.empty();
+    loadPage(scrollPageNum);
+}
 
 $("#image-scale").change(function(){
     scaleImages()
