@@ -632,11 +632,12 @@ function loadROIs(filters={}){
 let scrollPageNum = 1;
 let morePages = true;
 let imagesOutstanding = 0;
+let $loader = $(`<div id="roi-container-loader"> <i class='fa fa-spinner fa-spin fa-2x'></i></div>`);
 function showLoader(show){
     if(show){
-        $("#roi-container-loader").addClass("visible");
+        $("#roi-container").append($loader);
     }else{
-        $("#roi-container-loader").removeClass("visible");
+        $loader.remove();
     }
 }
 function imageLoaded(evt) {
@@ -677,12 +678,14 @@ function checkWindowFull(){//keep loading pages of ROIs until the screen is fill
 }
 function handleRoiAjax(r) {
     if(r.roi_count!=0){
+        showLoader(false);
         for (let i=0;i< r.rois.length; i++) {
             imagesOutstanding++;
             let $img = $('<img class="image-tile infinite-item" draggable="false" data-roi-id="' + r.rois[i].id + '" src="' + r.rois[i].path + '" style="visibility: hidden" />');
             $img.on("load", imageLoaded);
             $container_inner.append($img);
         }
+        showLoader(true);
         $container_inner.append('<div class="page_divider"><div>' + r.page_num + '</div></div>' );
     }else{
         showLoader(false);
