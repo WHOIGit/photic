@@ -148,36 +148,29 @@ function changeSkipInput(ev){
 
 function filterChange(ev){
     ev.preventDefault();
-    $container_inner.empty();
-    $("#skip-to-page").val("");
-
-    requestArray.forEach(function (req) {
-        req.abort();
-    });
-    requestArray = [];
     scrollPageNum = 1;
-    imagesOutstanding = 0;
     let filters = getFilters();
     updateQuery(filters);
-    loadPage(scrollPageNum)
+    resetPageAndLoad();
 };
 
 $("#skip-form").on('submit', function(ev){//very similar to filter change, consider merging
     ev.preventDefault();
     let targetPage = $("#skip-to-page").val();
+    scrollPageNum = targetPage;
+    resetPageAndLoad();
+});
+
+function resetPageAndLoad(){
     $container_inner.empty();
 
     requestArray.forEach(function (req) {
         req.abort();
     });
     requestArray = [];
-    scrollPageNum = targetPage;
-    let filters = getFilters();
-    updateQuery(filters);
-    loadPage(scrollPageNum)
-
-
-});
+    imagesOutstanding = 0;
+    loadPage(scrollPageNum);
+}
 
 function filterByLabel(label_name){
     $("#filter-label").val(label_name);
