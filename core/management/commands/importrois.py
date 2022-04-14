@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from core.models import ROI, Annotation, ImageCollection, Label
 
 class Command(BaseCommand):
-    help = 'import rois'
+    help = 'import rois from label folders'
 
     def add_arguments(self, parser):
         parser.add_argument('directory', type=str, help='directory containing images')
