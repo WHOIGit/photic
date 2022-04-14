@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:12-alpine
     environment:
       - POSTGRES_DB=photic
       - POSTGRES_USER=photic
