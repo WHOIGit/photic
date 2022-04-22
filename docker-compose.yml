@@ -40,7 +40,7 @@ services:
       - ${ROI_PATH}:/rois
       - ${SSL_KEY}:/ssl/ssl.key:ro
       - ${SSL_CERT}:/ssl/ssl.cer:ro
-      - ./logs:/var/log/nginx
+      - ${LOG_PATH}:/var/log/nginx
     ports:
       - ${HTTP_PORT}:${HTTP_PORT}
       - ${HTTPS_PORT}:${HTTPS_PORT}
