@@ -176,7 +176,8 @@ def get_labels(request):
     collection_name = request.POST.get('collection')
 
     if collection_name is None:
-        labels = Label.objects.all().order_by('name')
+        label_values = Label.objects.all().order_by('name').values('name')
+        labels = [{'label_name': i["name"], 'has_winning': True} for i in label_values] # mark all labels as has_winning for _all
     else:
         rc = get_object_or_404(ImageCollection, name=collection_name)
         labels = rc.labels(check_if_has_winning=True) # This is currently our switch to enable/disable skipping empty labels

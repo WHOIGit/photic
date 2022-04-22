@@ -87,10 +87,11 @@ const selection = new SelectionArea({
         el.classList.remove('selected');
     }
  }).on('stop', ({store, event}) => {
-    selection.keepSelection()
+    selection.keepSelection();
     $(store.selected).addClass('selected');
     $(store.changed.removed).removeClass('selected');
 });
+
 
 $("body").on('contextmenu', function(ev) {
     hideTags();
@@ -155,6 +156,7 @@ function filterChange(ev){
     });
     requestArray = [];
     scrollPageNum = 1;
+    imagesOutstanding = 0;
     let filters = getFilters();
     updateQuery(filters);
     loadPage(scrollPageNum)
@@ -184,6 +186,34 @@ function filterByLabel(label_name){
 
 function getSelectedWrapper(){
     return selection.getSelection();
+}
+
+function selectAllVisible(){
+    let visibleImgs = [];
+    $("#roi-container img").each(function(i){
+        let obj = this;
+        selection.deselect(obj);
+        if(checkInView(obj, true)){
+            visibleImgs.push(obj);
+        }
+    })
+    selection.clearSelection();
+    selection.select(visibleImgs);
+    selection.keepSelection();
+}
+function checkInView(elem,partial)
+{
+    var container = $("#main-panel");
+    var contHeight = container.height();
+    var contTop = container.scrollTop();
+    var contBottom = contTop + contHeight ;
+
+    var elemTop = $(elem).offset().top - container.offset().top;
+    var elemBottom = elemTop + $(elem).height();
+    var isTotal = (elemTop >= 0 && elemBottom <=contHeight);
+    var isPart = ((elemTop < 0 && elemBottom > 0 ) || (elemTop > 0 && elemTop <= container.height())) && partial ;
+
+    return  isTotal  || isPart ;
 }
 $("#add_to_collection_form").on('submit', function(ev){
     ev.preventDefault();
@@ -264,13 +294,13 @@ function applyLabelSubmit(){
 };
 let lastHiddenROIs = [];
 function apply_label_callback(evt){
-    let selected_rois = getSelectedWrapper();
-    for (let i=0; i<selected_rois.length; i++){
-        if($("#apply_label_hide").is(':checked')){
-            $(selected_rois[i]).fadeOut();
-        }else{
-            $(selected_rois[i]).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
-        }
+    let selected_rois = [...getSelectedWrapper()];
+    if($("#apply_label_hide").is(':checked')){
+        $(selected_rois).fadeOut();
+        selection.deselect(selected_rois);
+        selection.clearSelection();
+    }else{
+        $(selected_rois).fadeTo(200, 0.2).fadeTo(200, 1).fadeTo(200, 0.2).fadeTo(200, 1);
     }
 
     if($("#apply_label_hide").is(':checked')){
@@ -279,6 +309,20 @@ function apply_label_callback(evt){
         $("#unhide_last").removeClass("disabled");
     }
 }
+
+$("#unhide-last-form").on('submit', function(ev){
+    ev.preventDefault();
+    let last = lastHiddenROIs.pop();
+    if(last){
+        $(last).fadeIn();
+        selection.select(last);
+        selection.keepSelection();
+    }
+    if(lastHiddenROIs.length==0){
+        $("#unhide_last").addClass("disabled");
+    }
+});
+
 
 let REGEX_ALPHANUMERIC = /^[a-zA-Z0-9_ ]+$/i;
 $("#add-label-form").on("keyup", function(ev){
@@ -310,7 +354,6 @@ function get_labels_callback(r){
     }
 }
 function buildLabelSelect(){
-
     let $filter_label = $('#filter-label');
     let $apply_label_select = $('#apply_label_select');
     $filter_label.empty();
@@ -399,14 +442,25 @@ function prevLabelLoop($ele){
     }
     
 }
-
-$(document).on('keypress', function(event) {
+function platformCtrlKey(event){
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+    if(macosPlatforms.indexOf(window.navigator.platform)!=-1){
+        if(event.metaKey) return true;
+    }else{
+        if(event.ctrlKey) return true;
+    }
+    return false
+}
+$(document).on('keydown', function(event) {
     if ($(event.target).closest("input,textarea")[0]) {
         return;
     }
     let key = event.key.toUpperCase();
     if(key == 'N'){
         nextLabel();
+    }else if(platformCtrlKey(event) && key == 'A'){
+        event.preventDefault();
+        selectAllVisible();
     }else if( key ==='P'){
         prevLabel();
     }else if( key ==='ENTER'){
@@ -414,16 +468,6 @@ $(document).on('keypress', function(event) {
     }
 });
 
-$("#unhide-last-form").on('submit', function(ev){
-    ev.preventDefault();
-    let last = lastHiddenROIs.pop();
-    if(last){
-        $(last).fadeIn();
-    }
-    if(lastHiddenROIs){
-        $("#unhide_last").addClass("disabled");
-    }
-});
 
 $("#add-label-form").on('submit', function(ev){
     ev.preventDefault();
@@ -441,7 +485,6 @@ function add_label_callback(r){
     if(r.created){
         showMessage("Label created");
     }else{
-
         showError("Label already exists");
     }
     getLabels();
@@ -603,6 +646,7 @@ function imageLoaded(evt) {
     $image.css("visibility", "visible")
 
     imagesOutstanding--;
+    
     if(imagesOutstanding==0){
         allowLoad = true;
         showLoader(false);
@@ -649,8 +693,7 @@ function handleRoiAjax(r) {
 
     morePages = r.has_next_page;
 }
-$(window).on("load", function() {
-});
+
 let allowLoad = true;
 function onScroll(){
     if(morePages&&allowLoad){
@@ -681,6 +724,10 @@ $('.largeOptionSetSelection').select2({
 $('.largeOptionSetSelectionTag').select2({
     theme: "foundation",
     tags:true
+});
+
+$("#apply_label_select").on('select2:open', () => {
+    document.querySelector('.select2-search__field').focus();
 });
 
 $(document).foundation();
