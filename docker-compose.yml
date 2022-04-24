@@ -19,8 +19,8 @@ services:
       args:
         HTTP_PROXY: '${HTTP_PROXY}'
         HTTPS_PROXY: '${HTTPS_PROXY}'
-
-    command: python manage.py runserver 0.0.0.0:8000
+    #command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --bind 0.0.0.0:8000 --workers 2 -k uvicorn.workers.UvicornWorker photic.asgi:application
     volumes:
       - .:/code
       - ${ROI_PATH}:/rois
