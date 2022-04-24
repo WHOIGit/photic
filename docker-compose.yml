@@ -37,7 +37,7 @@ services:
       - NGINX_HTTP_PORT=${HTTP_PORT}
       - NGINX_HTTPS_PORT=${HTTPS_PORT}
     volumes:
-      - ./nginx/templates:/etc/nginx/templates
+      - ${NGINX_TEMPLATE_PATH}:/etc/nginx/templates
       - ./static:/code/static
       - ${ROI_PATH}:/rois
       - ${SSL_KEY}:/ssl/ssl.key:ro
