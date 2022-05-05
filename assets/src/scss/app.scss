@@ -9,7 +9,6 @@
 @import "brands";
 @import "../../node_modules/toastify-js/src/toastify";
 @import "../../node_modules/select2/dist/css/select2";
-@import "../../node_modules/datatables.net-zf/css/dataTables.foundation";
 @import "../../node_modules/datatables.net-buttons-zf/css/buttons.foundation";
 @import "../../node_modules/datatables.net-colreorder-zf/css/colReorder.foundation";
 
@@ -77,3 +76,4 @@
 @import "global/typography";
 @import "components/icons";
 @import "components/form";
+@import "components/datatables";

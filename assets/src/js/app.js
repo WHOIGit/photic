@@ -2,7 +2,6 @@ import $ from 'jquery';
 import 'what-input';
 import  SelectionArea from '@simonwep/selection-js';
 import 'jquery-datetimepicker';
-import Tagify from '@yaireo/tagify';
 import Toastify from 'toastify-js'
 import moment, { localeData } from 'moment';
 import 'select2';

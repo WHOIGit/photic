@@ -26667,15 +26667,13 @@ function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function"
 
 
 function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
     _typeof = function _typeof(obj) {
-      return typeof obj;
+      return _typeof2(obj);
     };
   } else {
     _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
     };
   }
 
@@ -26735,19 +26733,6 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 
-function _isNativeReflectConstruct() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -26759,30 +26744,9 @@ function _assertThisInitialized(self) {
 function _possibleConstructorReturn(self, call) {
   if (call && (_typeof2(call) === "object" || typeof call === "function")) {
     return call;
-  } else if (call !== void 0) {
-    throw new TypeError("Derived constructors may only return object or undefined");
   }
 
   return _assertThisInitialized(self);
-}
-
-function _createSuper(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf(Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf(this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn(this, result);
-  };
 }
 
 function _superPropBase(object, property) {
@@ -26816,7 +26780,7 @@ function _get(target, property, receiver) {
 }
 
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
 
 function _arrayWithHoles(arr) {
@@ -26824,17 +26788,13 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArrayLimit(arr, i) {
-  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-  if (_i == null) return;
   var _arr = [];
   var _n = true;
   var _d = false;
-
-  var _s, _e;
+  var _e = undefined;
 
   try {
-    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
       _arr.push(_s.value);
 
       if (i && _arr.length === i) break;
@@ -26853,27 +26813,8 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
 }
 /**
  * Returns a boolean for RTL support
@@ -27035,26 +26976,13 @@ function ignoreMousedisappear(handler) {
 }
 
 var foundation_core_utils = /*#__PURE__*/Object.freeze({
-  __proto__: null,
   rtl: rtl,
   GetYoDigits: GetYoDigits,
   RegExpEscape: RegExpEscape,
   transitionend: transitionend,
   onLoad: onLoad,
   ignoreMousedisappear: ignoreMousedisappear
-}); // const defaultQueries = {
-//   'default' : 'only screen',
-//   landscape : 'only screen and (orientation: landscape)',
-//   portrait : 'only screen and (orientation: portrait)',
-//   retina : 'only screen and (-webkit-min-device-pixel-ratio: 2),' +
-//     'only screen and (min--moz-device-pixel-ratio: 2),' +
-//     'only screen and (-o-min-device-pixel-ratio: 2/1),' +
-//     'only screen and (min-device-pixel-ratio: 2),' +
-//     'only screen and (min-resolution: 192dpi),' +
-//     'only screen and (min-resolution: 2dppx)'
-//   };
-// matchMedia() polyfill - Test a CSS media type/query in JS.
-// Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
+}); // Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
 
 /* eslint-disable */
 
@@ -27113,7 +27041,7 @@ var MediaQuery = {
   _init: function _init() {
     // make sure the initialization is only done once when calling _init() several times
     if (this.isInitialized === true) {
-      return this;
+      return;
     } else {
       this.isInitialized = true;
     }
@@ -27122,7 +27050,7 @@ var MediaQuery = {
     var $meta = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta.foundation-mq');
 
     if (!$meta.length) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(document.head);
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('<meta class="foundation-mq">').appendTo(document.head);
     }
 
     var extractedStyles = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.foundation-mq').css('font-family');
@@ -27315,7 +27243,7 @@ var MediaQuery = {
   _watcher: function _watcher() {
     var _this2 = this;
 
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on('resize.zf.trigger', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off('resize.zf.mediaquery').on('resize.zf.mediaquery', function () {
       var newSize = _this2._getCurrentSize(),
           currentSize = _this2.current;
 
@@ -27364,7 +27292,7 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-var FOUNDATION_VERSION = '6.7.4'; // Global Foundation object
+var FOUNDATION_VERSION = '6.6.3'; // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
 
 var Foundation = {
@@ -27449,9 +27377,7 @@ var Foundation = {
     .trigger("destroyed.zf.".concat(pluginName));
 
     for (var prop in plugin) {
-      if (typeof plugin[prop] === 'function') {
-        plugin[prop] = null; //clean up script to prep for garbage collection.
-      }
+      plugin[prop] = null; //clean up script to prep for garbage collection.
     }
 
     return;
@@ -27486,7 +27412,7 @@ var Foundation = {
             jquery__WEBPACK_IMPORTED_MODULE_0___default()('[data-' + plugins + ']').foundation('_init');
           },
           'undefined': function undefined$1() {
-            this.object(Object.keys(_this._plugins));
+            this['object'](Object.keys(_this._plugins));
           }
         };
 
@@ -27531,7 +27457,7 @@ var Foundation = {
         };
 
         if ($el.attr('data-options')) {
-          $el.attr('data-options').split(';').forEach(function (option) {
+          $el.attr('data-options').split(';').forEach(function (option, _index) {
             var opt = option.split(':').map(function (el) {
               return el.trim();
             });
@@ -27550,7 +27476,7 @@ var Foundation = {
     });
   },
   getFnName: functionName,
-  addToJquery: function addToJquery() {
+  addToJquery: function addToJquery($) {
     // TODO: consider not making this a jQuery function
     // TODO: need way to reflow vs. re-initialize
 
@@ -27560,7 +27486,7 @@ var Foundation = {
      */
     var foundation = function foundation(method) {
       var type = _typeof(method),
-          $noJS = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.no-js');
+          $noJS = $('.no-js');
 
       if ($noJS.length) {
         $noJS.removeClass('no-js');
@@ -27585,7 +27511,7 @@ var Foundation = {
           } else {
             this.each(function (i, el) {
               //otherwise loop through the jQuery collection and invoke the method on each
-              plugClass[method].apply(jquery__WEBPACK_IMPORTED_MODULE_0___default()(el).data('zfPlugin'), args);
+              plugClass[method].apply($(el).data('zfPlugin'), args);
             });
           }
         } else {
@@ -27600,8 +27526,8 @@ var Foundation = {
       return this;
     };
 
-    (jquery__WEBPACK_IMPORTED_MODULE_0___default().fn.foundation) = foundation;
-    return (jquery__WEBPACK_IMPORTED_MODULE_0___default());
+    $.fn.foundation = foundation;
+    return $;
   }
 };
 Foundation.util = {
@@ -27670,7 +27596,6 @@ window.Foundation = Foundation; // Polyfill for requestAnimationFrame
 })();
 
 if (!Function.prototype.bind) {
-  /* eslint-disable no-extend-native */
   Function.prototype.bind = function (oThis) {
     if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5
@@ -27724,17 +27649,18 @@ var Box = {
   OverlapArea: OverlapArea,
   GetDimensions: GetDimensions,
   GetExplicitOffsets: GetExplicitOffsets
+  /**
+   * Compares the dimensions of an element to a container and determines collision events with container.
+   * @function
+   * @param {jQuery} element - jQuery object to test for collisions.
+   * @param {jQuery} parent - jQuery object to use as bounding container.
+   * @param {Boolean} lrOnly - set to true to check left and right values only.
+   * @param {Boolean} tbOnly - set to true to check top and bottom values only.
+   * @default if no parent object passed, detects collisions with `window`.
+   * @returns {Boolean} - true if collision free, false if a collision in any direction.
+   */
+
 };
-/**
- * Compares the dimensions of an element to a container and determines collision events with container.
- * @function
- * @param {jQuery} element - jQuery object to test for collisions.
- * @param {jQuery} parent - jQuery object to use as bounding container.
- * @param {Boolean} lrOnly - set to true to check left and right values only.
- * @param {Boolean} tbOnly - set to true to check top and bottom values only.
- * @default if no parent object passed, detects collisions with `window`.
- * @returns {Boolean} - true if collision free, false if a collision in any direction.
- */
 
 function ImNotTouchingYou(element, parent, lrOnly, tbOnly, ignoreBottom) {
   return OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) === 0;
@@ -27931,7 +27857,7 @@ function onImagesLoaded(images, callback) {
       var image = new Image(); // Still count image as loaded if it finalizes with an error.
 
       var events = "load.zf.images error.zf.images";
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(image).one(events, function me() {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(image).one(events, function me(event) {
         // Unbind the event listeners. We're using 'one' but only one of the two events will have fired.
         jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).off(events, me);
         singleImageLoaded();
@@ -27983,37 +27909,6 @@ function findFocusable($element) {
 
 
     return true;
-  }).sort(function (a, b) {
-    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(a).attr('tabindex') === jquery__WEBPACK_IMPORTED_MODULE_0___default()(b).attr('tabindex')) {
-      return 0;
-    }
-
-    var aTabIndex = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(a).attr('tabindex'), 10),
-        bTabIndex = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(b).attr('tabindex'), 10); // Undefined is treated the same as 0
-
-    if (typeof jquery__WEBPACK_IMPORTED_MODULE_0___default()(a).attr('tabindex') === 'undefined' && bTabIndex > 0) {
-      return 1;
-    }
-
-    if (typeof jquery__WEBPACK_IMPORTED_MODULE_0___default()(b).attr('tabindex') === 'undefined' && aTabIndex > 0) {
-      return -1;
-    }
-
-    if (aTabIndex === 0 && bTabIndex > 0) {
-      return 1;
-    }
-
-    if (bTabIndex === 0 && aTabIndex > 0) {
-      return -1;
-    }
-
-    if (aTabIndex < bTabIndex) {
-      return -1;
-    }
-
-    if (aTabIndex > bTabIndex) {
-      return 1;
-    }
   });
 }
 
@@ -28136,7 +28031,7 @@ function getKeyCodes(kcs) {
   var k = {};
 
   for (var kc in kcs) {
-    if (kcs.hasOwnProperty(kc)) k[kcs[kc]] = kcs[kc];
+    k[kcs[kc]] = kcs[kc];
   }
 
   return k;
@@ -28161,7 +28056,7 @@ var Motion = {
 function Move(duration, elem, fn) {
   var anim,
       prog,
-      start = null;
+      start = null; // console.log('called');
 
   if (duration === 0) {
     fn.apply(elem);
@@ -28170,7 +28065,8 @@ function Move(duration, elem, fn) {
   }
 
   function move(ts) {
-    if (!start) start = ts;
+    if (!start) start = ts; // console.log(start, ts);
+
     prog = ts - start;
     fn.apply(elem);
 
@@ -28254,7 +28150,7 @@ var Nest = {
         $item.addClass(hasSubClass);
 
         if (applyAria) {
-          $item.children('a:first').attr({
+          $item.attr({
             'aria-haspopup': true,
             'aria-label': $item.children('a:first').text()
           }); // Note:  Drilldowns behave differently in how they hide, and so need
@@ -28345,6 +28241,7 @@ function Timer(elem, options, cb) {
 
 var Touch = {};
 var startPosX,
+    startPosY,
     startTime,
     elapsedTime,
     startEvent,
@@ -28366,15 +28263,14 @@ function onTouchEnd(e) {
 }
 
 function onTouchMove(e) {
-  if (true === (jquery__WEBPACK_IMPORTED_MODULE_0___default().spotSwipe.preventDefault)) {
+  if ((jquery__WEBPACK_IMPORTED_MODULE_0___default().spotSwipe.preventDefault)) {
     e.preventDefault();
   }
 
   if (isMoving) {
-    var x = e.touches[0].pageX; // var y = e.touches[0].pageY;
-
-    var dx = startPosX - x; // var dy = startPosY - y;
-
+    var x = e.touches[0].pageX;
+    var y = e.touches[0].pageY;
+    var dx = startPosX - x;
     var dir;
     didMoved = true;
     elapsedTime = new Date().getTime() - startTime;
@@ -28395,30 +28291,24 @@ function onTouchMove(e) {
 }
 
 function onTouchStart(e) {
-  if (e.touches.length === 1) {
+  if (e.touches.length == 1) {
     startPosX = e.touches[0].pageX;
+    startPosY = e.touches[0].pageY;
     startEvent = e;
     isMoving = true;
     didMoved = false;
     startTime = new Date().getTime();
-    this.addEventListener('touchmove', onTouchMove, {
-      passive: true === (jquery__WEBPACK_IMPORTED_MODULE_0___default().spotSwipe.preventDefault)
-    });
+    this.addEventListener('touchmove', onTouchMove, false);
     this.addEventListener('touchend', onTouchEnd, false);
   }
 }
 
 function init() {
-  this.addEventListener && this.addEventListener('touchstart', onTouchStart, {
-    passive: true
-  });
-} // function teardown() {
-//   this.removeEventListener('touchstart', onTouchStart);
-// }
-
+  this.addEventListener && this.addEventListener('touchstart', onTouchStart, false);
+}
 
 var SpotSwipe = /*#__PURE__*/function () {
-  function SpotSwipe() {
+  function SpotSwipe($) {
     _classCallCheck(this, SpotSwipe);
 
     this.version = '1.0.0';
@@ -28426,6 +28316,7 @@ var SpotSwipe = /*#__PURE__*/function () {
     this.preventDefault = false;
     this.moveThreshold = 75;
     this.timeThreshold = 200;
+    this.$ = $;
 
     this._init();
   }
@@ -28433,16 +28324,17 @@ var SpotSwipe = /*#__PURE__*/function () {
   _createClass(SpotSwipe, [{
     key: "_init",
     value: function _init() {
-      (jquery__WEBPACK_IMPORTED_MODULE_0___default().event.special.swipe) = {
+      var $ = this.$;
+      $.event.special.swipe = {
         setup: init
       };
-      (jquery__WEBPACK_IMPORTED_MODULE_0___default().event.special.tap) = {
+      $.event.special.tap = {
         setup: init
       };
-      jquery__WEBPACK_IMPORTED_MODULE_0___default().each(['left', 'up', 'down', 'right'], function () {
-        (jquery__WEBPACK_IMPORTED_MODULE_0___default().event.special)["swipe".concat(this)] = {
+      $.each(['left', 'up', 'down', 'right'], function () {
+        $.event.special["swipe".concat(this)] = {
           setup: function setup() {
-            jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).on('swipe', (jquery__WEBPACK_IMPORTED_MODULE_0___default().noop));
+            $(this).on('swipe', $.noop);
           }
         };
       });
@@ -28459,18 +28351,18 @@ var SpotSwipe = /*#__PURE__*/function () {
  ****************************************************/
 
 
-Touch.setupSpotSwipe = function () {
-  (jquery__WEBPACK_IMPORTED_MODULE_0___default().spotSwipe) = new SpotSwipe((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
+Touch.setupSpotSwipe = function ($) {
+  $.spotSwipe = new SpotSwipe($);
 };
 /****************************************************
  * Method for adding pseudo drag events to elements *
  ***************************************************/
 
 
-Touch.setupTouchHandler = function () {
-  (jquery__WEBPACK_IMPORTED_MODULE_0___default().fn.addTouch) = function () {
+Touch.setupTouchHandler = function ($) {
+  $.fn.addTouch = function () {
     this.each(function (i, el) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(el).bind('touchstart touchmove touchend touchcancel', function (event) {
+      $(el).bind('touchstart touchmove touchend touchcancel', function (event) {
         //we pass the original event object because the jQuery event
         //object is normalized to w3c specs and does not provide the TouchList
         handleTouch(event);
@@ -28509,10 +28401,10 @@ Touch.setupTouchHandler = function () {
   };
 };
 
-Touch.init = function () {
-  if (typeof (jquery__WEBPACK_IMPORTED_MODULE_0___default().spotSwipe) === 'undefined') {
-    Touch.setupSpotSwipe((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
-    Touch.setupTouchHandler((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
+Touch.init = function ($) {
+  if (typeof $.spotSwipe === 'undefined') {
+    Touch.setupSpotSwipe($);
+    Touch.setupTouchHandler($);
   }
 };
 
@@ -28644,8 +28536,9 @@ Triggers.Listeners.Global = {
 
       _this.triggerHandler('close.zf.trigger', [_this]);
     });
-  }
-}; // Global, parses whole document.
+  } // Global, parses whole document.
+
+};
 
 Triggers.Initializers.addClosemeListener = function (pluginName) {
   var yetiBoxes = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[data-yeti-box]'),
@@ -28672,7 +28565,7 @@ Triggers.Initializers.addClosemeListener = function (pluginName) {
 function debounceGlobalListener(debounce, trigger, listener) {
   var timer,
       args = Array.prototype.slice.call(arguments, 3);
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on(trigger, function () {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off(trigger).on(trigger, function (e) {
     if (timer) {
       clearTimeout(timer);
     }
@@ -28764,17 +28657,17 @@ Triggers.Initializers.addSimpleListeners = function () {
 Triggers.Initializers.addGlobalListeners = function () {
   var $document = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document);
   Triggers.Initializers.addMutationEventsListener($document);
-  Triggers.Initializers.addResizeListener(250);
+  Triggers.Initializers.addResizeListener();
   Triggers.Initializers.addScrollListener();
   Triggers.Initializers.addClosemeListener();
 };
 
-Triggers.init = function (__, Foundation) {
-  onLoad(jquery__WEBPACK_IMPORTED_MODULE_0___default()(window), function () {
-    if ((jquery__WEBPACK_IMPORTED_MODULE_0___default().triggersInitialized) !== true) {
+Triggers.init = function ($, Foundation) {
+  onLoad($(window), function () {
+    if ($.triggersInitialized !== true) {
       Triggers.Initializers.addSimpleListeners();
       Triggers.Initializers.addGlobalListeners();
-      (jquery__WEBPACK_IMPORTED_MODULE_0___default().triggersInitialized) = true;
+      $.triggersInitialized = true;
     }
   });
 
@@ -28826,9 +28719,7 @@ var Plugin = /*#__PURE__*/function () {
       .trigger("destroyed.zf.".concat(pluginName));
 
       for (var prop in this) {
-        if (this.hasOwnProperty(prop)) {
-          this[prop] = null; //clean up script to prep for garbage collection.
-        }
+        this[prop] = null; //clean up script to prep for garbage collection.
       }
     }
   }]);
@@ -28854,17 +28745,15 @@ function getPluginName(obj) {
 var Abide = /*#__PURE__*/function (_Plugin) {
   _inherits(Abide, _Plugin);
 
-  var _super = _createSuper(Abide);
-
   function Abide() {
     _classCallCheck(this, Abide);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Abide).apply(this, arguments));
   }
 
   _createClass(Abide, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Abide.
      * @class
@@ -28873,7 +28762,7 @@ var Abide = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element) {
+    value: function _setup(element) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend(true, {}, Abide.defaults, this.$element.data(), options);
@@ -29290,10 +29179,10 @@ var Abide = /*#__PURE__*/function (_Plugin) {
     key: "removeErrorClasses",
     value: function removeErrorClasses($el) {
       // radios need to clear all of the els
-      if ($el[0].type === 'radio') {
+      if ($el[0].type == 'radio') {
         return this.removeRadioErrorClasses($el.attr('name'));
       } // checkboxes need to clear all of the els
-      else if ($el[0].type === 'checkbox') {
+      else if ($el[0].type == 'checkbox') {
         return this.removeCheckboxErrorClasses($el.attr('name'));
       }
 
@@ -29393,10 +29282,10 @@ var Abide = /*#__PURE__*/function (_Plugin) {
       }
 
       if (manageErrorClasses) {
+        this.removeErrorClasses($el);
+
         if (!goodToGo) {
           this.addErrorClasses($el, failedValidators);
-        } else {
-          this.removeErrorClasses($el);
         }
       }
       /**
@@ -29560,7 +29449,7 @@ var Abide = /*#__PURE__*/function (_Plugin) {
           }
 
           if (typeof jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required') !== 'undefined') {
-            minRequired = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required'), 10);
+            minRequired = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required'));
           }
         }); // For the group to be valid, the minRequired amount of checkboxes have to be checked
 
@@ -29741,7 +29630,6 @@ Abide.defaults = {
   validateOnBlur: false,
   patterns: {
     alpha: /^[a-zA-Z]+$/,
-    // eslint-disable-next-line camelcase
     alpha_numeric: /^[a-zA-Z0-9]+$/,
     integer: /^[-+]?\d+$/,
     number: /^[-+]?\d*(?:[\.\,]\d+)?$/,
@@ -29763,17 +29651,15 @@ Abide.defaults = {
     time: /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
     dateISO: /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
     // MM/DD/YYYY
-    // eslint-disable-next-line camelcase
     month_day_year: /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
     // DD/MM/YYYY
-    // eslint-disable-next-line camelcase
     day_month_year: /^(0[1-9]|[12][0-9]|3[01])[- \/.](0[1-9]|1[012])[- \/.]\d{4}$/,
     // #FFF or #FFFFFF
     color: /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
     // Domain || URL
     website: {
       test: function test(text) {
-        return Abide.defaults.patterns.domain.test(text) || Abide.defaults.patterns.url.test(text);
+        return Abide.defaults.patterns['domain'].test(text) || Abide.defaults.patterns['url'].test(text);
       }
     }
   },
@@ -29782,10 +29668,12 @@ Abide.defaults = {
    * Optional validation functions to be used. `equalTo` being the only default included function.
    * Functions should return only a boolean if the input is valid or not. Functions are given the following arguments:
    * el : The jQuery element to validate.
+   * required : Boolean value of the required attribute be present or not.
+   * parent : The direct parent of the input.
    * @option
    */
   validators: {
-    equalTo: function equalTo(el) {
+    equalTo: function equalTo(el, required, parent) {
       return jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat(el.attr('data-equalto'))).val() === el.val();
     }
   }
@@ -29799,17 +29687,15 @@ Abide.defaults = {
 var Accordion = /*#__PURE__*/function (_Plugin) {
   _inherits(Accordion, _Plugin);
 
-  var _super = _createSuper(Accordion);
-
   function Accordion() {
     _classCallCheck(this, Accordion);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Accordion).apply(this, arguments));
   }
 
   _createClass(Accordion, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of an accordion.
      * @class
@@ -29818,7 +29704,7 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into an accordion.
      * @param {Object} options - a plain object with settings to override the default options.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Accordion.defaults, this.$element.data(), options);
       this.className = 'Accordion'; // ie9 back compat
@@ -29829,9 +29715,7 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
         'ENTER': 'toggle',
         'SPACE': 'toggle',
         'ARROW_DOWN': 'next',
-        'ARROW_UP': 'previous',
-        'HOME': 'first',
-        'END': 'last'
+        'ARROW_UP': 'previous'
       });
     }
     /**
@@ -29845,7 +29729,11 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
       var _this2 = this;
 
       this._isInitializing = true;
+      this.$element.attr('role', 'tablist');
       this.$tabs = this.$element.children('[data-accordion-item]');
+      this.$tabs.attr({
+        'role': 'presentation'
+      });
       this.$tabs.each(function (idx, el) {
         var $el = jquery__WEBPACK_IMPORTED_MODULE_0___default()(el),
             $content = $el.children('[data-tab-content]'),
@@ -29853,11 +29741,13 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
             linkId = el.id ? "".concat(el.id, "-label") : "".concat(id, "-label");
         $el.find('a:first').attr({
           'aria-controls': id,
+          'role': 'tab',
           'id': linkId,
-          'aria-expanded': false
+          'aria-expanded': false,
+          'aria-selected': false
         });
         $content.attr({
-          'role': 'region',
+          'role': 'tabpanel',
           'aria-labelledby': linkId,
           'aria-hidden': true,
           'id': id
@@ -29962,20 +29852,6 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
               },
               previous: function previous() {
                 var $a = $elem.prev().find('a').focus();
-
-                if (!_this.options.multiExpand) {
-                  $a.trigger('click.zf.accordion');
-                }
-              },
-              first: function first() {
-                var $a = _this.$tabs.first().find('.accordion-title').focus();
-
-                if (!_this.options.multiExpand) {
-                  $a.trigger('click.zf.accordion');
-                }
-              },
-              last: function last() {
-                var $a = _this.$tabs.last().find('.accordion-title').focus();
 
                 if (!_this.options.multiExpand) {
                   $a.trigger('click.zf.accordion');
@@ -30105,7 +29981,8 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
       $target.attr('aria-hidden', false);
       $targetItem.addClass('is-active');
       jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat(targetContentId)).attr({
-        'aria-expanded': true
+        'aria-expanded': true,
+        'aria-selected': true
       });
       $target.finish().slideDown(this.options.slideSpeed, function () {
         /**
@@ -30133,7 +30010,8 @@ var Accordion = /*#__PURE__*/function (_Plugin) {
       $target.attr('aria-hidden', true);
       $targetItem.removeClass('is-active');
       jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat(targetContentId)).attr({
-        'aria-expanded': false
+        'aria-expanded': false,
+        'aria-selected': false
       });
       $target.finish().slideUp(this.options.slideSpeed, function () {
         /**
@@ -30256,17 +30134,15 @@ Accordion.defaults = {
 var AccordionMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(AccordionMenu, _Plugin);
 
-  var _super = _createSuper(AccordionMenu);
-
   function AccordionMenu() {
     _classCallCheck(this, AccordionMenu);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(AccordionMenu).apply(this, arguments));
   }
 
   _createClass(AccordionMenu, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of an accordion menu.
      * @class
@@ -30275,7 +30151,7 @@ var AccordionMenu = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into an accordion menu.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, AccordionMenu.defaults, this.$element.data(), options);
       this.className = 'AccordionMenu'; // ie9 back compat
@@ -30307,6 +30183,7 @@ var AccordionMenu = /*#__PURE__*/function (_Plugin) {
       this.$element.find('[data-submenu]').not('.is-active').slideUp(0); //.find('a').css('padding-left', '1rem');
 
       this.$element.attr({
+        'role': 'tree',
         'aria-multiselectable': this.options.multiOpen
       });
       this.$menuLinks = this.$element.find('.is-accordion-submenu-parent');
@@ -30340,6 +30217,9 @@ var AccordionMenu = /*#__PURE__*/function (_Plugin) {
           'id': subId
         });
       });
+      this.$element.find('li').attr({
+        'role': 'treeitem'
+      });
       var initPanes = this.$element.find('.is-active');
 
       if (initPanes.length) {
@@ -30365,7 +30245,7 @@ var AccordionMenu = /*#__PURE__*/function (_Plugin) {
 
         if ($submenu.length) {
           if (_this.options.submenuToggle) {
-            jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function () {
+            jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function (e) {
               _this.toggle($submenu);
             });
           } else {
@@ -30642,17 +30522,15 @@ AccordionMenu.defaults = {
 var Drilldown = /*#__PURE__*/function (_Plugin) {
   _inherits(Drilldown, _Plugin);
 
-  var _super = _createSuper(Drilldown);
-
   function Drilldown() {
     _classCallCheck(this, Drilldown);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Drilldown).apply(this, arguments));
   }
 
   _createClass(Drilldown, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a drilldown menu.
      * @class
@@ -30660,7 +30538,7 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into an accordion menu.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Drilldown.defaults, this.$element.data(), options);
       this.className = 'Drilldown'; // ie9 back compat
@@ -30674,7 +30552,9 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
         'ARROW_UP': 'up',
         'ARROW_DOWN': 'down',
         'ARROW_LEFT': 'previous',
-        'ESCAPE': 'close'
+        'ESCAPE': 'close',
+        'TAB': 'down',
+        'SHIFT_TAB': 'up'
       });
     }
     /**
@@ -30692,11 +30572,12 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
       }
 
       this.$element.attr({
+        'role': 'tree',
         'aria-multiselectable': false
       });
       this.$submenuAnchors = this.$element.find('li.is-drilldown-submenu-parent').children('a');
       this.$submenus = this.$submenuAnchors.parent('li').children('[data-submenu]').attr('role', 'group');
-      this.$menuItems = this.$element.find('li').not('.js-drilldown-back').find('a'); // Set the main menu as current by default (unless a submenu is selected)
+      this.$menuItems = this.$element.find('li').not('.js-drilldown-back').attr('role', 'treeitem').find('a'); // Set the main menu as current by default (unless a submenu is selected)
       // Used to set the wrapper height when the drilldown is closed/reopened from any (sub)menu
 
       this.$currentMenu = this.$element;
@@ -30813,12 +30694,12 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
 
         if (_this.options.closeOnClick) {
           var $body = jquery__WEBPACK_IMPORTED_MODULE_0___default()('body');
-          $body.off('.zf.drilldown').on('click.zf.drilldown', function (ev) {
-            if (ev.target === _this.$element[0] || jquery__WEBPACK_IMPORTED_MODULE_0___default().contains(_this.$element[0], ev.target)) {
+          $body.off('.zf.drilldown').on('click.zf.drilldown', function (e) {
+            if (e.target === _this.$element[0] || jquery__WEBPACK_IMPORTED_MODULE_0___default().contains(_this.$element[0], e.target)) {
               return;
             }
 
-            ev.preventDefault();
+            e.preventDefault();
 
             _this._hideAll();
 
@@ -30854,7 +30735,7 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
     value: function _scrollTop() {
       var _this = this;
 
-      var $scrollTopElement = _this.options.scrollTopElement !== '' ? jquery__WEBPACK_IMPORTED_MODULE_0___default()(_this.options.scrollTopElement) : _this.$element,
+      var $scrollTopElement = _this.options.scrollTopElement != '' ? jquery__WEBPACK_IMPORTED_MODULE_0___default()(_this.options.scrollTopElement) : _this.$element,
           scrollPos = parseInt($scrollTopElement.offset().top + _this.options.scrollTopOffset, 10);
       jquery__WEBPACK_IMPORTED_MODULE_0___default()('html, body').stop(true).animate({
         scrollTop: scrollPos
@@ -31010,7 +30891,8 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
       var _this = this;
 
       $elem.off('click.zf.drilldown');
-      $elem.children('.js-drilldown-back').on('click.zf.drilldown', function () {
+      $elem.children('.js-drilldown-back').on('click.zf.drilldown', function (e) {
+        // console.log('mouseup on back');
         _this._hide($elem); // If there is a parent submenu, call show
 
 
@@ -31018,8 +30900,6 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
 
         if (parentSubMenu.length) {
           _this._show(parentSubMenu);
-        } else {
-          _this.$currentMenu = _this.$element;
         }
       });
     }
@@ -31034,7 +30914,7 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
     value: function _menuLinkEvents() {
       var _this = this;
 
-      this.$menuItems.not('.is-drilldown-submenu-parent').off('click.zf.drilldown').on('click.zf.drilldown', function () {
+      this.$menuItems.not('.is-drilldown-submenu-parent').off('click.zf.drilldown').on('click.zf.drilldown', function (e) {
         setTimeout(function () {
           _this._hideAll();
         }, 0);
@@ -31092,14 +30972,14 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
 
 
       var $expandedSubmenus = this.$element.find('li[aria-expanded="true"] > ul[data-submenu]');
-      $expandedSubmenus.each(function () {
+      $expandedSubmenus.each(function (index) {
         _this._setHideSubMenuClasses(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this));
       }); // Save the menu as the currently displayed one.
 
       this.$currentMenu = $elem; // If target menu is root, focus first link & exit
 
       if ($elem.is('[data-drilldown]')) {
-        if (autoFocus === true) $elem.find('li > a').first().focus();
+        if (autoFocus === true) $elem.find('li[role="treeitem"] > a').first().focus();
         if (this.options.autoHeight) this.$wrapper.css('height', $elem.data('calcHeight'));
         return;
       } // Find all submenus on way to root incl. the element itself
@@ -31113,13 +30993,13 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
           _this.$wrapper.css('height', jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).data('calcHeight'));
         }
 
-        var isLastChild = index === $submenus.length - 1; // Add transitionsend listener to last child (root due to reverse order) to open target menu's first link
+        var isLastChild = index == $submenus.length - 1; // Add transitionsend listener to last child (root due to reverse order) to open target menu's first link
         // Last child makes sure the event gets always triggered even if going through several menus
 
         if (isLastChild === true) {
           jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).one(transitionend(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this)), function () {
             if (autoFocus === true) {
-              $elem.find('li > a').first().focus();
+              $elem.find('li[role="treeitem"] > a').first().focus();
             }
           });
         }
@@ -31139,12 +31019,8 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
     value: function _show($elem) {
       var $submenu = $elem.children('[data-submenu]');
       $elem.attr('aria-expanded', true);
-      this.$currentMenu = $submenu; //hide drilldown parent menu when submenu is open
-      // this removes it from the dom so that the tab key will take the user to the next visible element
-
-      $elem.parent().closest('ul').addClass('invisible'); // add visible class to submenu to override invisible class above
-
-      $submenu.addClass('is-active visible').removeClass('invisible').attr('aria-hidden', false);
+      this.$currentMenu = $submenu;
+      $submenu.addClass('is-active').removeClass('invisible').attr('aria-hidden', false);
 
       if (this.options.autoHeight) {
         this.$wrapper.css({
@@ -31172,11 +31048,10 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
       if (this.options.autoHeight) this.$wrapper.css({
         height: $elem.parent().closest('ul').data('calcHeight')
       });
-      $elem.parent().closest('ul').removeClass('invisible');
       $elem.parent('li').attr('aria-expanded', false);
       $elem.attr('aria-hidden', true);
       $elem.addClass('is-closing').one(transitionend($elem), function () {
-        $elem.removeClass('is-active is-closing visible');
+        $elem.removeClass('is-active is-closing');
         $elem.blur().addClass('invisible');
       });
       /**
@@ -31202,6 +31077,7 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
 
 
       this.$submenus.add(this.$element).each(function () {
+        var numOfElems = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).children('li').length;
         var height = Box.GetDimensions(this).height;
         maxHeight = height > maxHeight ? height : maxHeight;
 
@@ -31209,7 +31085,7 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
           jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).data('calcHeight', height);
         }
       });
-      if (this.options.autoHeight) result.height = this.$currentMenu.data('calcHeight');else result['min-height'] = "".concat(maxHeight, "px");
+      if (this.options.autoHeight) result['height'] = this.$currentMenu.data('calcHeight');else result['min-height'] = "".concat(maxHeight, "px");
       result['max-width'] = "".concat(this.$element[0].getBoundingClientRect().width, "px");
       return result;
     }
@@ -31221,14 +31097,13 @@ var Drilldown = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "_destroy",
     value: function _destroy() {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').off('.zf.drilldown');
       if (this.options.scrollTop) this.$element.off('.zf.drilldown', this._bindHandler);
 
       this._hideAll();
 
       this.$element.off('mutateme.zf.trigger');
       Nest.Burn(this.$element, 'drilldown');
-      this.$element.unwrap().find('.js-drilldown-back, .is-submenu-parent-item').remove().end().find('.is-active, .is-closing, .is-drilldown-submenu').removeClass('is-active is-closing is-drilldown-submenu').off('transitionend otransitionend webkitTransitionEnd').end().find('[data-submenu]').removeAttr('aria-hidden tabindex role');
+      this.$element.unwrap().find('.js-drilldown-back, .is-submenu-parent-item').remove().end().find('.is-active, .is-closing, .is-drilldown-submenu').removeClass('is-active is-closing is-drilldown-submenu').end().find('[data-submenu]').removeAttr('aria-hidden tabindex role');
       this.$submenuAnchors.each(function () {
         jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).off('.zf.drilldown');
       });
@@ -31381,17 +31256,15 @@ function nextItem(item, array) {
 var Positionable = /*#__PURE__*/function (_Plugin) {
   _inherits(Positionable, _Plugin);
 
-  var _super = _createSuper(Positionable);
-
   function Positionable() {
     _classCallCheck(this, Positionable);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Positionable).apply(this, arguments));
   }
 
   _createClass(Positionable, [{
     key: "_init",
-    value:
+
     /**
      * Abstract class encapsulating the tether-like explicit positioning logic
      * including repositioning based on overlap.
@@ -31401,7 +31274,7 @@ var Positionable = /*#__PURE__*/function (_Plugin) {
      * generated) by explicitly declaring them.
      *
      **/
-    function _init() {
+    value: function _init() {
       this.triedPositions = {};
       this.position = this.options.position === 'auto' ? this._getDefaultPosition() : this.options.position;
       this.alignment = this.options.alignment === 'auto' ? this._getDefaultAlignment() : this.options.alignment;
@@ -31477,7 +31350,7 @@ var Positionable = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "_alignmentsExhausted",
     value: function _alignmentsExhausted(position) {
-      return this.triedPositions[position] && this.triedPositions[position].length === ALIGNMENTS[position].length;
+      return this.triedPositions[position] && this.triedPositions[position].length == ALIGNMENTS[position].length;
     } // When we're trying to center, we don't want to apply offset that's going to
     // take us just off center, so wrap around to return 0 for the appropriate
     // offset in those alignments.  TODO: Figure out if we want to make this
@@ -31615,17 +31488,15 @@ Positionable.defaults = {
 var Dropdown = /*#__PURE__*/function (_Positionable) {
   _inherits(Dropdown, _Positionable);
 
-  var _super = _createSuper(Dropdown);
-
   function Dropdown() {
     _classCallCheck(this, Dropdown);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Dropdown).apply(this, arguments));
   }
 
   _createClass(Dropdown, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a dropdown.
      * @class
@@ -31634,7 +31505,7 @@ var Dropdown = /*#__PURE__*/function (_Positionable) {
      *        Object should be of the dropdown panel, rather than its anchor.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Dropdown.defaults, this.$element.data(), options);
       this.className = 'Dropdown'; // ie9 back compat
@@ -31818,7 +31689,8 @@ var Dropdown = /*#__PURE__*/function (_Positionable) {
       }
 
       this.$anchors.add(this.$element).on('keydown.zf.dropdown', function (e) {
-        var $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this);
+        var $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
+            visibleFocusableElements = Keyboard.findFocusable(_this.$element);
         Keyboard.handleKey(e, 'Dropdown', {
           open: function open() {
             if ($target.is(_this.$anchors) && !$target.is('input, textarea')) {
@@ -32102,17 +31974,15 @@ Dropdown.defaults = {
 var DropdownMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(DropdownMenu, _Plugin);
 
-  var _super = _createSuper(DropdownMenu);
-
   function DropdownMenu() {
     _classCallCheck(this, DropdownMenu);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(DropdownMenu).apply(this, arguments));
   }
 
   _createClass(DropdownMenu, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of DropdownMenu.
      * @class
@@ -32121,7 +31991,7 @@ var DropdownMenu = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into a dropdown menu.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, DropdownMenu.defaults, this.$element.data(), options);
       this.className = 'DropdownMenu'; // ie9 back compat
@@ -32233,7 +32103,7 @@ var DropdownMenu = /*#__PURE__*/function (_Plugin) {
 
 
       if (_this.options.closeOnClickInside) {
-        this.$menuItems.on('click.zf.dropdownMenu', function () {
+        this.$menuItems.on('click.zf.dropdownMenu', function (e) {
           var $elem = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
               hasSub = $elem.hasClass(parClass);
 
@@ -32243,10 +32113,8 @@ var DropdownMenu = /*#__PURE__*/function (_Plugin) {
         });
       }
 
-      if (hasTouch && this.options.disableHoverOnTouch) this.options.disableHover = true;
-
       if (!this.options.disableHover) {
-        this.$menuItems.on('mouseenter.zf.dropdownMenu', function () {
+        this.$menuItems.on('mouseenter.zf.dropdownMenu', function (e) {
           var $elem = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
               hasSub = $elem.hasClass(parClass);
 
@@ -32256,7 +32124,7 @@ var DropdownMenu = /*#__PURE__*/function (_Plugin) {
               _this._show($elem.children('.is-dropdown-submenu'));
             }, _this.options.hoverDelay));
           }
-        }).on('mouseleave.zf.dropdownMenu', ignoreMousedisappear(function () {
+        }).on('mouseleave.zf.dropdownMenu', ignoreMousedisappear(function (e) {
           var $elem = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
               hasSub = $elem.hasClass(parClass);
 
@@ -32492,7 +32360,7 @@ var DropdownMenu = /*#__PURE__*/function (_Plugin) {
       if ($elem && $elem.length) {
         $toClose = $elem;
       } else if (typeof idx !== 'undefined') {
-        $toClose = this.$tabs.not(function (i) {
+        $toClose = this.$tabs.not(function (i, el) {
           return i === idx;
         });
       } else {
@@ -32555,14 +32423,6 @@ DropdownMenu.defaults = {
    * @default false
    */
   disableHover: false,
-
-  /**
-   * Disallows hover on touch devices
-   * @option
-   * @type {boolean}
-   * @default true
-   */
-  disableHoverOnTouch: true,
 
   /**
    * Allow a submenu to automatically close on a mouseleave event, if not clicked open.
@@ -32654,17 +32514,15 @@ DropdownMenu.defaults = {
 var Equalizer = /*#__PURE__*/function (_Plugin) {
   _inherits(Equalizer, _Plugin);
 
-  var _super = _createSuper(Equalizer);
-
   function Equalizer() {
     _classCallCheck(this, Equalizer);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Equalizer).apply(this, arguments));
   }
 
   _createClass(Equalizer, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Equalizer.
      * @class
@@ -32673,7 +32531,7 @@ var Equalizer = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Equalizer.defaults, this.$element.data(), options);
       this.className = 'Equalizer'; // ie9 back compat
@@ -32743,7 +32601,7 @@ var Equalizer = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "_onResizeMe",
-    value: function _onResizeMe() {
+    value: function _onResizeMe(e) {
       this._reflow();
     }
     /**
@@ -32884,7 +32742,7 @@ var Equalizer = /*#__PURE__*/function (_Plugin) {
 
         var elOffsetTop = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this.$watched[i]).offset().top;
 
-        if (elOffsetTop !== lastElTopOffset) {
+        if (elOffsetTop != lastElTopOffset) {
           group++;
           groups[group] = [];
           lastElTopOffset = elOffsetTop;
@@ -33038,17 +32896,15 @@ Equalizer.defaults = {
 var Interchange = /*#__PURE__*/function (_Plugin) {
   _inherits(Interchange, _Plugin);
 
-  var _super = _createSuper(Interchange);
-
   function Interchange() {
     _classCallCheck(this, Interchange);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Interchange).apply(this, arguments));
   }
 
   _createClass(Interchange, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Interchange.
      * @class
@@ -33057,7 +32913,7 @@ var Interchange = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Interchange.defaults, this.$element.data(), options);
       this.rules = [];
@@ -33148,7 +33004,7 @@ var Interchange = /*#__PURE__*/function (_Plugin) {
     value: function _parseOptions() {
       var types = ['auto', 'src', 'background', 'html'];
       if (typeof this.options.type === 'undefined') this.options.type = 'auto';else if (types.indexOf(this.options.type) === -1) {
-        console.warn("Warning: invalid value \"".concat(this.options.type, "\" for Interchange option \"type\""));
+        console.log("Warning: invalid value \"".concat(this.options.type, "\" for Interchange option \"type\""));
         this.options.type = 'auto';
       }
     }
@@ -33172,12 +33028,13 @@ var Interchange = /*#__PURE__*/function (_Plugin) {
      * Checks the Interchange element for the provided media query + content pairings
      * @function
      * @private
+     * @param {Object} element - jQuery object that is an Interchange instance
      * @returns {Array} scenarios - Array of objects that have 'mq' and 'path' keys with corresponding keys
      */
 
   }, {
     key: "_generateRules",
-    value: function _generateRules() {
+    value: function _generateRules(element) {
       var rulesList = [];
       var rules;
 
@@ -33308,17 +33165,15 @@ Interchange.SPECIAL_QUERIES = {
 var SmoothScroll = /*#__PURE__*/function (_Plugin) {
   _inherits(SmoothScroll, _Plugin);
 
-  var _super = _createSuper(SmoothScroll);
-
   function SmoothScroll() {
     _classCallCheck(this, SmoothScroll);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(SmoothScroll).apply(this, arguments));
   }
 
   _createClass(SmoothScroll, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of SmoothScroll.
      * @class
@@ -33327,7 +33182,7 @@ var SmoothScroll = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, SmoothScroll.defaults, this.$element.data(), options);
       this.className = 'SmoothScroll'; // ie9 back compat
@@ -33384,18 +33239,18 @@ var SmoothScroll = /*#__PURE__*/function (_Plugin) {
     }
   }, {
     key: "_destroy",
-    value:
+
     /**
      * Destroys the SmoothScroll instance.
      * @function
      */
-    function _destroy() {
+    value: function _destroy() {
       this.$element.off('click.zf.smoothScroll', this._linkClickListener);
       this.$element.off('click.zf.smoothScroll', 'a[href^="#"]', this._linkClickListener);
     }
   }], [{
     key: "scrollToLoc",
-    value:
+
     /**
      * Function to scroll to a given location on the page.
      * @param {String} loc - A properly formatted jQuery id selector. Example: '#foo'
@@ -33404,7 +33259,7 @@ var SmoothScroll = /*#__PURE__*/function (_Plugin) {
      * @static
      * @function
      */
-    function scrollToLoc(loc) {
+    value: function scrollToLoc(loc) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : SmoothScroll.defaults;
       var callback = arguments.length > 2 ? arguments[2] : undefined;
       var $loc = jquery__WEBPACK_IMPORTED_MODULE_0___default()(loc); // Do nothing if target does not exist to prevent errors
@@ -33472,17 +33327,15 @@ SmoothScroll.defaults = {
 var Magellan = /*#__PURE__*/function (_Plugin) {
   _inherits(Magellan, _Plugin);
 
-  var _super = _createSuper(Magellan);
-
   function Magellan() {
     _classCallCheck(this, Magellan);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Magellan).apply(this, arguments));
   }
 
   _createClass(Magellan, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Magellan.
      * @class
@@ -33491,7 +33344,7 @@ var Magellan = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Magellan.defaults, this.$element.data(), options);
       this.className = 'Magellan'; // ie9 back compat
@@ -33581,7 +33434,7 @@ var Magellan = /*#__PURE__*/function (_Plugin) {
         });
       });
 
-      this._deepLinkScroll = function () {
+      this._deepLinkScroll = function (e) {
         if (_this.options.deepLinking) {
           _this.scrollToLoc(window.location.hash);
         }
@@ -33633,9 +33486,9 @@ var Magellan = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "_updateActive",
-    value: function
+    value: function _updateActive()
     /*evt, elem, scrollPos*/
-    _updateActive() {
+    {
       var _this2 = this;
 
       if (this._inTransition) return;
@@ -33644,12 +33497,14 @@ var Magellan = /*#__PURE__*/function (_Plugin) {
       this.scrollPos = newScrollPos;
       var activeIdx; // Before the first point: no link
 
-      if (newScrollPos < this.points[0] - this.options.offset - (isScrollingUp ? this.options.threshold : 0)) ; // At the bottom of the page: last link
+      if (newScrollPos < this.points[0]) ;
+      /* do nothing */
+      // At the bottom of the page: last link
       else if (newScrollPos + this.winHeight === this.docHeight) {
         activeIdx = this.points.length - 1;
       } // Otherwhise, use the last visible link
       else {
-        var visibleLinks = this.points.filter(function (p) {
+        var visibleLinks = this.points.filter(function (p, i) {
           return p - _this2.options.offset - (isScrollingUp ? _this2.options.threshold : 0) <= newScrollPos;
         });
         activeIdx = visibleLinks.length ? visibleLinks.length - 1 : 0;
@@ -33793,17 +33648,15 @@ Magellan.defaults = {
 var OffCanvas = /*#__PURE__*/function (_Plugin) {
   _inherits(OffCanvas, _Plugin);
 
-  var _super = _createSuper(OffCanvas);
-
   function OffCanvas() {
     _classCallCheck(this, OffCanvas);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(OffCanvas).apply(this, arguments));
   }
 
   _createClass(OffCanvas, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of an off-canvas wrapper.
      * @class
@@ -33812,7 +33665,7 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to initialize.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       var _this2 = this;
 
       this.className = 'OffCanvas'; // ie9 back compat
@@ -34141,80 +33994,79 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "_stopScrolling",
-    value: function _stopScrolling() {
+    value: function _stopScrolling(event) {
       return false;
     }
     /**
-     * Save current finger y-position
-     * @param event
+     * Tag the element given as context whether it can be scrolled up and down.
+     * Used to allow or prevent it to scroll. See `_stopScrollPropagation`.
+     *
+     * Taken and adapted from http://stackoverflow.com/questions/16889447/prevent-full-page-scrolling-ios
+     * Only really works for y, not sure how to extend to x or if we need to.
+     *
+     * @function
      * @private
      */
 
   }, {
     key: "_recordScrollable",
     value: function _recordScrollable(event) {
-      var elem = this;
-      elem.lastY = event.touches[0].pageY;
-    }
-    /**
-     * Prevent further scrolling when it hits the edges
-     * @param event
-     * @private
-     */
+      var elem = this; // called from event handler context with this as elem
+      // If the element is scrollable (content overflows), then...
 
-  }, {
-    key: "_preventDefaultAtEdges",
-    value: function _preventDefaultAtEdges(event) {
-      var elem = this;
-      var _this = event.data;
-      var delta = elem.lastY - event.touches[0].pageY;
-      elem.lastY = event.touches[0].pageY;
+      if (elem.scrollHeight !== elem.clientHeight) {
+        // If we're at the top, scroll down one pixel to allow scrolling up
+        if (elem.scrollTop === 0) {
+          elem.scrollTop = 1;
+        } // If we're at the bottom, scroll up one pixel to allow scrolling down
 
-      if (!_this._canScroll(delta, elem)) {
-        event.preventDefault();
-      }
-    }
-    /**
-     * Handle continuous scrolling of scrollbox
-     * Don't bubble up to _preventDefaultAtEdges
-     * @param event
-     * @private
-     */
 
-  }, {
-    key: "_scrollboxTouchMoved",
-    value: function _scrollboxTouchMoved(event) {
-      var elem = this;
-      var _this = event.data;
-      var parent = elem.closest('[data-off-canvas], [data-off-canvas-scrollbox-outer]');
-      var delta = elem.lastY - event.touches[0].pageY;
-      parent.lastY = elem.lastY = event.touches[0].pageY;
-      event.stopPropagation();
-
-      if (!_this._canScroll(delta, elem)) {
-        if (!_this._canScroll(delta, parent)) {
-          event.preventDefault();
-        } else {
-          parent.scrollTop += delta;
+        if (elem.scrollTop === elem.scrollHeight - elem.clientHeight) {
+          elem.scrollTop = elem.scrollHeight - elem.clientHeight - 1;
         }
       }
+
+      elem.allowUp = elem.scrollTop > 0;
+      elem.allowDown = elem.scrollTop < elem.scrollHeight - elem.clientHeight;
+      elem.lastY = event.originalEvent.pageY;
     }
     /**
-     * Detect possibility of scrolling
-     * @param delta
-     * @param elem
-     * @returns boolean
+     * Prevent the given event propagation if the element given as context can scroll.
+     * Used to preserve the element scrolling on mobile (`touchmove`) when the document
+     * scrolling is prevented. See https://git.io/zf-9707.
+     * @function
      * @private
      */
 
   }, {
-    key: "_canScroll",
-    value: function _canScroll(delta, elem) {
-      var up = delta < 0;
-      var down = delta > 0;
-      var allowUp = elem.scrollTop > 0;
-      var allowDown = elem.scrollTop < elem.scrollHeight - elem.clientHeight;
-      return up && allowUp || down && allowDown;
+    key: "_stopScrollPropagation",
+    value: function _stopScrollPropagation(event) {
+      var elem = this; // called from event handler context with this as elem
+
+      var parent; // off-canvas elem if called from inner scrollbox
+
+      var up = event.pageY < elem.lastY;
+      var down = !up;
+      elem.lastY = event.pageY;
+
+      if (up && elem.allowUp || down && elem.allowDown) {
+        // It is not recommended to stop event propagation (the user cannot watch it),
+        // but in this case this is the only solution we have.
+        event.stopPropagation(); // If elem is inner scrollbox we are scrolling the outer off-canvas down/up once the box end has been reached
+        // This lets the user continue to touch move the off-canvas without the need to place the finger outside the scrollbox
+
+        if (elem.hasAttribute('data-off-canvas-scrollbox')) {
+          parent = elem.closest('[data-off-canvas], [data-off-canvas-scrollbox-outer]');
+
+          if (elem.scrollTop <= 1 && parent.scrollTop > 0) {
+            parent.scrollTop--;
+          } else if (elem.scrollTop >= elem.scrollHeight - elem.clientHeight - 1 && parent.scrollTop < parent.scrollHeight - parent.clientHeight) {
+            parent.scrollTop++;
+          }
+        }
+      } else {
+        event.preventDefault();
+      }
     }
     /**
      * Opens the off-canvas menu.
@@ -34260,9 +34112,9 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
       if (this.options.contentScroll === false) {
         jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').addClass('is-off-canvas-open').on('touchmove', this._stopScrolling);
         this.$element.on('touchstart', this._recordScrollable);
-        this.$element.on('touchmove', this, this._preventDefaultAtEdges);
+        this.$element.on('touchmove', this._stopScrollPropagation);
         this.$element.on('touchstart', '[data-off-canvas-scrollbox]', this._recordScrollable);
-        this.$element.on('touchmove', '[data-off-canvas-scrollbox]', this, this._scrollboxTouchMoved);
+        this.$element.on('touchmove', '[data-off-canvas-scrollbox]', this._stopScrollPropagation);
       }
 
       if (this.options.contentOverlay === true) {
@@ -34325,7 +34177,7 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "close",
-    value: function close() {
+    value: function close(cb) {
       var _this5 = this;
 
       if (!this.$element.hasClass('is-open') || this.isRevealed) {
@@ -34352,7 +34204,7 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
 
       this.$triggers.attr('aria-expanded', 'false'); // Listen to transitionEnd: add class, re-enable scrolling and release focus when done.
 
-      this.$element.one(transitionend(this.$element), function () {
+      this.$element.one(transitionend(this.$element), function (e) {
         _this5.$element.addClass('is-closed');
 
         _this5._removeContentClasses();
@@ -34367,11 +34219,11 @@ var OffCanvas = /*#__PURE__*/function (_Plugin) {
 
           _this5.$element.off('touchstart', _this5._recordScrollable);
 
-          _this5.$element.off('touchmove', _this5._preventDefaultAtEdges);
+          _this5.$element.off('touchmove', _this5._stopScrollPropagation);
 
           _this5.$element.off('touchstart', '[data-off-canvas-scrollbox]', _this5._recordScrollable);
 
-          _this5.$element.off('touchmove', '[data-off-canvas-scrollbox]', _this5._scrollboxTouchMoved);
+          _this5.$element.off('touchmove', '[data-off-canvas-scrollbox]', _this5._stopScrollPropagation);
         }
 
         if (_this5.options.trapFocus === true) {
@@ -34573,17 +34425,15 @@ OffCanvas.defaults = {
 var Orbit = /*#__PURE__*/function (_Plugin) {
   _inherits(Orbit, _Plugin);
 
-  var _super = _createSuper(Orbit);
-
   function Orbit() {
     _classCallCheck(this, Orbit);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Orbit).apply(this, arguments));
   }
 
   _createClass(Orbit, [{
     key: "_setup",
-    value:
+
     /**
     * Creates a new instance of an orbit carousel.
     * @class
@@ -34591,7 +34441,7 @@ var Orbit = /*#__PURE__*/function (_Plugin) {
     * @param {jQuery} element - jQuery object to make into an Orbit Carousel.
     * @param {Object} options - Overrides to the default plugin settings.
     */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Orbit.defaults, this.$element.data(), options);
       this.className = 'Orbit'; // ie9 back compat
@@ -34863,7 +34713,7 @@ var Orbit = /*#__PURE__*/function (_Plugin) {
     key: "_reset",
     value: function _reset() {
       // Don't do anything if there are no slides (first run)
-      if (typeof this.$slides === 'undefined') {
+      if (typeof this.$slides == 'undefined') {
         return;
       }
 
@@ -34923,8 +34773,8 @@ var Orbit = /*#__PURE__*/function (_Plugin) {
       if (!chosenSlide) {
         //most of the time, this will be auto played or clicked from the navButtons.
         $newSlide = isLTR ? //if wrapping enabled, check to see if there is a `next` or `prev` sibling, if not, select the first or last slide to fill in. if wrapping not enabled, attempt to select `next` or `prev`, if there's nothing there, the function will kick out on next step. CRAZY NESTED TERNARIES!!!!!
-        this.options.infiniteWrap ? $curSlide.next(".".concat(this.options.slideClass)).length ? $curSlide.next(".".concat(this.options.slideClass)) : $firstSlide : $curSlide.next(".".concat(this.options.slideClass)) //pick next slide if moving left to right
-        : this.options.infiniteWrap ? $curSlide.prev(".".concat(this.options.slideClass)).length ? $curSlide.prev(".".concat(this.options.slideClass)) : $lastSlide : $curSlide.prev(".".concat(this.options.slideClass)); //pick prev slide if moving right to left
+        this.options.infiniteWrap ? $curSlide.next(".".concat(this.options.slideClass)).length ? $curSlide.next(".".concat(this.options.slideClass)) : $firstSlide : $curSlide.next(".".concat(this.options.slideClass)) : //pick next slide if moving left to right
+        this.options.infiniteWrap ? $curSlide.prev(".".concat(this.options.slideClass)).length ? $curSlide.prev(".".concat(this.options.slideClass)) : $lastSlide : $curSlide.prev(".".concat(this.options.slideClass)); //pick prev slide if moving right to left
       } else {
         $newSlide = chosenSlide;
       }
@@ -35200,17 +35050,15 @@ var MenuPlugins = {
 var ResponsiveMenu = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveMenu, _Plugin);
 
-  var _super = _createSuper(ResponsiveMenu);
-
   function ResponsiveMenu() {
     _classCallCheck(this, ResponsiveMenu);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(ResponsiveMenu).apply(this, arguments));
   }
 
   _createClass(ResponsiveMenu, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a responsive menu.
      * @class
@@ -35219,7 +35067,7 @@ var ResponsiveMenu = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into a dropdown menu.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element) {
+    value: function _setup(element, options) {
       this.$element = jquery__WEBPACK_IMPORTED_MODULE_0___default()(element);
       this.rules = this.$element.data('responsive-menu');
       this.currentMq = null;
@@ -35343,17 +35191,15 @@ ResponsiveMenu.defaults = {};
 var ResponsiveToggle = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveToggle, _Plugin);
 
-  var _super = _createSuper(ResponsiveToggle);
-
   function ResponsiveToggle() {
     _classCallCheck(this, ResponsiveToggle);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(ResponsiveToggle).apply(this, arguments));
   }
 
   _createClass(ResponsiveToggle, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Tab Bar.
      * @class
@@ -35362,7 +35208,7 @@ var ResponsiveToggle = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to attach tab bar functionality to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = jquery__WEBPACK_IMPORTED_MODULE_0___default()(element);
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, ResponsiveToggle.defaults, this.$element.data(), options);
       this.className = 'ResponsiveToggle'; // ie9 back compat
@@ -35444,7 +35290,7 @@ var ResponsiveToggle = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "toggleMenu",
     value: function toggleMenu() {
-      var _this = this;
+      var _this2 = this;
 
       if (!MediaQuery.atLeast(this.options.hideFor)) {
         /**
@@ -35454,13 +35300,13 @@ var ResponsiveToggle = /*#__PURE__*/function (_Plugin) {
         if (this.options.animate) {
           if (this.$targetMenu.is(':hidden')) {
             Motion.animateIn(this.$targetMenu, this.animationIn, function () {
-              _this.$element.trigger('toggled.zf.responsiveToggle');
+              _this2.$element.trigger('toggled.zf.responsiveToggle');
 
-              _this.$targetMenu.find('[data-mutate]').triggerHandler('mutateme.zf.trigger');
+              _this2.$targetMenu.find('[data-mutate]').triggerHandler('mutateme.zf.trigger');
             });
           } else {
             Motion.animateOut(this.$targetMenu, this.animationOut, function () {
-              _this.$element.trigger('toggled.zf.responsiveToggle');
+              _this2.$element.trigger('toggled.zf.responsiveToggle');
             });
           }
         } else {
@@ -35512,17 +35358,15 @@ ResponsiveToggle.defaults = {
 var Reveal = /*#__PURE__*/function (_Plugin) {
   _inherits(Reveal, _Plugin);
 
-  var _super = _createSuper(Reveal);
-
   function Reveal() {
     _classCallCheck(this, Reveal);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Reveal).apply(this, arguments));
   }
 
   _createClass(Reveal, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Reveal.
      * @class
@@ -35530,7 +35374,7 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to use for the modal.
      * @param {Object} options - optional parameters.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Reveal.defaults, this.$element.data(), options);
       this.className = 'Reveal'; // ie9 back compat
@@ -35564,7 +35408,7 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
       this.$anchor = jquery__WEBPACK_IMPORTED_MODULE_0___default()("[data-open=\"".concat(this.id, "\"]")).length ? jquery__WEBPACK_IMPORTED_MODULE_0___default()("[data-open=\"".concat(this.id, "\"]")) : jquery__WEBPACK_IMPORTED_MODULE_0___default()("[data-toggle=\"".concat(this.id, "\"]"));
       this.$anchor.attr({
         'aria-controls': this.id,
-        'aria-haspopup': 'dialog',
+        'aria-haspopup': true,
         'tabindex': 0
       });
 
@@ -35711,7 +35555,7 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "_handleState",
-    value: function _handleState() {
+    value: function _handleState(e) {
       if (window.location.hash === '#' + this.id && !this.isActive) {
         this.open();
       } else {
@@ -35740,7 +35584,7 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "_enableScroll",
     value: function _enableScroll(scrollTop) {
-      scrollTop = scrollTop || parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()("html").css("top"), 10);
+      scrollTop = scrollTop || parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()("html").css("top"));
 
       if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).height() > jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).height()) {
         jquery__WEBPACK_IMPORTED_MODULE_0___default()("html").css("top", "");
@@ -35996,7 +35840,7 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
         // Get the current top before the modal is closed and restore the scroll after.
         // TODO: use component properties instead of HTML properties
         // See https://github.com/foundation/foundation-sites/pull/10786
-        var scrollTop = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()("html").css("top"), 10);
+        var scrollTop = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()("html").css("top"));
 
         if (jquery__WEBPACK_IMPORTED_MODULE_0___default()('.reveal:visible').length === 0) {
           _this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal
@@ -36063,12 +35907,12 @@ var Reveal = /*#__PURE__*/function (_Plugin) {
     }
   }, {
     key: "_destroy",
-    value:
+
     /**
      * Destroys an instance of a modal.
      * @function
      */
-    function _destroy() {
+    value: function _destroy() {
       if (this.options.overlay) {
         this.$element.appendTo(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this.options.appendTo)); // move $element outside of $overlay to prevent error unregisterPlugin()
 
@@ -36231,17 +36075,15 @@ Reveal.defaults = {
 var Slider = /*#__PURE__*/function (_Plugin) {
   _inherits(Slider, _Plugin);
 
-  var _super = _createSuper(Slider);
-
   function Slider() {
     _classCallCheck(this, Slider);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Slider).apply(this, arguments));
   }
 
   _createClass(Slider, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a slider control.
      * @class
@@ -36249,12 +36091,11 @@ var Slider = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into a slider control.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Slider.defaults, this.$element.data(), options);
       this.className = 'Slider'; // ie9 back compat
-
-      this.initialized = false; // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
+      // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
 
       Touch.init((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
       Triggers.init((jquery__WEBPACK_IMPORTED_MODULE_0___default()));
@@ -36267,18 +36108,18 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           'ARROW_UP': 'increase',
           'ARROW_DOWN': 'decrease',
           'ARROW_LEFT': 'decrease',
-          'SHIFT_ARROW_RIGHT': 'increaseFast',
-          'SHIFT_ARROW_UP': 'increaseFast',
-          'SHIFT_ARROW_DOWN': 'decreaseFast',
-          'SHIFT_ARROW_LEFT': 'decreaseFast',
+          'SHIFT_ARROW_RIGHT': 'increase_fast',
+          'SHIFT_ARROW_UP': 'increase_fast',
+          'SHIFT_ARROW_DOWN': 'decrease_fast',
+          'SHIFT_ARROW_LEFT': 'decrease_fast',
           'HOME': 'min',
           'END': 'max'
         },
         'rtl': {
           'ARROW_LEFT': 'increase',
           'ARROW_RIGHT': 'decrease',
-          'SHIFT_ARROW_LEFT': 'increaseFast',
-          'SHIFT_ARROW_RIGHT': 'decreaseFast'
+          'SHIFT_ARROW_LEFT': 'increase_fast',
+          'SHIFT_ARROW_RIGHT': 'decrease_fast'
         }
       });
     }
@@ -36326,8 +36167,6 @@ var Slider = /*#__PURE__*/function (_Plugin) {
       this.setHandles();
 
       this._events();
-
-      this.initialized = true;
     }
   }, {
     key: "setHandles",
@@ -36491,7 +36330,7 @@ var Slider = /*#__PURE__*/function (_Plugin) {
             //empty variable, will be used for min-height/width for fill bar
         dim,
             //percentage w/h of the handle compared to the slider bar
-        handlePct = Math.floor(percent(handleDim, elemDim) * 100); //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
+        handlePct = ~~(percent(handleDim, elemDim) * 100); //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
 
         if (isLeftHndl) {
           //left or top percentage value to apply to the fill bar.
@@ -36514,8 +36353,15 @@ var Slider = /*#__PURE__*/function (_Plugin) {
 
 
         css["min-".concat(hOrW)] = "".concat(dim, "%");
-      } //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
+      }
 
+      this.$element.one('finished.zf.animate', function () {
+        /**
+         * Fires when the handle is done moving.
+         * @event Slider#moved
+         */
+        _this.$element.trigger('moved.zf.slider', [$hndl]);
+      }); //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
 
       var moveTime = this.$element.data('dragging') ? 1000 / 60 : this.options.moveTime;
       Move(moveTime, $hndl, function () {
@@ -36536,25 +36382,15 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           _this.$fill.css(css);
         }
       });
+      /**
+       * Fires when the value has not been change for a given time.
+       * @event Slider#changed
+       */
 
-      if (this.initialized) {
-        this.$element.one('finished.zf.animate', function () {
-          /**
-           * Fires when the handle is done moving.
-           * @event Slider#moved
-           */
-          _this.$element.trigger('moved.zf.slider', [$hndl]);
-        });
-        /**
-         * Fires when the value has not been change for a given time.
-         * @event Slider#changed
-         */
-
-        clearTimeout(_this.timeout);
-        _this.timeout = setTimeout(function () {
-          _this.$element.trigger('changed.zf.slider', [$hndl]);
-        }, _this.options.changedDelay);
-      }
+      clearTimeout(_this.timeout);
+      _this.timeout = setTimeout(function () {
+        _this.$element.trigger('changed.zf.slider', [$hndl]);
+      }, _this.options.changedDelay);
     }
     /**
      * Sets the initial attribute for the slider element.
@@ -36654,7 +36490,7 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           value = this.options.end - value;
         }
 
-        value = _this._adjustValue(null, value);
+        value = _this._adjustValue(null, value); //boolean flag for the setHandlePos fn, specifically for vertical sliders
 
         if (!$handle) {
           //figure out which handle it is, pass it to the next function.
@@ -36684,8 +36520,8 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           step = this.options.step,
           div = parseFloat(step / 2),
           left,
-          previousVal,
-          nextVal;
+          prev_val,
+          next_val;
 
       if (!!$handle) {
         val = parseFloat($handle.attr('aria-valuenow'));
@@ -36699,14 +36535,14 @@ var Slider = /*#__PURE__*/function (_Plugin) {
         left = step + val % step;
       }
 
-      previousVal = val - left;
-      nextVal = previousVal + step;
+      prev_val = val - left;
+      next_val = prev_val + step;
 
       if (left === 0) {
         return val;
       }
 
-      val = val >= previousVal + div ? nextVal : previousVal;
+      val = val >= prev_val + div ? next_val : prev_val;
       return val;
     }
     /**
@@ -36747,7 +36583,7 @@ var Slider = /*#__PURE__*/function (_Plugin) {
 
 
       this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
-        if (e.keyCode === 13) handleChangeEvent.call(this, e);
+        if (e.keyCode == 13) handleChangeEvent.call(this, e);
       });
       this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
 
@@ -36779,12 +36615,12 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           _this.$element.data('dragging', true);
 
           curHandle = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.currentTarget);
-          $body.on('mousemove.zf.slider', function (ev) {
-            ev.preventDefault();
+          $body.on('mousemove.zf.slider', function (e) {
+            e.preventDefault();
 
-            _this._handleEvent(ev, curHandle);
-          }).on('mouseup.zf.slider', function (ev) {
-            _this._handleEvent(ev, curHandle);
+            _this._handleEvent(e, curHandle);
+          }).on('mouseup.zf.slider', function (e) {
+            _this._handleEvent(e, curHandle);
 
             $handle.removeClass('is-dragging');
 
@@ -36814,10 +36650,10 @@ var Slider = /*#__PURE__*/function (_Plugin) {
           increase: function increase() {
             newValue = oldValue + _this.options.step;
           },
-          decreaseFast: function decreaseFast() {
+          decrease_fast: function decrease_fast() {
             newValue = oldValue - _this.options.step * 10;
           },
-          increaseFast: function increaseFast() {
+          increase_fast: function increase_fast() {
             newValue = oldValue + _this.options.step * 10;
           },
           min: function min() {
@@ -37035,17 +36871,15 @@ function baseLog(base, value) {
 var Sticky = /*#__PURE__*/function (_Plugin) {
   _inherits(Sticky, _Plugin);
 
-  var _super = _createSuper(Sticky);
-
   function Sticky() {
     _classCallCheck(this, Sticky);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Sticky).apply(this, arguments));
   }
 
   _createClass(Sticky, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a sticky thing.
      * @class
@@ -37053,7 +36887,7 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make sticky.
      * @param {Object} options - options object passed when creating the element programmatically.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Sticky.defaults, this.$element.data(), options);
       this.className = 'Sticky'; // ie9 back compat
@@ -37102,7 +36936,7 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
       this.isStuck = false;
       this.onLoadListener = onLoad(jquery__WEBPACK_IMPORTED_MODULE_0___default()(window), function () {
         //We calculate the container height to have correct values for anchor points offset calculation.
-        _this.containerHeight = _this.$element.css("display") === "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
+        _this.containerHeight = _this.$element.css("display") == "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
 
         _this.$container.css('height', _this.containerHeight);
 
@@ -37137,8 +36971,8 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "_parsePoints",
     value: function _parsePoints() {
-      var top = this.options.topAnchor === "" ? 1 : this.options.topAnchor,
-          btm = this.options.btmAnchor === "" ? document.documentElement.scrollHeight : this.options.btmAnchor,
+      var top = this.options.topAnchor == "" ? 1 : this.options.topAnchor,
+          btm = this.options.btmAnchor == "" ? document.documentElement.scrollHeight : this.options.btmAnchor,
           pts = [top, btm],
           breaks = {};
 
@@ -37181,7 +37015,7 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
 
       if (this.canStick) {
         this.isOn = true;
-        jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off(scrollListener).on(scrollListener, function () {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off(scrollListener).on(scrollListener, function (e) {
           if (_this.scrollCount === 0) {
             _this.scrollCount = _this.options.checkEvery;
 
@@ -37196,15 +37030,15 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
         });
       }
 
-      this.$element.off('resizeme.zf.trigger').on('resizeme.zf.trigger', function () {
+      this.$element.off('resizeme.zf.trigger').on('resizeme.zf.trigger', function (e, el) {
         _this._eventsHandler(id);
       });
-      this.$element.on('mutateme.zf.trigger', function () {
+      this.$element.on('mutateme.zf.trigger', function (e, el) {
         _this._eventsHandler(id);
       });
 
       if (this.$anchor) {
-        this.$anchor.on('mutateme.zf.trigger', function () {
+        this.$anchor.on('mutateme.zf.trigger', function (e, el) {
           _this._eventsHandler(id);
         });
       }
@@ -37345,12 +37179,12 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
           mrgn = stickToTop ? 'marginTop' : 'marginBottom',
           topOrBottom = isTop ? 'top' : 'bottom';
       css[mrgn] = 0;
-      css.bottom = 'auto';
+      css['bottom'] = 'auto';
 
       if (isTop) {
-        css.top = 0;
+        css['top'] = 0;
       } else {
-        css.top = anchorPt;
+        css['top'] = anchorPt;
       }
 
       this.isStuck = false;
@@ -37398,7 +37232,7 @@ var Sticky = /*#__PURE__*/function (_Plugin) {
       if (this.options.dynamicHeight || !this.containerHeight) {
         // Get the sticked element height and apply it to the container to "hold the place"
         var newContainerHeight = this.$element[0].getBoundingClientRect().height || this.containerHeight;
-        newContainerHeight = this.$element.css("display") === "none" ? 0 : newContainerHeight;
+        newContainerHeight = this.$element.css("display") == "none" ? 0 : newContainerHeight;
         this.$container.css('height', newContainerHeight);
         this.containerHeight = newContainerHeight;
       }
@@ -37614,17 +37448,15 @@ function emCalc(em) {
 var Tabs = /*#__PURE__*/function (_Plugin) {
   _inherits(Tabs, _Plugin);
 
-  var _super = _createSuper(Tabs);
-
   function Tabs() {
     _classCallCheck(this, Tabs);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Tabs).apply(this, arguments));
   }
 
   _createClass(Tabs, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of tabs.
      * @class
@@ -37633,7 +37465,7 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into tabs.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Tabs.defaults, this.$element.data(), options);
       this.className = 'Tabs'; // ie9 back compat
@@ -37753,7 +37585,7 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
             var offset = _this2.$element.offset();
 
             jquery__WEBPACK_IMPORTED_MODULE_0___default()('html, body').animate({
-              scrollTop: offset.top - _this2.options.deepLinkSmudgeOffset
+              scrollTop: offset.top
             }, _this2.options.deepLinkSmudgeDelay);
           }
           /**
@@ -37943,11 +37775,11 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
   }, {
     key: "_collapseTab",
     value: function _collapseTab($target) {
-      var $targetAnchor = $target.removeClass("".concat(this.options.linkActiveClass)).find('[role="tab"]').attr({
+      var $target_anchor = $target.removeClass("".concat(this.options.linkActiveClass)).find('[role="tab"]').attr({
         'aria-selected': 'false',
         'tabindex': -1
       });
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat($targetAnchor.attr('aria-controls'))).removeClass("".concat(this.options.panelActiveClass)).attr({
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat($target_anchor.attr('aria-controls'))).removeClass("".concat(this.options.panelActiveClass)).attr({
         'aria-hidden': 'true'
       });
     }
@@ -38004,7 +37836,7 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
     }
   }, {
     key: "_setHeight",
-    value:
+
     /**
      * Sets the height of each panel to the height of the tallest panel.
      * If enabled in options, gets called on media query change.
@@ -38013,16 +37845,12 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
      * @function
      * @private
      */
-    function _setHeight() {
+    value: function _setHeight() {
       var max = 0,
           _this = this; // Lock down the `this` value for the root tabs object
 
 
-      if (!this.$tabContent) {
-        return;
-      }
-
-      this.$tabContent.find(".".concat(this.options.panelClass)).css('min-height', '').each(function () {
+      this.$tabContent.find(".".concat(this.options.panelClass)).css('height', '').each(function () {
         var panel = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
             isActive = panel.hasClass("".concat(_this.options.panelActiveClass)); // get the options from the parent instead of trying to get them from the child
 
@@ -38043,7 +37871,7 @@ var Tabs = /*#__PURE__*/function (_Plugin) {
         }
 
         max = temp > max ? temp : max;
-      }).css('min-height', "".concat(max, "px"));
+      }).css('height', "".concat(max, "px"));
     }
     /**
      * Destroys an instance of tabs.
@@ -38099,14 +37927,6 @@ Tabs.defaults = {
    * @default 300
    */
   deepLinkSmudgeDelay: 300,
-
-  /**
-   * If `deepLinkSmudge` is enabled, animation offset from the top for the deep link adjustment
-   * @option
-   * @type {number}
-   * @default 0
-   */
-  deepLinkSmudgeOffset: 0,
 
   /**
    * If `deepLink` is enabled, update the browser history with the open tab
@@ -38191,17 +38011,15 @@ Tabs.defaults = {
 var Toggler = /*#__PURE__*/function (_Plugin) {
   _inherits(Toggler, _Plugin);
 
-  var _super = _createSuper(Toggler);
-
   function Toggler() {
     _classCallCheck(this, Toggler);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Toggler).apply(this, arguments));
   }
 
   _createClass(Toggler, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of Toggler.
      * @class
@@ -38210,7 +38028,7 @@ var Toggler = /*#__PURE__*/function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Toggler.defaults, element.data(), options);
       this.className = '';
@@ -38248,7 +38066,7 @@ var Toggler = /*#__PURE__*/function (_Plugin) {
         input = this.options.toggler;
 
         if (typeof input !== 'string' || !input.length) {
-          throw new Error("The 'toggler' option containing the target class is required, got \"".concat(input, "\""));
+          throw new Error("The 'toogler' option containing the target class is required, got \"".concat(input, "\""));
         } // Allow for a . at the beginning of the string
 
 
@@ -38383,17 +38201,15 @@ Toggler.defaults = {
 var Tooltip = /*#__PURE__*/function (_Positionable) {
   _inherits(Tooltip, _Positionable);
 
-  var _super = _createSuper(Tooltip);
-
   function Tooltip() {
     _classCallCheck(this, Tooltip);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Tooltip).apply(this, arguments));
   }
 
   _createClass(Tooltip, [{
     key: "_setup",
-    value:
+
     /**
      * Creates a new instance of a Tooltip.
      * @class
@@ -38402,7 +38218,7 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
      * @param {jQuery} element - jQuery object to attach a tooltip to.
      * @param {Object} options - object to extend the default configuration.
      */
-    function _setup(element, options) {
+    value: function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default().extend({}, Tooltip.defaults, this.$element.data(), options);
       this.className = 'Tooltip'; // ie9 back compat
@@ -38544,7 +38360,8 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
         'data-is-active': true,
         'aria-hidden': false
       });
-      _this.isActive = true;
+      _this.isActive = true; // console.log(this.template);
+
       this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, function () {//maybe do stuff?
       });
       /**
@@ -38563,6 +38380,7 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
   }, {
     key: "hide",
     value: function hide() {
+      // console.log('hiding', this.$element.data('yeti-box'));
       var _this = this;
 
       this.template.stop().attr({
@@ -38591,18 +38409,19 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
       var _this = this;
 
       var hasTouch = 'ontouchstart' in window || typeof window.ontouchstart !== 'undefined';
+      var $template = this.template;
       var isFocus = false; // `disableForTouch: Fully disable the tooltip on touch devices
 
       if (hasTouch && this.options.disableForTouch) return;
 
       if (!this.options.disableHover) {
-        this.$element.on('mouseenter.zf.tooltip', function () {
+        this.$element.on('mouseenter.zf.tooltip', function (e) {
           if (!_this.isActive) {
             _this.timeout = setTimeout(function () {
               _this.show();
             }, _this.options.hoverDelay);
           }
-        }).on('mouseleave.zf.tooltip', ignoreMousedisappear(function () {
+        }).on('mouseleave.zf.tooltip', ignoreMousedisappear(function (e) {
           clearTimeout(_this.timeout);
 
           if (!isFocus || _this.isClick && !_this.options.clickOpen) {
@@ -38612,13 +38431,13 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
       }
 
       if (hasTouch) {
-        this.$element.on('tap.zf.tooltip touchend.zf.tooltip', function () {
+        this.$element.on('tap.zf.tooltip touchend.zf.tooltip', function (e) {
           _this.isActive ? _this.hide() : _this.show();
         });
       }
 
       if (this.options.clickOpen) {
-        this.$element.on('mousedown.zf.tooltip', function () {
+        this.$element.on('mousedown.zf.tooltip', function (e) {
           if (_this.isClick) ;else {
             _this.isClick = true;
 
@@ -38628,7 +38447,7 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
           }
         });
       } else {
-        this.$element.on('mousedown.zf.tooltip', function () {
+        this.$element.on('mousedown.zf.tooltip', function (e) {
           _this.isClick = true;
         });
       }
@@ -38638,7 +38457,7 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
         // 'close.zf.trigger': this.hide.bind(this)
         'close.zf.trigger': this.hide.bind(this)
       });
-      this.$element.on('focus.zf.tooltip', function () {
+      this.$element.on('focus.zf.tooltip', function (e) {
         isFocus = true;
 
         if (_this.isClick) {
@@ -38652,7 +38471,7 @@ var Tooltip = /*#__PURE__*/function (_Positionable) {
         } else {
           _this.show();
         }
-      }).on('focusout.zf.tooltip', function () {
+      }).on('focusout.zf.tooltip', function (e) {
         isFocus = false;
         _this.isClick = false;
 
@@ -38909,14 +38728,12 @@ var MenuPlugins$1 = {
 var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
   _inherits(ResponsiveAccordionTabs, _Plugin);
 
-  var _super = _createSuper(ResponsiveAccordionTabs);
-
   function ResponsiveAccordionTabs(element, options) {
     var _this2;
 
     _classCallCheck(this, ResponsiveAccordionTabs);
 
-    _this2 = _super.call(this, element, options);
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(ResponsiveAccordionTabs).call(this, element, options));
     return _possibleConstructorReturn(_this2, _this2.options.reflow && _this2.storezfData || _assertThisInitialized(_this2));
   }
   /**
@@ -39009,9 +38826,7 @@ var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
             }
 
             tmpPlugin.destroy();
-          } catch (e) {
-            console.warn("Warning: Problems getting Accordion/Tab options: ".concat(e));
-          }
+          } catch (e) {}
         }
       }
     }
@@ -39157,7 +38972,7 @@ var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "open",
-    value: function open() {
+    value: function open(_target) {
       if (this.currentRule && typeof this.currentRule.open === 'function') {
         var _this$currentRule;
 
@@ -39173,7 +38988,7 @@ var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "close",
-    value: function close() {
+    value: function close(_target) {
       if (this.currentRule && typeof this.currentRule.close === 'function') {
         var _this$currentRule2;
 
@@ -39189,7 +39004,7 @@ var ResponsiveAccordionTabs = /*#__PURE__*/function (_Plugin) {
 
   }, {
     key: "toggle",
-    value: function toggle() {
+    value: function toggle(_target) {
       if (this.currentRule && typeof this.currentRule.toggle === 'function') {
         var _this$currentRule3;
 
@@ -50722,7 +50537,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 //! moment.js locale configuration
-//! locale : Arabic (Libya) [ar-ly]
+//! locale : Arabic (Lybia) [ar-ly]
 //! author : Ali Hmer: https://github.com/kikoanis
 ;
 
@@ -52558,10 +52373,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 })(this, function (moment) {
   'use strict'; //! moment.js locale configuration
 
-  var months = {
-    format: 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
-    standalone: 'ledna_února_března_dubna_května_června_července_srpna_září_října_listopadu_prosince'.split('_')
-  },
+  var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
       monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_'),
       monthsParse = [/^led/i, /^úno/i, /^bře/i, /^dub/i, /^kvě/i, /^(čvn|červen$|června)/i, /^(čvc|červenec|července)/i, /^srp/i, /^zář/i, /^říj/i, /^lis/i, /^pro/i],
       // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
@@ -62114,40 +61926,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     words: {
       //Different grammatical cases
       ss: ['секунда', 'секунде', 'секунди'],
-      m: ['један минут', 'једног минута'],
-      mm: ['минут', 'минута', 'минута'],
+      m: ['један минут', 'једне минуте'],
+      mm: ['минут', 'минуте', 'минута'],
       h: ['један сат', 'једног сата'],
       hh: ['сат', 'сата', 'сати'],
-      d: ['један дан', 'једног дана'],
       dd: ['дан', 'дана', 'дана'],
-      M: ['један месец', 'једног месеца'],
       MM: ['месец', 'месеца', 'месеци'],
-      y: ['једну годину', 'једне године'],
-      yy: ['годину', 'године', 'година']
+      yy: ['година', 'године', 'година']
     },
     correctGrammaticalCase: function correctGrammaticalCase(number, wordKey) {
-      if (number % 10 >= 1 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
-        return number % 10 === 1 ? wordKey[0] : wordKey[1];
-      }
-
-      return wordKey[2];
+      return number === 1 ? wordKey[0] : number >= 2 && number <= 4 ? wordKey[1] : wordKey[2];
     },
-    translate: function translate(number, withoutSuffix, key, isFuture) {
+    translate: function translate(number, withoutSuffix, key) {
       var wordKey = translator.words[key];
 
       if (key.length === 1) {
-        // Nominativ
-        if (key === 'y' && withoutSuffix) return 'једна година';
-        return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
+        return withoutSuffix ? wordKey[0] : wordKey[1];
+      } else {
+        return number + ' ' + translator.correctGrammaticalCase(number, wordKey);
       }
-
-      var word = translator.correctGrammaticalCase(number, wordKey); // Nominativ
-
-      if (key === 'yy' && withoutSuffix && word === 'годину') {
-        return number + ' година';
-      }
-
-      return number + ' ' + word;
     }
   };
   var srCyrl = moment.defineLocale('sr-cyrl', {
@@ -62203,11 +62000,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       mm: translator.translate,
       h: translator.translate,
       hh: translator.translate,
-      d: translator.translate,
+      d: 'дан',
       dd: translator.translate,
-      M: translator.translate,
+      M: 'месец',
       MM: translator.translate,
-      y: translator.translate,
+      y: 'годину',
       yy: translator.translate
     },
     dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -62250,40 +62047,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     words: {
       //Different grammatical cases
       ss: ['sekunda', 'sekunde', 'sekundi'],
-      m: ['jedan minut', 'jednog minuta'],
-      mm: ['minut', 'minuta', 'minuta'],
+      m: ['jedan minut', 'jedne minute'],
+      mm: ['minut', 'minute', 'minuta'],
       h: ['jedan sat', 'jednog sata'],
       hh: ['sat', 'sata', 'sati'],
-      d: ['jedan dan', 'jednog dana'],
       dd: ['dan', 'dana', 'dana'],
-      M: ['jedan mesec', 'jednog meseca'],
       MM: ['mesec', 'meseca', 'meseci'],
-      y: ['jednu godinu', 'jedne godine'],
-      yy: ['godinu', 'godine', 'godina']
+      yy: ['godina', 'godine', 'godina']
     },
     correctGrammaticalCase: function correctGrammaticalCase(number, wordKey) {
-      if (number % 10 >= 1 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
-        return number % 10 === 1 ? wordKey[0] : wordKey[1];
-      }
-
-      return wordKey[2];
+      return number === 1 ? wordKey[0] : number >= 2 && number <= 4 ? wordKey[1] : wordKey[2];
     },
-    translate: function translate(number, withoutSuffix, key, isFuture) {
+    translate: function translate(number, withoutSuffix, key) {
       var wordKey = translator.words[key];
 
       if (key.length === 1) {
-        // Nominativ
-        if (key === 'y' && withoutSuffix) return 'jedna godina';
-        return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
+        return withoutSuffix ? wordKey[0] : wordKey[1];
+      } else {
+        return number + ' ' + translator.correctGrammaticalCase(number, wordKey);
       }
-
-      var word = translator.correctGrammaticalCase(number, wordKey); // Nominativ
-
-      if (key === 'yy' && withoutSuffix && word === 'godinu') {
-        return number + ' godina';
-      }
-
-      return number + ' ' + word;
     }
   };
   var sr = moment.defineLocale('sr', {
@@ -62339,11 +62121,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       mm: translator.translate,
       h: translator.translate,
       hh: translator.translate,
-      d: translator.translate,
+      d: 'dan',
       dd: translator.translate,
-      M: translator.translate,
+      M: 'mesec',
       MM: translator.translate,
-      y: translator.translate,
+      y: 'godinu',
       yy: translator.translate
     },
     dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -63516,7 +63298,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     months: 'Ocak_Şubat_Mart_Nisan_Mayıs_Haziran_Temmuz_Ağustos_Eylül_Ekim_Kasım_Aralık'.split('_'),
     monthsShort: 'Oca_Şub_Mar_Nis_May_Haz_Tem_Ağu_Eyl_Eki_Kas_Ara'.split('_'),
     weekdays: 'Pazar_Pazartesi_Salı_Çarşamba_Perşembe_Cuma_Cumartesi'.split('_'),
-    weekdaysShort: 'Paz_Pzt_Sal_Çar_Per_Cum_Cmt'.split('_'),
+    weekdaysShort: 'Paz_Pts_Sal_Çar_Per_Cum_Cts'.split('_'),
     weekdaysMin: 'Pz_Pt_Sa_Ça_Pe_Cu_Ct'.split('_'),
     meridiem: function meridiem(hours, minutes, isLower) {
       if (hours < 12) {
@@ -65134,7 +64916,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 //! moment.js
-//! version : 2.29.2
+//! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -65205,10 +64987,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
   function map(arr, fn) {
     var res = [],
-        i,
-        arrLen = arr.length;
+        i;
 
-    for (i = 0; i < arrLen; ++i) {
+    for (i = 0; i < arr.length; ++i) {
       res.push(fn(arr[i], i));
     }
 
@@ -65327,10 +65108,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       updateInProgress = false;
 
   function copyConfig(to, from) {
-    var i,
-        prop,
-        val,
-        momentPropertiesLen = momentProperties.length;
+    var i, prop, val;
 
     if (!isUndefined(from._isAMomentObject)) {
       to._isAMomentObject = from._isAMomentObject;
@@ -65372,8 +65150,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       to._locale = from._locale;
     }
 
-    if (momentPropertiesLen > 0) {
-      for (i = 0; i < momentPropertiesLen; i++) {
+    if (momentProperties.length > 0) {
+      for (i = 0; i < momentProperties.length; i++) {
         prop = momentProperties[i];
         val = from[prop];
 
@@ -65425,10 +65203,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         var args = [],
             arg,
             i,
-            key,
-            argLen = arguments.length;
+            key;
 
-        for (i = 0; i < argLen; i++) {
+        for (i = 0; i < arguments.length; i++) {
           arg = '';
 
           if (_typeof(arguments[i]) === 'object') {
@@ -65858,10 +65635,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     if (_typeof(units) === 'object') {
       units = normalizeObjectUnits(units);
       var prioritized = getPrioritizedUnits(units),
-          i,
-          prioritizedLen = prioritized.length;
+          i;
 
-      for (i = 0; i < prioritizedLen; i++) {
+      for (i = 0; i < prioritized.length; i++) {
         this[prioritized[i].unit](units[prioritized[i].unit]);
       }
     } else {
@@ -65942,8 +65718,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
   function addParseToken(token, callback) {
     var i,
-        func = callback,
-        tokenLen;
+        func = callback;
 
     if (typeof token === 'string') {
       token = [token];
@@ -65955,9 +65730,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       };
     }
 
-    tokenLen = token.length;
-
-    for (i = 0; i < tokenLen; i++) {
+    for (i = 0; i < token.length; i++) {
       tokens[token[i]] = func;
     }
   }
@@ -67043,16 +66816,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     return globalLocale;
   }
 
-  function isLocaleNameSane(name) {
-    // Prevent names that look like filesystem paths, i.e contain '/' or '\'
-    return name.match('^[^/\\\\]*$') != null;
-  }
-
   function loadLocale(name) {
     var oldLocale = null,
         aliasedRequire; // TODO: Find a better way to register and load all the locales in Node
 
-    if (locales[name] === undefined && "object" !== 'undefined' && module && module.exports && isLocaleNameSane(name)) {
+    if (locales[name] === undefined && "object" !== 'undefined' && module && module.exports) {
       try {
         oldLocale = globalLocale._abbr;
         aliasedRequire = undefined;
@@ -67284,14 +67052,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         allowTime,
         dateFormat,
         timeFormat,
-        tzFormat,
-        isoDatesLen = isoDates.length,
-        isoTimesLen = isoTimes.length;
+        tzFormat;
 
     if (match) {
       getParsingFlags(config).iso = true;
 
-      for (i = 0, l = isoDatesLen; i < l; i++) {
+      for (i = 0, l = isoDates.length; i < l; i++) {
         if (isoDates[i][1].exec(match[1])) {
           dateFormat = isoDates[i][0];
           allowTime = isoDates[i][2] !== false;
@@ -67305,7 +67071,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       }
 
       if (match[3]) {
-        for (i = 0, l = isoTimesLen; i < l; i++) {
+        for (i = 0, l = isoTimes.length; i < l; i++) {
           if (isoTimes[i][1].exec(match[3])) {
             // match[2] should be 'T' or space
             timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -67641,12 +67407,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         skipped,
         stringLength = string.length,
         totalParsedInputLength = 0,
-        era,
-        tokenLen;
+        era;
     tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
-    tokenLen = tokens.length;
 
-    for (i = 0; i < tokenLen; i++) {
+    for (i = 0; i < tokens.length; i++) {
       token = tokens[i];
       parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
 
@@ -67739,16 +67503,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         i,
         currentScore,
         validFormatFound,
-        bestFormatIsValid = false,
-        configfLen = config._f.length;
+        bestFormatIsValid = false;
 
-    if (configfLen === 0) {
+    if (config._f.length === 0) {
       getParsingFlags(config).invalidFormat = true;
       config._d = new Date(NaN);
       return;
     }
 
-    for (i = 0; i < configfLen; i++) {
+    for (i = 0; i < config._f.length; i++) {
       currentScore = 0;
       validFormatFound = false;
       tempConfig = copyConfig({}, config);
@@ -67970,8 +67733,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
   function isDurationValid(m) {
     var key,
         unitHasDecimal = false,
-        i,
-        orderLen = ordering.length;
+        i;
 
     for (key in m) {
       if (hasOwnProp(m, key) && !(indexOf.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
@@ -67979,7 +67741,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
       }
     }
 
-    for (i = 0; i < orderLen; ++i) {
+    for (i = 0; i < ordering.length; ++i) {
       if (m[ordering[i]]) {
         if (unitHasDecimal) {
           return false; // only allow non-integers for smallest unit
@@ -68467,10 +68229,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         propertyTest = false,
         properties = ['years', 'year', 'y', 'months', 'month', 'M', 'days', 'day', 'd', 'dates', 'date', 'D', 'hours', 'hour', 'h', 'minutes', 'minute', 'm', 'seconds', 'second', 's', 'milliseconds', 'millisecond', 'ms'],
         i,
-        property,
-        propertyLen = properties.length;
+        property;
 
-    for (i = 0; i < propertyLen; i += 1) {
+    for (i = 0; i < properties.length; i += 1) {
       property = properties[i];
       propertyTest = propertyTest || hasOwnProp(input, property);
     }
@@ -70212,7 +69973,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     config._d = new Date(toInt(input));
   }); //! moment.js
 
-  hooks.version = '2.29.2';
+  hooks.version = '2.29.1';
   setHookCallback(createLocal);
   hooks.fn = proto;
   hooks.min = min;
