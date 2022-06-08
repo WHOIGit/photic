@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
                 all = []
                 row = next(reader)
-                row.append('Status')
+                row.append('UpdatedRowCount')
                 all.append(row)
 
                 for row in reader:
