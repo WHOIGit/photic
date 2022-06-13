@@ -1,9 +1,10 @@
 import csv
 import os
+
 from django.core.management.base import BaseCommand, CommandError
-
-from core.models import Label
-
+from core.models import Annotation, ROI, Label
+from django.db import connection
+from django.db.models import Count
 
 class Command(BaseCommand):
     help = 'change labels'
@@ -19,21 +20,19 @@ class Command(BaseCommand):
             raise CommandError('Input mapping file not specified')
         if not os.path.exists(mapping_csv):
             raise CommandError('specified file does not exist')
+        
         with open(mapping_csv,'r') as csvin:
-            with open('/rois/output.csv', 'w') as csvout:
-                writer = csv.writer(csvout, lineterminator='\n')
                 reader = csv.reader(csvin)
-
-                all = []
                 row = next(reader)
-                row.append('UpdatedRowCount')
-                all.append(row)
 
                 for row in reader:
                     res = 0
                     res = Label.objects.filter(name=row[0]).update(name=row[1])
-                    row.append(res)
-                    all.append(row)
+                    if res == 0:
+                        print("Error: Source Label, " + row[0] + " not found!")
+                        continue
+                    # Number of ROIs affected with this particular Label change
+                    i = Annotation.objects.filter(label__name__contains=row[1]).count()
+                    print(row[0] + " -> " + row[1] + ", affected ROIs: " + str(i))
+        print("Done.")
 
-                writer.writerows(all)
-        print("Status of update in /rois/output.csv.")
