@@ -21,6 +21,8 @@ class Command(BaseCommand):
         if not os.path.exists(mapping_csv):
             raise CommandError('specified file does not exist')
         
+        # Array of label names
+        labels = []
         with open(mapping_csv,'r') as csvin:
                 reader = csv.reader(csvin)
                 row = next(reader)
@@ -34,5 +36,9 @@ class Command(BaseCommand):
                     # Number of ROIs affected with this particular Label change
                     i = Annotation.objects.filter(label__name__contains=row[1]).count()
                     print(row[0] + " -> " + row[1] + ", affected ROIs: " + str(i))
+                    labels.append(row[1])
+        
+        roi_count = ROI.objects.filter(annotations__label__name__in=labels).count()
+        print("Number of ROIs affected by all label changes: " + str(roi_count))
         print("Done.")
 
