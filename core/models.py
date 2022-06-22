@@ -168,18 +168,18 @@ class AnnotationManager(models.Manager):
     def get_queryset(self):
         return AnnotationQuerySet(self.model, using=self._db)
 
-    def create_annotation(self, roi, label, user):
-        return self.create(roi=roi, label=label, user=user, user_power=user.annotator.power)
+    def create_annotation(self, roi, label, user, auto):
+        return self.create(roi=roi, label=label, user=user, user_power=user.annotator.power, auto=auto)
 
-    def create_or_verify(self, roi, label, user):
+    def create_or_verify(self, roi, label, user, auto):
         with transaction.atomic():
             try:
-                annotation = self.get(roi=roi, label=label, user=user)
+                annotation = self.get(roi=roi, label=label, user=user, auto=auto)
                 annotation.verify()
                 annotation.save()
                 created = False
             except Annotation.DoesNotExist:
-                annotation = self.create_annotation(roi=roi, label=label, user=user)
+                annotation = self.create_annotation(roi=roi, label=label, user=user, auto=auto)
                 created = True
             roi.cache_winning_annotation()
             return annotation, created

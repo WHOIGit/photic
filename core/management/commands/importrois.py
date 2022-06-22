@@ -12,12 +12,14 @@ class Command(BaseCommand):
         parser.add_argument('directory', type=str, help='directory containing images')
         parser.add_argument('-c','--collection', type=str, help='image collection to create or add images to')
         parser.add_argument('-u','--user', type=str, help='username for any created annotations (user must exist)')
+        parser.add_argument('-f', '--flag', type=str, help='indicate whether annotation is manual or auto. Defaulted to manual, if not specified')
 
     def handle(self, *args, **options):
         # handle arguments
         directory = options['directory']
         collection_name = options.get('collection')
         username = options.get('user')
+        flag = options.get('flag')
         # validate arguments
         if not os.path.exists(directory):
             raise CommandError('specified directory does not exist')
@@ -31,6 +33,17 @@ class Command(BaseCommand):
         if collection_name is not None:
             collection, created = ImageCollection.objects.get_or_create(
                 name=collection_name)
+
+        auto = False
+        # If flag not specified, auto defaulted to False
+        if flag:
+            if not(flag == "auto" or flag == "manual"):
+                raise CommandError('values of flag should either be auto or manual')
+            if flag == "auto":
+                auto = True
+            # if flag == manual, auto already set to False
+
+
         # scan directory and one level of subdirectories
         def scan(dir):
             result = []
@@ -61,7 +74,7 @@ class Command(BaseCommand):
             for roi_filename in rois:
                 roi_path = os.path.join(directory, label_name, roi_filename)
                 roi = ROI.objects.create_or_update_roi(roi_path, collection=collection)
-                Annotation.objects.create_or_verify(roi, label, user)
+                Annotation.objects.create_or_verify(roi, label, user, auto)
 
 
 
