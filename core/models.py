@@ -195,6 +195,7 @@ class Annotation(models.Model):
     user_power = models.IntegerField(default=1)
     timestamp = models.DateTimeField(auto_now_add=True)
     verifications = models.IntegerField(default=0)
+    auto = models.BooleanField(default = False)
 
     objects = AnnotationManager()
 
