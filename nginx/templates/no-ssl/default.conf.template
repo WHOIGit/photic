@@ -5,11 +5,7 @@ upstream photic_server {
 server {
     listen ${NGINX_HTTP_PORT};
     listen [::]:${NGINX_HTTP_PORT};
-    listen ${NGINX_HTTPS_PORT} ssl;
-    server_name ${NGINX_HOST}; 
-
-    ssl_certificate /ssl/ssl.cer;
-    ssl_certificate_key /ssl/ssl.key;
+    server_name ${NGINX_HOST};
 
     location /static/ {
         root /code;
