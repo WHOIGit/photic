@@ -2,11 +2,9 @@ version: '3'
 
 services:
   db:
-    image: postgres:${POSTGRES_TAG:-12-alpine}
-    environment:
-      - POSTGRES_DB=photic
-      - POSTGRES_USER=photic
-      - POSTGRES_PASSWORD=photic
+    image: postgres:12-alpine
+    env_file:
+      - .env
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     networks:
@@ -16,13 +14,10 @@ services:
   web:
     build:
       context: .
-      args:
-        HTTP_PROXY: '${HTTP_PROXY}'
-        HTTPS_PROXY: '${HTTPS_PROXY}'
 
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - .:/app
       - ${ROI_PATH}:/rois
     depends_on:
       - db
@@ -32,19 +27,17 @@ services:
 
   nginx:
     image: nginx:alpine
-    environment:
-      - NGINX_HOST=${HOST}
-      - NGINX_HTTP_PORT=${HTTP_PORT}
-      - NGINX_HTTPS_PORT=${HTTPS_PORT}
+    env_file:
+      - .env
     volumes:
-      - ./nginx/templates:/etc/nginx/templates
-      - ./static:/code/static
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/app/static
       - ${ROI_PATH}:/rois
       - ${SSL_KEY}:/ssl/ssl.key:ro
       - ${SSL_CERT}:/ssl/ssl.cer:ro
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
-      - ${HTTPS_PORT}:${HTTPS_PORT}
+      - "80:80"
+      - "443:443"
     depends_on:
       - web
     networks:
@@ -55,6 +48,6 @@ volumes:
   postgres_data:
 
 networks:
-    photic:
-      name: ${DOCKER_NETWORK}
-      driver: bridge
+  photic:
+    name: photic
+    driver: bridge
