@@ -24,7 +24,9 @@ class Command(BaseCommand):
         for roi in ROI.objects.all():
             # is this an IFCB ROI?
             if os.path.exists(roi.path):
-                print(f"ROI {roi.path} already exists, skipping download.")
+                # Do not print anything normally - many paths are not IFCB images and will errors that cannot be fixed
+                #   using this command
+                #print(f"ROI {roi.path} already exists, skipping download.")
                 continue
             try:
                 pid = parse(roi.path)
