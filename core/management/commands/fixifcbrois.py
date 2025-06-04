@@ -40,7 +40,10 @@ class Command(BaseCommand):
             if roi_resp.status_code == 404:
                 print(f"ROI {lid} not found at {roi_url}, skipping.")
                 continue
-            roi_resp.raise_for_status()  # raise an error for bad responses
+            elif roi_resp.status_code != 200:
+                print(f"Error fetching ROI {lid} from {roi_url}: {roi_resp.status_code}, skipping.")
+                continue
+            # ensure the directory exists and write the ROI image file to the path
             roi_bytes = roi_resp.content
             os.makedirs(os.path.dirname(roi.path), exist_ok=True)
             with open(roi.path, 'wb') as f:
