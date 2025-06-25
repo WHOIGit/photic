@@ -45,7 +45,9 @@ class Command(BaseCommand):
                 continue
             # ensure the directory exists and write the ROI image file to the path
             roi_bytes = roi_resp.content
-            os.makedirs(os.path.dirname(roi.path), exist_ok=True)
+            dir_path = os.path.dirname(roi.path)
+            if dir_path:  # Only create the directory if the path is non-empty
+                os.makedirs(dir_path, exist_ok=True)
             with open(roi.path, 'wb') as f:
                 f.write(roi_bytes)
             
