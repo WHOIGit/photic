@@ -15,7 +15,7 @@ services:
       - db
 
   db:
-    image: postgres:${POSTGRES_TAG:-12-alpine}
+    image: postgres:${POSTGRES_TAG:-17.5-alpine}
     env_file:
       - .env
     volumes:
