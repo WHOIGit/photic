@@ -3,6 +3,8 @@ version: '3.9'
 services:
   web:
     image: harbor-registry.whoi.edu/photic/photic_web:1.0
+    env_file:
+      - .env
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ${ROI_PATH}:/rois

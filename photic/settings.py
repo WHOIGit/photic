@@ -135,6 +135,10 @@ STATIC_ROOT = './assets/django/'
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/manage/login"
 
+# S3/Vast credentials
+S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
+S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
+
 try:
     from .local_settings import *
 except ImportError as e:

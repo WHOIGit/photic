@@ -1,4 +1,5 @@
 import os
+import io
 from datetime import datetime
 import json
 
@@ -11,6 +12,8 @@ from django.db.models.functions import LastValue
 from django.utils import timezone
 
 from PIL import Image
+import boto3
+from constants import StorageOrigin
 
 
 class ROIQuerySet(models.QuerySet):
@@ -61,10 +64,16 @@ class ROIManager(models.Manager):
     def get_queryset(self):
         return ROIQuerySet(self.model, using=self._db)
 
-    def create_or_update_roi(self, path, collection=None):
+    def create_or_update_roi(self, path, collection=None, origin='', bucket=None, s3_client=None):
         if not path.endswith('.png') and not path.endswith('.jpg'):
             raise NameError(f'{path} is not the path to a ROI image')
         roi_id = os.path.basename(path)[:-4]  # we know it ends with a 3-character image extension
+
+        # TODO: For testing - outside of loop so it always runs
+        # width, height = self.calculate_dimensions(path, origin, bucket, s3_client)
+
+        # TODO: Remove debugging line
+        # print(f"- {path} is {width}x{height}")
 
         with transaction.atomic():
             try:
@@ -76,8 +85,7 @@ class ROIManager(models.Manager):
                     if not roi.collections.filter(id=collection.id).exists():
                         roi.collections.add(collection)
             except ROI.DoesNotExist:
-                with Image.open(path) as image:
-                    width, height = image.size
+                width, height = self.calculate_dimensions(path, origin, bucket, s3_client)
                 roi = self.create(roi_id=roi_id, width=width, height=height, path=path)
                 if collection is not None:
                     roi.collections.add(collection)
@@ -89,15 +97,28 @@ class ROIManager(models.Manager):
     def unlabeled(self):
         return self.get_queryset().unlabeled()
 
+    def calculate_dimensions(self, path, origin, bucket=None, s3_client=None):
+        try:
+            if origin == StorageOrigin.S3.value:
+                response = s3_client.get_object(Bucket=bucket, Key=path)
+                data = response["Body"].read()
+
+                with Image.open(io.BytesIO(data)) as image:
+                    return image.size
+            else:
+                with Image.open(path) as image:
+                    return image.size
+        except Exception as e:
+            return 0, 0
+
 
 class ROI(models.Model):
     roi_id = models.CharField(max_length=255, unique=True)
     width = models.IntegerField()
     height = models.IntegerField()
     path = models.CharField(max_length=512)
-    winning_annotation = models.ForeignKey('Annotation', on_delete=models.CASCADE, null=True,\
+    winning_annotation = models.ForeignKey('Annotation', on_delete=models.CASCADE, null=True, \
                                            related_name='associated_roi')
-
     objects = ROIManager()
 
     @property
