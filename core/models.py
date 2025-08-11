@@ -72,7 +72,8 @@ class ROIManager(models.Manager):
         # TODO: For testing - outside of loop so it always runs
         # width, height = self.calculate_dimensions(path, origin, bucket, s3_client)
 
-        # TODO: Remove debugging line
+        # TODO: Remove debugging lines
+        # print(f"- ROI ID: {roi_id}")
         # print(f"- {path} is {width}x{height}")
 
         with transaction.atomic():
@@ -101,6 +102,7 @@ class ROIManager(models.Manager):
         try:
             if origin == StorageOrigin.S3.value:
                 response = s3_client.get_object(Bucket=bucket, Key=path)
+
                 data = response["Body"].read()
 
                 with Image.open(io.BytesIO(data)) as image:
@@ -109,6 +111,7 @@ class ROIManager(models.Manager):
                 with Image.open(path) as image:
                     return image.size
         except Exception as e:
+            print(f"Failed to download or read image from S3: {e}")
             return 0, 0
 
 

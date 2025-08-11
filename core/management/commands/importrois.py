@@ -53,19 +53,21 @@ class Command(BaseCommand):
 
         return unlabeled, labeled
 
-    # TODO: Handle/check using a subfolder as the directory
     def scan_s3(self, s3_client, bucket, directory):
         unlabeled = []
         labeled = {}
         folders = []
 
-        # TODO: Questions for the group. Do we need to support local and S3 at the same time? or just one or the other?
         # TODO: The method may need to be "list_objects" instead of "list_objects_v2" due to Vast permissions
         paginator = s3_client.get_paginator('list_objects_v2')
 
         for page in paginator.paginate(Bucket=bucket, Delimiter=S3_DELIMITER, Prefix=directory):
             for cp in page.get("CommonPrefixes", []):
                 folder = cp.get("Prefix")
+
+                if directory != "":
+                    folder = folder.removeprefix(directory)
+
                 folders.append(folder)
 
             for obj in page.get("Contents", []):
@@ -74,6 +76,10 @@ class Command(BaseCommand):
                 # Ignore folders and files within folders
                 if filename.endswith('/'):
                     continue
+
+                # Remove the directory/path if there is one
+                if directory != "":
+                    filename = filename.removeprefix(directory)
 
                 name, ext = os.path.splitext(filename)
                 if ext not in ALLOWED_FILE_TYPES:
@@ -85,15 +91,19 @@ class Command(BaseCommand):
             key = folder.rstrip("/")
             labeled[key] = []
             prefix = os.path.join(directory, folder)
+
             for page in paginator.paginate(Bucket=bucket, Delimiter=S3_DELIMITER, Prefix=prefix):
 
                 for obj in page.get("Contents", []):
-                    # TODO: If we're not in root, we might need to also lstrip() the directory?
-                    filename = obj['Key'].lstrip(prefix)
+                    filename = obj['Key'].removeprefix(prefix)
 
                     # Ignore subfolders and files within subfolders
                     if "/" in filename:
                         continue
+
+                    # Remove the directory/path if there is one
+                    if directory != "":
+                        filename = filename.removeprefix(directory)
 
                     name, ext = os.path.splitext(filename)
                     if ext not in ALLOWED_FILE_TYPES:
@@ -122,6 +132,17 @@ class Command(BaseCommand):
         if origin == StorageOrigin.S3.value and (bucket or "") == "":
             raise CommandError('bucket must be specified')
 
+        # For S3, if the user wants to look in root, the options are a bit unclear so we should allow them to an empty
+        #   string (with ""), or a single slash. However, as far as AWS is concerned, directory in this case should be
+        #   set to an empty string (slash will not work properly)
+        if origin == StorageOrigin.S3.value and directory == "/":
+            directory = ""
+
+        # For S3, if the user entered a directory, it must end in a trailing slash. Rather than require it, we can just
+        #   add one if it's not there
+        if origin == StorageOrigin.S3.value and directory != "" and not directory.endswith("/"):
+            directory += "/"
+
         user = None
         if username:
             try:
@@ -144,10 +165,11 @@ class Command(BaseCommand):
         print(f'found {len(unlabeled)} unlabeled images and {len(labeled)} label directories')
 
         # now create ROI records in the database
-        print(f'importing {len(unlabeled)} unlabeled ROIs...')
-        for roi_filename in unlabeled:
-            path = os.path.join(directory, roi_filename)
-            _ = ROI.objects.create_or_update_roi(path, collection=collection, origin=origin, bucket=bucket, s3_client=s3_client)
+        if len(unlabeled) > 0:
+            print(f'importing {len(unlabeled)} unlabeled ROIs...')
+            for roi_filename in unlabeled:
+                path = os.path.join(directory, roi_filename)
+                _ = ROI.objects.create_or_update_roi(path, collection=collection, origin=origin, bucket=bucket, s3_client=s3_client)
 
         for label_name, rois in labeled.items():
             print(f'importing {len(rois)} ROIs labeled "{label_name}"...')
