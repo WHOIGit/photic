@@ -1,3 +1,4 @@
+import os
 import json
 
 from django.contrib.auth.models import User
@@ -6,12 +7,17 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from constants import StorageOrigin, ALLOWED_FILE_TYPES
 from core.models import Annotation, Label, ImageCollection, ROI, Annotator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from services.s3_service import S3Service
 
 import logging
 
 log = logging.getLogger(__name__)
+
+# This is initialized outside of any view methods so its only created once
+s3_client = S3Service.get_client()
 
 def index(request):
     annotation_users = User.objects.all()
@@ -61,7 +67,7 @@ def roi_list(request):
 
     rois = rois.order_by(*sortby_query)
     roi_count = rois.count()
-    rois_list = rois.values_list('id', 'path')
+    rois_list = rois.values('id', 'path', 'origin', 'bucket')
 
     paginator = Paginator(rois_list, 1000)
     
@@ -72,10 +78,20 @@ def roi_list(request):
     except EmptyPage:
         roi_page = paginator.page(paginator.num_pages)
 
-    roi_records = [{
-        'id': rid,
-        'path': path,
-    } for rid, path in roi_page]
+    roi_records = []
+    for roi in roi_page:
+        # S3 based images need to use a custom wrapper
+        if roi["origin"] == StorageOrigin.S3.value:
+            bucket = roi["bucket"]
+            path = roi["path"]
+            url = f"/api/view_image/{bucket}/{path}"
+        else:
+            url = roi["path"]
+
+        roi_records.append({
+            "id": roi["id"],
+            "path": url,
+        })
 
     return JsonResponse({
         'rois': roi_records,
@@ -237,3 +253,20 @@ def api_winning_annotations(request, collection_name):
     response['Content-Disposition'] = f'attachment; filename="{collection_name}_annotations.csv"'
     return response
 
+
+def view_image(request, bucket, path):
+    # Only serve up images with valid extensions
+    name, ext = os.path.splitext(path)
+    if ext not in ALLOWED_FILE_TYPES:
+        return HttpResponseBadRequest()
+
+    mime_type = "image/jpg" if ext == ".jpg" else "image/png"
+
+    try:
+        response = s3_client.get_object(Bucket=bucket, Key=path)
+
+        data = response["Body"].read()
+
+        return HttpResponse(data, content_type=mime_type)
+    except:
+        return HttpResponseBadRequest("Image unavailable")
