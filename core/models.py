@@ -79,15 +79,23 @@ class ROIManager(models.Manager):
         with transaction.atomic():
             try:
                 roi = self.get(roi_id=roi_id)
-                if roi.path != path:
+                if roi.path != path or roi.origin != origin or roi.bucket != bucket:
                     roi.path = path
+                    roi.bucket = bucket
+                    roi.origin = origin
                     roi.save()
                 if collection is not None:
                     if not roi.collections.filter(id=collection.id).exists():
                         roi.collections.add(collection)
             except ROI.DoesNotExist:
                 width, height = self.calculate_dimensions(path, origin, bucket, s3_client)
-                roi = self.create(roi_id=roi_id, width=width, height=height, path=path)
+                roi = self.create(
+                    roi_id=roi_id,
+                    width=width,
+                    height=height,
+                    path=path,
+                    origin=origin,
+                    bucket=bucket)
                 if collection is not None:
                     roi.collections.add(collection)
         return roi
@@ -122,6 +130,11 @@ class ROI(models.Model):
     path = models.CharField(max_length=512)
     winning_annotation = models.ForeignKey('Annotation', on_delete=models.CASCADE, null=True, \
                                            related_name='associated_roi')
+    bucket = models.CharField(max_length=100, null=True, blank=True)
+    origin = models.CharField(max_length=50, null=False, blank=False, default=StorageOrigin.LOCAL.value, choices=[
+        (StorageOrigin.LOCAL.name, StorageOrigin.LOCAL.value),
+        (StorageOrigin.S3.name, StorageOrigin.S3.value),
+    ])
     objects = ROIManager()
 
     @property
