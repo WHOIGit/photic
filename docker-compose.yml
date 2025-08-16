@@ -35,6 +35,7 @@ services:
       - ${ROI_PATH}:/rois
       - ${SSL_KEY}:/ssl/ssl.key:ro
       - ${SSL_CERT}:/ssl/ssl.cer:ro
+      - ${LOG_PATH}:/var/log/nginx
     ports:
       - "80:80"
       - "443:443"
