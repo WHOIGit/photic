@@ -69,13 +69,6 @@ class ROIManager(models.Manager):
             raise NameError(f'{path} is not the path to a ROI image')
         roi_id = os.path.basename(path)[:-4]  # we know it ends with a 3-character image extension
 
-        # TODO: For testing - outside of loop so it always runs
-        # width, height = self.calculate_dimensions(path, origin, bucket, s3_client)
-
-        # TODO: Remove debugging lines
-        # print(f"- ROI ID: {roi_id}")
-        # print(f"- {path} is {width}x{height}")
-
         with transaction.atomic():
             try:
                 roi = self.get(roi_id=roi_id)

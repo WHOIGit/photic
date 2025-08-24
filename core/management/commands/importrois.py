@@ -58,8 +58,9 @@ class Command(BaseCommand):
         labeled = {}
         folders = []
 
-        # TODO: The method may need to be "list_objects" instead of "list_objects_v2" due to Vast permissions
-        paginator = s3_client.get_paginator('list_objects_v2')
+        # Intentionally using "list_objects" here instead of "list_objects_v2" to work around potential permission or
+        #   feature restrictions when using VAST as the backend storage resource
+        paginator = s3_client.get_paginator('list_objects')
 
         for page in paginator.paginate(Bucket=bucket, Delimiter=S3_DELIMITER, Prefix=directory):
             for cp in page.get("CommonPrefixes", []):

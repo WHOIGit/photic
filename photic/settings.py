@@ -138,6 +138,7 @@ LOGIN_URL = "/manage/login"
 # S3/Vast credentials
 S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
+S3_ENDPOINT_URL = os.environ.get('S3_ENDPOINT_URL')
 
 try:
     from .local_settings import *
