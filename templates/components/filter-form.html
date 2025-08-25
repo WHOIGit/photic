@@ -112,6 +112,18 @@
                   <input type="submit" class="button small primary expanded" id="add_to_collection" value="Add to Collection">
                 </div>
             </form>
+            <form id="export_collection_form" data-abide method="post" action="/api/export_roi_list">
+                {% csrf_token %}
+                <label>Export Collection:</label>
+                <div>
+                    <select name="collection" style="width:100%">
+                        {% for collection in collections %}
+                        <option value="{{ collection.name }}">{{ collection.name }}</option>
+                        {% endfor %}
+                    </select>
+                <input type="submit" class="button small primary expanded" id="export_collection" value="Export Collection">
+                </div>
+            </form>
             {% else %}
               To annotate images, please <a href="{% url 'manage:login' %}">login</a>.
             {% endif %}

@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/roi_annotations', views.roi_annotations, name='annotations'),
     path('api/create_label', views.create_label, name='create_label'),
     path('api/roi_list', views.roi_list, name='roi_list'),
+    path('api/export_roi_list', views.export_roi_list, name='export_roi_list'),
     path('api/create_or_verify_annotations', views.create_or_verify_annotations, name='create_or_verify_annotations'),
     path('api/move_or_copy_to_collection', views.move_or_copy_to_collection, name='move_or_copy_to_collection'),
     path('api/get_labels', views.get_labels, name='get_labels'),

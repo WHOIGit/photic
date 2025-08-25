@@ -1,7 +1,10 @@
+import csv
+import os
+from pprint import pprint
 import json
 
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -34,6 +37,36 @@ SORTBY_OPTIONS = {
     'ROI_ID_ASC': ['roi_id'],
     'ROI_ID_DESC': ['-roi_id'],
 }
+
+def export_roi_list(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    collection = request.POST.get('collection')
+    if not collection:
+        return HttpResponseBadRequest()
+
+    rois = ROI.objects \
+        .filter(collections__name=collection) \
+        .order_by("roi_id") \
+        .values_list('collections__name', 'winning_annotation__label__name', 'path')
+
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{collection}-rois.csv"'},
+    )
+
+    writer = csv.writer(response)
+    writer.writerow(["Collection", "Label", "Filename", "Path"])
+    for roi in rois:
+        writer.writerow([
+            roi[0],
+            roi[1],
+            os.path.basename(roi[2]),
+            os.path.dirname(roi[2]),
+        ])
+
+    return response
 
 @require_POST
 def roi_list(request):
