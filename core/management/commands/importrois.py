@@ -1,5 +1,6 @@
 import os
 import boto3
+from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
@@ -18,11 +19,22 @@ class Command(BaseCommand):
         parser.add_argument('-c','--collection', type=str, help='image collection to create or add images to')
         parser.add_argument('-b', '--bucket', type=str, help='the bucket when importing from S3')
         parser.add_argument('-u','--user', type=str, help='username for any created annotations (user must exist)')
+        parser.add_argument('--include-rois', type=str, help='only import rois matching a comma separated list')
+        parser.add_argument('--include-rois-file', type=str, help='only import rois found in a file (new line separated)')
+        parser.add_argument('--prefix', type=str, help='a prefix to prepend to all ROIs used with --include-rois or --include-rois-file')
 
         origin_choices = [StorageOrigin.LOCAL.value, StorageOrigin.S3.value,]
         parser.add_argument('-o','--origin', type=str, choices=origin_choices, default='local', help='storage type to use (local or s3)')
 
-    def scan_local(self, directory):
+    def is_roi_included(self, filename, included_rois):
+        if not included_rois:
+            return True
+
+        is_included = any(roi in filename for roi in included_rois)
+
+        return is_included
+
+    def scan_local(self, directory, included_rois=None):
         unlabeled = []
         labeled = {}
         folders = []
@@ -30,7 +42,7 @@ class Command(BaseCommand):
         # First, loop through the directory and sort entries into unlabeled files and top level folders
         for entry in os.listdir(directory):
             name, ext = os.path.splitext(entry)
-            if ext in ALLOWED_FILE_TYPES:
+            if ext in ALLOWED_FILE_TYPES and self.is_roi_included(name, included_rois):
                 unlabeled.append(entry)
                 continue
 
@@ -46,14 +58,14 @@ class Command(BaseCommand):
             path = os.path.join(directory, folder)
             for entry in os.listdir(path):
                 name, ext = os.path.splitext(entry)
-                if ext not in ALLOWED_FILE_TYPES:
+                if ext not in ALLOWED_FILE_TYPES or not self.is_roi_included(name, included_rois):
                     continue
 
                 labeled[folder].append(entry)
 
         return unlabeled, labeled
 
-    def scan_s3(self, s3_client, bucket, directory):
+    def scan_s3(self, s3_client, bucket, directory, included_rois=None):
         unlabeled = []
         labeled = {}
         folders = []
@@ -83,7 +95,7 @@ class Command(BaseCommand):
                     filename = filename.removeprefix(directory)
 
                 name, ext = os.path.splitext(filename)
-                if ext not in ALLOWED_FILE_TYPES:
+                if ext not in ALLOWED_FILE_TYPES or not self.is_roi_included(name, included_rois):
                     continue
 
                 unlabeled.append(filename)
@@ -107,7 +119,7 @@ class Command(BaseCommand):
                         filename = filename.removeprefix(directory)
 
                     name, ext = os.path.splitext(filename)
-                    if ext not in ALLOWED_FILE_TYPES:
+                    if ext not in ALLOWED_FILE_TYPES or not self.is_roi_included(name, included_rois):
                         continue
 
                     labeled[key].append(filename)
@@ -121,9 +133,20 @@ class Command(BaseCommand):
         username = options.get('user')
         origin = options.get('origin')
         bucket = options.get('bucket')
+        rois_list = options.get('include_rois')
+        rois_file = options.get('include_rois_file')
+        prefix = options.get('prefix') or ''
         s3_client = S3Service.get_client() if origin == StorageOrigin.S3.value else None
 
         # validate arguments
+
+        if rois_list and rois_file:
+            raise CommandError('the include-rois and include-rois-file arguments cannot be used at the same time')
+
+        if rois_file:
+            path = Path(rois_file)
+            if not path.exists() or not path.is_file():
+                raise CommandError(f"file not found: {path}")
 
         # Only verify the path physically exists when using local storage
         if origin == StorageOrigin.LOCAL.value and not os.path.exists(directory):
@@ -144,6 +167,20 @@ class Command(BaseCommand):
         if origin == StorageOrigin.S3.value and directory != "" and not directory.endswith("/"):
             directory += "/"
 
+        # Load any filters
+        included_rois = []
+
+        if rois_list:
+            included_rois = [prefix + item.strip() for item in rois_list.split(',') if item.strip()]
+
+        if rois_file:
+            path = Path(rois_file)
+            try:
+                with path.open('r') as f:
+                    included_rois = [prefix + line.strip() for line in f if line.strip()]
+            except Exception as e:
+                raise CommandError(f"could not read file {rois_file}: {e}")
+
         user = None
         if username:
             try:
@@ -156,9 +193,9 @@ class Command(BaseCommand):
             collection, _ = ImageCollection.objects.get_or_create(name=collection_name)
 
         if origin == StorageOrigin.S3.value:
-            unlabeled, labeled = self.scan_s3(s3_client, bucket, directory)
+            unlabeled, labeled = self.scan_s3(s3_client, bucket, directory, included_rois=included_rois)
         else:
-            unlabeled, labeled = self.scan_local(directory)
+            unlabeled, labeled = self.scan_local(directory, included_rois=included_rois)
 
         if len(labeled) > 0 and not user:
             raise CommandError('labeled ROIs found but no username specified')
