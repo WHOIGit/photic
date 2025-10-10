@@ -125,8 +125,8 @@ class ROI(models.Model):
                                            related_name='associated_roi')
     bucket = models.CharField(max_length=100, null=True, blank=True)
     origin = models.CharField(max_length=50, null=False, blank=False, default=StorageOrigin.LOCAL.value, choices=[
-        (StorageOrigin.LOCAL.name, StorageOrigin.LOCAL.value),
-        (StorageOrigin.S3.name, StorageOrigin.S3.value),
+        (StorageOrigin.LOCAL.value, StorageOrigin.LOCAL.value),
+        (StorageOrigin.S3.value, StorageOrigin.S3.value),
     ])
     objects = ROIManager()
 
