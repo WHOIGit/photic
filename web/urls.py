@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/move_or_copy_to_collection', views.move_or_copy_to_collection, name='move_or_copy_to_collection'),
     path('api/get_labels', views.get_labels, name='get_labels'),
     path('api/get_collections', views.get_collections, name='get_collections'),
+    path('api/view_image/<bucket>/<path:path>', views.view_image, name='view_image'),
 
     # external REST endpoints
     path('api/winning_annotations/<collection_name>', views.api_winning_annotations, name='winning_annotations'),

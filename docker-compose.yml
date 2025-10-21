@@ -16,6 +16,8 @@ services:
       context: .
 
     command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - .env
     volumes:
       - .:/app
       - ${ROI_PATH}:/rois
